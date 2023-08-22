@@ -1,11 +1,11 @@
 {
-  "name": "@tetreum/shroom",
-  "version": "0.7.6",
+  "name": "@wiredsnippets/shroom",
+  "version": "0.7.7",
   "main": "dist/index.js",
   "license": "LGPL-3.0-or-later",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tetreum/shroom.git"
+    "url": "https://github.com/wiredsnippets/shroom.git"
   },
   "devDependencies": {
     "@types/axios": "^0.14.0",

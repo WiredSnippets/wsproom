@@ -14,9 +14,9 @@ export class Avatar extends RoomObject implements IMoveable, IScreenPositioned {
 
   private _moveAnimation:
     | ObjectAnimation<
-        | { type: "walk"; direction?: number; headDirection?: number }
-        | { type: "move" }
-      >
+      | { type: "walk"; direction?: number; headDirection?: number }
+      | { type: "move" }
+    >
     | undefined;
   private _walking = false;
   private _moving = false;
@@ -87,6 +87,11 @@ export class Avatar extends RoomObject implements IMoveable, IScreenPositioned {
         this._updateAvatarSprites();
       },
     });
+  }
+
+  public setLook(look: string) {
+    this._look = look
+    this._updateAvatarSprites();
   }
 
   /**
@@ -370,16 +375,27 @@ export class Avatar extends RoomObject implements IMoveable, IScreenPositioned {
    * @param roomY New y-Position
    * @param roomZ New z-Position
    */
-  move(roomX: number, roomY: number, roomZ: number) {
-    this._moveAnimation?.move(
-      { roomX: this.roomX, roomY: this.roomY, roomZ: this.roomZ },
-      { roomX, roomY, roomZ },
-      { type: "move" }
-    );
+  move(
+    roomX: number,
+    roomY: number,
+    roomZ: number,
+    options: {
+      animation: boolean
+    } = { animation: true }) {
+
+    if (options?.animation) {
+      this._moveAnimation?.move(
+        { roomX: this.roomX, roomY: this.roomY, roomZ: this.roomZ },
+        { roomX, roomY, roomZ },
+        { type: "move" }
+      );
+    }
 
     this._roomX = roomX;
     this._roomY = roomY;
     this._roomZ = roomZ;
+
+    this._updatePosition();
   }
 
   /**
