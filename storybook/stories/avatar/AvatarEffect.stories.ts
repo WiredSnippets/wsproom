@@ -1,4 +1,4 @@
-import { Room, Avatar } from "@tetreum/shroom";
+import { Room, Avatar } from "@wiredsnippets/shroom";
 import { renderAvatarDirections } from "./renderAvatarDirections";
 
 export default {

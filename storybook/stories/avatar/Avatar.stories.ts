@@ -1,4 +1,4 @@
-import { Avatar, AvatarAction, Room, BaseAvatar } from "@tetreum/shroom";
+import { Avatar, AvatarAction, Room, BaseAvatar } from "@wiredsnippets/shroom";
 import { createShroom } from "../common/createShroom";
 import { action } from "@storybook/addon-actions";
 

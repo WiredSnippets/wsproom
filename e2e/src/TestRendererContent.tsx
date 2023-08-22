@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import * as PIXI from "pixi.js";
 import styled from "styled-components";
-import { Shroom } from "@tetreum/shroom";
+import { Shroom } from "@wiredsnippets/shroom";
 
 import { TestMap } from "./TestMap";
 import { TestRenderer } from "./TestRenderer";

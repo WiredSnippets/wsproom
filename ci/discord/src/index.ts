@@ -19,7 +19,7 @@ function getLatestChangelogMarkdown(): string {
   return "```" + matchingRelease.toString() + "```";
 }
 
-const packageName = "@tetreum/shroom";
+const packageName = "@wiredsnippets/shroom";
 
 const content = {
   content: "A new version of shroom has been released.",

@@ -1,4 +1,4 @@
-import { Room } from "@tetreum/shroom";
+import { Room } from "@wiredsnippets/shroom";
 import { createShroom } from "./common/createShroom";
 
 export default {

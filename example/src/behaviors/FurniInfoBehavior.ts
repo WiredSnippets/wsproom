@@ -2,7 +2,7 @@ import {
   IFurnitureBehavior,
   IFurniture,
   IFurnitureData,
-} from "@tetreum/shroom";
+} from "@wiredsnippets/shroom";
 
 export class FurniInfoBehavior implements IFurnitureBehavior {
   private parent: IFurniture | undefined;

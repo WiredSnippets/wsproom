@@ -17,7 +17,7 @@ Please note with both those methods, you will need to implement your own pathfin
 ```ts
 import * as PIXI from "pixi.js";
 
-import { Room, Avatar, Shroom } from "@tetreum/shroom";
+import { Room, Avatar, Shroom } from "@wiredsnippets/shroom";
 
 const view = document.querySelector("#root") as HTMLCanvasElement;
 const application = new PIXI.Application({ view });

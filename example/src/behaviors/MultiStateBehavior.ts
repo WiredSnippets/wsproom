@@ -1,4 +1,4 @@
-import { IFurniture, IFurnitureBehavior } from "@tetreum/shroom";
+import { IFurniture, IFurnitureBehavior } from "@wiredsnippets/shroom";
 
 export class MultiStateBehavior implements IFurnitureBehavior {
   private furniture: IFurniture | undefined;

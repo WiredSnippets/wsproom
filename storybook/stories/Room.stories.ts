@@ -6,7 +6,7 @@ import {
   RoomCamera,
   Avatar,
   FloorFurniture,
-} from "@tetreum/shroom";
+} from "@wiredsnippets/shroom";
 
 import { createShroom } from "./common/createShroom";
 import tile from "./assets/tile2.png";

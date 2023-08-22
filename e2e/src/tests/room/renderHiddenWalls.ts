@@ -1,4 +1,4 @@
-import { Room } from "@tetreum/shroom";
+import { Room } from "@wiredsnippets/shroom";
 import { TestRenderer } from "../../TestRenderer";
 
 export const renderHiddenWalls: TestRenderer = ({ shroom, application }) => {

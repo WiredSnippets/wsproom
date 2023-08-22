@@ -24,7 +24,7 @@
     "webpack-dev-server": "^3.11.0"
   },
   "dependencies": {
-    "@tetreum/shroom": "^0.1.8",
+    "@wiredsnippets/shroom": "^0.1.8",
     "easystarjs": "^0.4.4",
     "events": "^3.2.0",
     "pixi.js": "^5.3.3",

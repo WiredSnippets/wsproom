@@ -13,7 +13,7 @@ This will create a 4x3 room.
 ```ts
 import * as PIXI from "pixi.js";
 
-import { Room, FloorFurniture, Avatar, Shroom } from "@tetreum/shroom";
+import { Room, FloorFurniture, Avatar, Shroom } from "@wiredsnippets/shroom";
 
 const view = document.querySelector("#root") as HTMLCanvasElement;
 const application = new PIXI.Application({ view });

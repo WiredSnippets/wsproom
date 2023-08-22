@@ -6,7 +6,7 @@ import {
   AvatarAction,
   BaseAvatar,
   BaseFurniture,
-} from "@tetreum/shroom";
+} from "@wiredsnippets/shroom";
 import { createShroom } from "./common/createShroom";
 
 export default {

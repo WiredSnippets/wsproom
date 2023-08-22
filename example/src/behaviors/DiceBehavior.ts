@@ -1,4 +1,4 @@
-import { IFurnitureBehavior, HitEvent, IFurniture } from "@tetreum/shroom";
+import { IFurnitureBehavior, HitEvent, IFurniture } from "@wiredsnippets/shroom";
 
 interface DiceState {
   state: "rolling" | "value" | "closed";

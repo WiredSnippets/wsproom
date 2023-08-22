@@ -1,4 +1,4 @@
-import { Room, FloorFurniture } from "@tetreum/shroom";
+import { Room, FloorFurniture } from "@wiredsnippets/shroom";
 import { createShroom } from "../common/createShroom";
 
 export function renderFurnitureExample(
