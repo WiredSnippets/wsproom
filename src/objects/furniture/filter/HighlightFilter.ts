@@ -1,16 +1,29 @@
 import * as PIXI from "pixi.js";
 
 export class HighlightFilter extends PIXI.Filter {
-  constructor(private _backgroundColor: number, private _borderColor: number) {
+  constructor(
+    private _backgroundColor: number, 
+    private _borderColor: number,
+    private _opacity: number = 0.5) {
     super(vertex, fragment);
-    this.uniforms.backgroundColor = new Float32Array(4);
-    this.uniforms.borderColor = new Float32Array(4);
-
-    this.uniforms.backgroundColor = [
+    
+    this.uniforms.backgroundColor = new Float32Array([
       ...PIXI.utils.hex2rgb(this._backgroundColor),
+      this._opacity,
+    ]);
+    this.uniforms.borderColor = new Float32Array([
+      ...PIXI.utils.hex2rgb(this._borderColor),
       1.0,
-    ];
-    this.uniforms.borderColor = [...PIXI.utils.hex2rgb(this._borderColor), 1.0];
+    ]);
+
+  }
+
+  public set opacity(value: number) {
+    this.uniforms.backgroundColor[3] = value;
+  }
+
+  public get opacity(): number {
+    return this.uniforms.backgroundColor[3];
   }
 }
 
@@ -42,7 +55,8 @@ void main(void) {
         if (currentColor.r == 0.0 && currentColor.g == 0.0 && currentColor.b == 0.0) {
             gl_FragColor = borderColor;
         } else {
-            gl_FragColor = backgroundColor;
+            vec4 modifiedBackgroundColor = vec4(backgroundColor.rgb * backgroundColor.a, backgroundColor.a);
+            gl_FragColor = mix(currentColor, modifiedBackgroundColor, 0.6);
         }
     }
 }
