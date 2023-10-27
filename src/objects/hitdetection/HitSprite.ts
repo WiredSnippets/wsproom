@@ -216,9 +216,10 @@ export class HitSprite extends PIXI.Sprite implements IEventTarget {
 
     if (inBoundsX && inBoundsY) {
       const hits = this._getHitmap();
+      const pos = this.getGlobalPosition();
       return hits(x, y, {
-        x: this.getGlobalPosition().x,
-        y: this.getGlobalPosition().y,
+        x: pos.x,
+        y: pos.y,
       });
     }
 

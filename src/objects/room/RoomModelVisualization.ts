@@ -50,12 +50,13 @@ export class RoomModelVisualization
   private _wallHitAreaLayer: PIXI.Container = new PIXI.Container();
   private _masksLayer: PIXI.Container = new PIXI.Container();
 
+  private tileCursor: TileCursor = new TileCursor();
+
   private _wallTexture: PIXI.Texture | undefined;
   private _floorTexture: PIXI.Texture | undefined;
 
   private _walls: (WallLeft | WallRight | WallOuterCorner)[] = [];
   private _tiles: (Tile | Stair | StairCorner)[] = [];
-  private _tileCursors: TileCursor[] = [];
   private _masks: Map<string, RoomLandscapeMaskSprite> = new Map();
 
   private _parts: Set<IRoomPart> = new Set();
@@ -130,6 +131,7 @@ export class RoomModelVisualization
 
     this._updateHeightmap();
 
+    this._primaryLayer.addChild(this.tileCursor);
     this._application.ticker.add(this._handleTick);
   }
 
@@ -395,7 +397,8 @@ export class RoomModelVisualization
     };
   }
 
-  private _setCache(cache: boolean) {
+  public _setCache(cache: boolean) {
+    return;
     [this._tileLayer, this._wallLayer].forEach(
       (container) => (container.cacheAsBitmap = cache)
     );
@@ -406,11 +409,10 @@ export class RoomModelVisualization
   }
 
   private _destroyAllSprites() {
-    [...this._tileCursors, ...this._tiles, ...this._walls].forEach((part) =>
+    [...this._tiles, ...this._walls].forEach((part) =>
       part.destroy()
     );
 
-    this._tileCursors = [];
     this._tiles = [];
     this._walls = [];
   }
@@ -483,9 +485,6 @@ export class RoomModelVisualization
 
     this._tiles.push(stair);
     this._tileLayer.addChild(stair);
-
-    this._createTileCursor(x, y, z);
-    this._createTileCursor(x, y, z + 1);
   }
 
   private _createStair(x: number, y: number, z: number, direction: 2 | 0) {
@@ -500,9 +499,6 @@ export class RoomModelVisualization
 
     this._tiles.push(stair);
     this._tileLayer.addChild(stair);
-
-    this._createTileCursor(x, y, z);
-    this._createTileCursor(x, y, z + 1);
   }
 
   private _createDoor(x: number, y: number, z: number) {
@@ -557,6 +553,19 @@ export class RoomModelVisualization
     const showBorders = this.shouldShowBorders(x, y);
 
     const tile = new Tile({ color: "#eeeeee", tileHeight: this._tileHeight, showBorders });
+    
+    tile.interactive = true;
+    tile.on('pointerover', () => {
+      const { x: posX, y: posY } = this._getPosition(x, y, z);
+
+      this.tileCursor.visible = true;
+      this.tileCursor.x = posX;
+      this.tileCursor.y = posY;
+      this.tileCursor.zIndex = getZOrder(x, y, z) - 1000;
+    });
+    tile.on('pointerout', () => {
+      this.tileCursor.visible = false;
+    });
 
     const xEven = x % 2 === 0;
     const yEven = y % 2 === 0;
@@ -570,41 +579,6 @@ export class RoomModelVisualization
 
     (container ?? this._tileLayer).addChild(tile);
     this._tiles.push(tile);
-
-    this._createTileCursor(x, y, z, container);
-  }
-
-  private _createTileCursor(
-    x: number,
-    y: number,
-    z: number,
-    container?: PIXI.Container
-  ) {
-    if (this._hideTileCursor) return;
-
-    const position: RoomPosition = { roomX: x, roomY: y, roomZ: z };
-    const cursor = new TileCursor(
-      this._eventManager,
-      position,
-      (pos, event) => {
-        this._onTileClick.next({position, event});
-      },
-      () => {
-        this._onActiveTileChange.next(position);
-      },
-      () => {
-        this._onActiveTileChange.next(undefined);
-      }
-    );
-
-    const { x: posX, y: posY } = this._getPosition(x, y, z);
-
-    cursor.x = posX;
-    cursor.y = posY;
-    cursor.zIndex = getZOrder(x, y, z) - 1000;
-
-    this._tileCursors.push(cursor);
-    (container ?? this._primaryLayer).addChild(cursor);
   }
 
   private _handleTick = () => {

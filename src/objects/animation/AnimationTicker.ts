@@ -1,4 +1,5 @@
 import { IAnimationTicker } from "../../interfaces/IAnimationTicker";
+import type * as PIXI from "pixi.js";
 
 const ANIM_FPS = 24;
 const TARGET_FPS = 60;

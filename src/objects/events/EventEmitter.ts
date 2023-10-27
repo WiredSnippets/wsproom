@@ -37,7 +37,9 @@ type EventCallback<K extends keyof TMap, TMap extends BaseTypeMap<unknown>> = (
   event: TMap[K]
 ) => void;
 
-window.addEventListener;
+if(typeof window !== 'undefined') {
+  window.addEventListener;
+}
 
 type BaseTypeMap<T> = {
   [k in keyof T]: unknown;

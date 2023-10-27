@@ -9,6 +9,7 @@ import { IRoomGeometry } from "./IRoomGeometry";
 import { IRoomObjectContainer } from "./IRoomObjectContainer";
 import { IRoomVisualization } from "./IRoomVisualization";
 import { ITileMap } from "./ITileMap";
+import type * as PIXI from "pixi.js";
 
 export interface IRoomContext {
   geometry: IRoomGeometry;

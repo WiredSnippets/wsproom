@@ -1,5 +1,6 @@
 import { MaskNode } from "../../interfaces/IRoomVisualization";
 import { IFurnitureRoomVisualization } from "./BaseFurniture";
+import type * as PIXI from "pixi.js";
 
 export class FurnitureRoomVisualization implements IFurnitureRoomVisualization {
   constructor(private _container: PIXI.Container) {}

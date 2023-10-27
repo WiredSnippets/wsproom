@@ -1,3 +1,5 @@
+import type * as PIXI from "pixi.js";
+
 export interface RoomPartData {
   wallHeight: number;
   borderWidth: number;

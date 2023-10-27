@@ -1,5 +1,6 @@
 import { IRoomPart } from "../objects/room/parts/IRoomPart";
 import { RoomLandscapeMaskSprite } from "../objects/room/RoomLandscapeMaskSprite";
+import type * as PIXI from "pixi.js";
 
 export interface IRoomVisualization {
   container: PIXI.Container;

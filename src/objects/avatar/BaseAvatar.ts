@@ -59,7 +59,7 @@ export interface BaseAvatarDependencies {
   avatarLoader: IAvatarLoader;
 }
 
-export class BaseAvatar extends PIXI.Container implements IEventGroup {
+export class BaseAvatar extends PIXI.Container implements PIXI.DisplayObject, IEventGroup {
   private _container: PIXI.Container | undefined;
   private _avatarLoaderResult: AvatarLoaderResult | undefined;
   private _avatarDrawDefinition: AvatarDrawDefinition | undefined;

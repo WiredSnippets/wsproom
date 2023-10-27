@@ -69,7 +69,12 @@ export class StairCorner extends PIXI.Container implements IRoomPart {
       tilePosition: PIXI.Point
     ) {
       const tile = new PIXI.TilingSprite(texture ?? PIXI.Texture.WHITE);
-      tile.tilePosition = tilePosition;
+      tile.tilePosition = new PIXI.ObservablePoint(
+        () => {}, 
+        self, 
+        tilePosition.x, 
+        tilePosition.y
+      );
       tile.transform.setFromMatrix(matrix);
 
       tile.tint = tint;
@@ -132,7 +137,12 @@ export class StairCorner extends PIXI.Container implements IRoomPart {
       tilePosition: PIXI.Point
     ) {
       const tile = new PIXI.TilingSprite(texture ?? PIXI.Texture.WHITE);
-      tile.tilePosition = tilePosition;
+      tile.tilePosition = new PIXI.ObservablePoint(
+        () => {}, 
+        self, 
+        tilePosition.x, 
+        tilePosition.y
+      );;
       tile.transform.setFromMatrix(matrix);
 
       tile.tint = tint;
@@ -200,7 +210,12 @@ export class StairCorner extends PIXI.Container implements IRoomPart {
       tilePosition: PIXI.Point
     ) {
       const tile = new PIXI.TilingSprite(texture ?? PIXI.Texture.WHITE);
-      tile.tilePosition = tilePosition;
+      tile.tilePosition = new PIXI.ObservablePoint(
+        () => {}, 
+        self, 
+        tilePosition.x, 
+        tilePosition.y
+      );
       tile.transform.setFromMatrix(matrix);
 
       tile.tint = tint;

@@ -160,7 +160,12 @@ export class Landscape extends RoomObject implements IRoomPart {
             this._leftTexture.height
           );
 
-          graphics.tilePosition = new PIXI.Point(offsetRow, 0);
+          graphics.tilePosition = new PIXI.ObservablePoint(
+            () => {}, 
+            self, 
+            offsetRow, 
+            0
+          );
           graphics.texture = this._leftTexture;
           graphics.x = 0;
           graphics.y = -this._leftTexture.height;
@@ -193,7 +198,12 @@ export class Landscape extends RoomObject implements IRoomPart {
           graphics.texture = this._rightTexture;
           graphics.x = 0;
           graphics.y = -this._rightTexture.height;
-          graphics.tilePosition = new PIXI.Point(offsetCol, 0);
+          graphics.tilePosition = new PIXI.ObservablePoint(
+            () => {}, 
+            self, 
+            offsetCol, 
+            0
+          );
           wall.addChild(graphics);
         }
 

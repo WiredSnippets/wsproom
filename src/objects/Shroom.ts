@@ -3,7 +3,7 @@ import { AvatarLoader } from "./avatar/AvatarLoader";
 import { FurnitureLoader } from "./furniture/FurnitureLoader";
 import { FurnitureData } from "./furniture/FurnitureData";
 import { Dependencies } from "./room/Room";
-
+import type * as PIXI from "pixi.js";
 export class Shroom {
   constructor(public readonly dependencies: Dependencies) {}
 
