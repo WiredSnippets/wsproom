@@ -8,6 +8,7 @@ import {
   Shroom,
   loadRoomTexture,
 } from "@wiredsnippets/shroom";
+import { DummyRoom } from "./DummyRoom";
 
 const view = document.querySelector("#root") as HTMLCanvasElement | undefined;
 const container = document.querySelector("#container") as
@@ -18,7 +19,7 @@ if (view == null || container == null) throw new Error("Invalid view");
 const application = new PIXI.Application({
   view,
   antialias: false,
-  resolution: window.devicePixelRatio,
+  resolution: 1,
   autoDensity: true,
   width: 1200,
   height: 900,
@@ -27,7 +28,7 @@ const application = new PIXI.Application({
 
 PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
 
-const shroom = Shroom.create({
+/* const shroom = Shroom.create({
   application,
   resourcePath: "./resources",
   configuration: { placeholder: PIXI.Texture.from("./image.png") },
@@ -59,3 +60,5 @@ room.floorColor = "#eeeeee";
 
 room.addRoomObject(avatar);
 application.stage.addChild(RoomCamera.forScreen(room));
+ */
+const dummy = new DummyRoom(application)

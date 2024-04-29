@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "commonjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "storybook": "start-storybook -s ./public -p 6006",
-    "dump": "shroom dump --url https://www.habbo.com/gamedata/external_variables/326b0a1abf9e2571d541ac05e6eb3173b83bddea --location ./public/resources",
+    "dump": "shroom dump --url https://www.habbo.com/gamedata/external_variables/1 --location ./public/resources",
     "build-storybook": "build-storybook"
   },
   "keywords": [],
@@ -22,7 +23,7 @@
   },
   "dependencies": {
     "@wiredsnippets/shroom": "file:../",
-    "pixi.js": "^5.3.3",
+    "pixi.js": "^6.5.9",
     "react": "^17.0.1",
     "react-dom": "^17.0.1"
   },

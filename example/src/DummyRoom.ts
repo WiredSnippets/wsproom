@@ -12,6 +12,7 @@ import EasyStar from "easystarjs";
 import { MultiStateBehavior } from "./behaviors/MultiStateBehavior";
 import { DiceBehavior } from "./behaviors/DiceBehavior";
 import { FurniInfoBehavior } from "./behaviors/FurniInfoBehavior";
+import PIXI from "pixi.js";
 
 export class DummyRoom {
   private room: Room;
@@ -265,18 +266,6 @@ export class DummyRoom {
       })
     );
 
-    this.room.addRoomObject(
-      new WallFurniture({
-        roomX: 0,
-        roomY: 0,
-        roomZ: 1,
-        direction: 2,
-        type: "window_basic",
-        animation: "0",
-        behaviors: [new FurniInfoBehavior(furnitureData)],
-      })
-    );
-
     this.room.floorTexture = loadRoomTexture("./tile.png");
 
     this.room.onTileClick = async (position) => {
@@ -295,7 +284,7 @@ export class DummyRoom {
     });
 
     this.ownAvatar.onClick = (event) => {
-      event.absorb();
+      event.skip()
     };
 
     this.room.addRoomObject(this.ownAvatar);
