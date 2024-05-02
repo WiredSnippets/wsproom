@@ -10,6 +10,5 @@ node_modules
 /storybook/public/resources
 /storybook/public/images
 /e2e/public/resources
-yarn.lock
 /.idea
 /.parcel-cache

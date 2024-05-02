@@ -98,6 +98,32 @@ export class DummyRoom {
       })
     );
 
+    const walkOff = new FloorFurniture({
+      roomX: 3,
+      roomY: 3,
+      roomZ: 1,
+      direction: 0,
+      type: "wf_trg_walks_off_furni",
+      animation: "0",
+      behaviors: [new MultiStateBehavior({ initialState: 0, count: 6 })],
+    })
+    this.room.addRoomObject(
+      walkOff
+    );
+
+    const teleportTo = new FloorFurniture({
+      roomX: 3,
+      roomY: 3,
+      roomZ: 1.65,
+      direction: 0,
+      type: "wf_act_teleport_to",
+      animation: "0",
+      behaviors: [new MultiStateBehavior({ initialState: 0, count: 6 })],
+    })
+    this.room.addRoomObject(
+      teleportTo
+    );
+
     this.room.addRoomObject(
       new FloorFurniture({
         roomX: 2,

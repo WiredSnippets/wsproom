@@ -84,6 +84,7 @@ export class HitSprite extends PIXI.Sprite implements IEventTarget {
   triggerClick(event: IEventManagerEvent): void {
     event.tag = this._tag;
     this._eventEmitter.trigger("click", event);
+    event.stopPropagation();
   }
 
   triggerPointerDown(event: IEventManagerEvent): void {
