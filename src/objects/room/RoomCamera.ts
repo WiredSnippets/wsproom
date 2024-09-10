@@ -3,7 +3,7 @@ import * as PIXI from "pixi.js";
 import { Room } from "./Room";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const TWEEN = require("tween.js");
+import TWEEN from "tween.js";
 
 export class RoomCamera extends PIXI.Container {
   private _state: RoomCameraState = { type: "WAITING" };
@@ -103,10 +103,13 @@ export class RoomCamera extends PIXI.Container {
   };
 
   private _handlePointerMove = (event: PointerEvent) => {
-    const box = this._room.application.view.getBoundingClientRect();
+    const view = this._room.application.view;
+    if (!view) return;
+
+    const box = view.getBoundingClientRect();
     const position = new PIXI.Point(
       event.clientX - box.x - this.parent.worldTransform.tx,
-      event.clientY - box.y - this.parent.worldTransform.tx
+      event.clientY - box.y - this.parent.worldTransform.ty
     );
 
     switch (this._state.type) {
