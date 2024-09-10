@@ -45,7 +45,7 @@ export class FurnitureLoader implements IFurnitureLoader {
       furnitureData,
       getAssetBundle: async (type, revision) => {
         const bundle = await ShroomAssetBundle.fromUrl(
-          `${resourcePath}/hof_furni/${normalizePath(revision, type)}.shroom`
+          `${resourcePath}/hof_furni/${normalizePath(revision, type)}.wsproom`
         );
         return new JsonFurnitureAssetBundle(bundle);
       },

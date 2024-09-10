@@ -121,7 +121,7 @@ export class AvatarLoader implements IAvatarLoader {
       },
       getEffectBundle: async (effect) => {
         const data = await ShroomAssetBundle.fromUrl(
-          `${resourcePath}/effects/${effect.lib}.shroom`
+          `${resourcePath}/effects/${effect.lib}.wsproom`
         );
         return new AvatarEffectBundle(data);
       },
@@ -134,7 +134,7 @@ export class AvatarLoader implements IAvatarLoader {
         initializeDefaultAvatarDependencies(resourcePath),
       getAssetBundle: async (library) => {
         return ShroomAssetBundle.fromUrl(
-          `${resourcePath}/figure/${library}.shroom`
+          `${resourcePath}/figure/${library}.wsproom`
         );
       },
       getEffectMap: async () => {
@@ -145,7 +145,7 @@ export class AvatarLoader implements IAvatarLoader {
       },
       getEffectBundle: async (effect) => {
         const data = await ShroomAssetBundle.fromUrl(
-          `${resourcePath}/effects/${effect.lib}.shroom`
+          `${resourcePath}/effects/${effect.lib}.wsproom`
         );
         return new AvatarEffectBundle(data);
       },

@@ -58,5 +58,5 @@ export async function dumpFurniture(
   furnitureFile.addFile("index.json", encoder.encode(jsonString));
   furnitureFile.addFile("spritesheet.png", image);
 
-  await fs.writeFile(`${dumpLocation}.shroom`, furnitureFile.toBuffer());
+  await fs.writeFile(`${dumpLocation}.wsproom`, furnitureFile.toBuffer());
 }

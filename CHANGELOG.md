@@ -101,9 +101,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Mouse events now don't trigger `onTileClick` when `stopPropagation` is called on a avatar or furniture above it
 - **BREAKING:**: Asset dumping & loading
 
-  Assets now get dumped into `.shroom` files, instead of individual files. Rerun the `shroom dump` command to regenerate those assets.
+  Assets now get dumped into `.wsproom` files, instead of individual files. Rerun the `wsproom dump` command to regenerate those assets.
 
-- Allow skipping the download on `shroom dump` when omitting the `--url` parameter
+- Allow skipping the download on `wsproom dump` when omitting the `--url` parameter
 
 ### Removed
 

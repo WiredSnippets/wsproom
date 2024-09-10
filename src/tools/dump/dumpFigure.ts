@@ -32,5 +32,5 @@ export async function dumpFigure(
     file.addFile(baseName, buffer);
   });
 
-  await fs.writeFile(`${dumpLocation}.shroom`, file.toBuffer());
+  await fs.writeFile(`${dumpLocation}.wsproom`, file.toBuffer());
 }
