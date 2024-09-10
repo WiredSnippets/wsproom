@@ -2,6 +2,7 @@ import { notNullOrUndefined } from "../../../util/notNullOrUndefined";
 import { HitTexture } from "../../hitdetection/HitTexture";
 import { IFurnitureAssetsData } from "../data/interfaces/IFurnitureAssetsData";
 import { IFurnitureIndexData } from "../data/interfaces/IFurnitureIndexData";
+import { IFurnitureLogicData } from "../data/interfaces/IFurnitureLogicData";
 import { IFurnitureVisualizationData } from "../data/interfaces/IFurnitureVisualizationData";
 import { FurnitureExtraData } from "../FurnitureExtraData";
 import { IFurnitureAssetBundle } from "../IFurnitureAssetBundle";
@@ -23,6 +24,7 @@ export type LoadFurniResult = {
   getDrawDefinition: GetFurniDrawDefinition;
   getTexture: (name: string) => HitTexture | undefined;
   getExtraData: () => FurnitureExtraData;
+  logicData: IFurnitureLogicData;
   directions: number[];
   visualizationData: IFurnitureVisualizationData;
 };
@@ -34,8 +36,11 @@ export async function loadFurni(
   const assetsData = await bundle.getAssets();
   const indexData = await bundle.getIndex();
   const visualizationData = await bundle.getVisualization();
+  const logicData = await bundle.getLogic();
   const validDirections = visualizationData.getDirections(64);
   const sortedDirections = [...validDirections].sort((a, b) => a - b);
+
+  console.log(logicData);
 
   const assetMap = assetsData.getAssets();
 
@@ -81,6 +86,7 @@ export async function loadFurni(
     getExtraData: () => {
       return indexData;
     },
+    logicData,
     visualizationData,
     directions: sortedDirections,
   };

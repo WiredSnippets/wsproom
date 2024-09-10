@@ -5,6 +5,7 @@ import { FurnitureVisualizationData } from "../../objects/furniture/data/Furnitu
 import { FurnitureIndexData } from "../../objects/furniture/data/FurnitureIndexData";
 import { FurnitureAssetsData } from "../../objects/furniture/data/FurnitureAssetsData";
 import { ShroomAssetBundle } from "../../assets/ShroomAssetBundle";
+import { FurnitureLogicData } from "../../objects/furniture/data/FurnitureLogicData";
 
 export async function dumpFurniture(
   baseName: string,
@@ -29,16 +30,26 @@ export async function dumpFurniture(
     "utf-8"
   );
 
+  const logicData = await fs.readFile(
+    path.join(dumpLocation, `${baseName}_logic.bin`),
+    "utf-8"
+  );
+
   const visualization = new FurnitureVisualizationData(visualizationData);
   const index = new FurnitureIndexData(indexData);
   const assets = new FurnitureAssetsData(assetsData);
+  const logic = new FurnitureLogicData(logicData);
 
   const data = {
     spritesheet: json,
     visualization: visualization.toJson(),
     index: index.toJson(),
     assets: assets.toJson(),
+    logic: logic.toJson(),
   };
+
+  const logictest = logic.getLogics();
+  console.log(logictest);
 
   const jsonString = JSON.stringify(data);
   const encoder = new TextEncoder();

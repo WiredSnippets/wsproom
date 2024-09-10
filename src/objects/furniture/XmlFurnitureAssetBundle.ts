@@ -2,9 +2,11 @@ import { IAssetBundle } from "../../assets/IAssetBundle";
 import { HitTexture } from "../hitdetection/HitTexture";
 import { FurnitureAssetsData } from "./data/FurnitureAssetsData";
 import { FurnitureIndexData } from "./data/FurnitureIndexData";
+import { FurnitureLogicData } from "./data/FurnitureLogicData";
 import { FurnitureVisualizationData } from "./data/FurnitureVisualizationData";
 import { IFurnitureAssetsData } from "./data/interfaces/IFurnitureAssetsData";
 import { IFurnitureIndexData } from "./data/interfaces/IFurnitureIndexData";
+import { IFurnitureLogicData } from "./data/interfaces/IFurnitureLogicData";
 import { IFurnitureVisualizationData } from "./data/interfaces/IFurnitureVisualizationData";
 import { IFurnitureAssetBundle } from "./IFurnitureAssetBundle";
 
@@ -32,5 +34,10 @@ export class XmlFurnitureAssetBundle implements IFurnitureAssetBundle {
   async getIndex(): Promise<IFurnitureIndexData> {
     const data = await this._assetBundle.getString(`index.bin`);
     return new FurnitureIndexData(data);
+  }
+
+  async getLogic(): Promise<IFurnitureLogicData> {
+    const data = await this._assetBundle.getString(`${this._type}_logic.bin`);
+    return new FurnitureLogicData(data);
   }
 }

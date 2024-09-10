@@ -11,17 +11,27 @@ import { IFurnitureVisualizationData } from "./data/interfaces/IFurnitureVisuali
 import { JsonFurnitureAssetsData } from "./data/JsonFurnitureAssetsData";
 import { JsonFurnitureVisualizationData } from "./data/JsonFurnitureVisualizationData";
 import { IFurnitureAssetBundle } from "./IFurnitureAssetBundle";
+import { IFurnitureLogicData } from "./data/interfaces/IFurnitureLogicData";
+import { JsonFurnitureLogicData } from "./data/JsonFurnitureLogicData";
+import { FurnitureLogicData } from "./data/FurnitureLogicData";
 
 export class JsonFurnitureAssetBundle implements IFurnitureAssetBundle {
   private _data: Promise<{
     assets: IFurnitureAssetsData;
     visualization: IFurnitureVisualizationData;
+    logic: IFurnitureLogicData;
     index: IFurnitureIndexData;
     spritesheet: PIXI.Spritesheet;
   }>;
 
   constructor(private _assetBundle: IAssetBundle) {
     this._data = this._load();
+  }
+
+  async getLogic(): Promise<IFurnitureLogicData> {
+    const { logic } = await this._data;
+
+    return logic;
   }
 
   async getAssets(): Promise<IFurnitureAssetsData> {
@@ -72,6 +82,7 @@ export class JsonFurnitureAssetBundle implements IFurnitureAssetBundle {
       visualization: new JsonFurnitureVisualizationData(json.visualization),
       index: json.index,
       spritesheet,
+      logic: new JsonFurnitureLogicData(new FurnitureLogicData(JSON.stringify(json.logic))),
     };
   }
 }
