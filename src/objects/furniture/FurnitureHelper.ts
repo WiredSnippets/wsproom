@@ -24,6 +24,26 @@ export class FurnitureHelper {
     });
   }
 
+  public static getFurniIcon(furniId: string, shroom: Shroom): Promise<HTMLImageElement> {
+    return new Promise((resolve, reject) => {
+      const container = new PIXI.Container();
+
+      BaseFurniture.fromShroom(shroom, container, {
+        animation: "0",
+        direction: 2,
+        type: { type: furniId, kind: "type" },
+        onLoad: () => {
+          const image = shroom.dependencies.application.renderer.plugins.extract.image(container);
+
+          image.onload = () => {
+            resolve(image);
+            container.destroy();
+          };
+        },
+      });
+  });
+  }
+
   public static async getFurniOptions(furni: IFurnitureExtended, shroom: Shroom): Promise<FurniOptions | undefined> {
     if (!furni.type) return; // If Furniture Type == Undefined, Return Undefined
     const info = await shroom.dependencies.furnitureData?.getInfo(furni.type);

@@ -1,7 +1,8 @@
-export {
-  FurniDrawDefinition as DrawDefinition,
+export type {
   FurniDrawPart as DrawPart,
 } from "./DrawDefinition";
+export type { FurniDrawDefinition as DrawDefinition } from "./DrawDefinition";
+
 export * from "./visualization/parseVisualization";
 
 export function getCharFromLayerIndex(index: number) {

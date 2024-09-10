@@ -6,10 +6,14 @@ export { FloorFurniture } from "./objects/furniture/FloorFurniture";
 export { WallFurniture } from "./objects/furniture/WallFurniture";
 export { Room } from "./objects/room/Room";
 export { RoomCamera } from "./objects/room/RoomCamera";
+export { Pathfinding } from "./objects/room/Pathfinding";
 export { loadRoomTexture } from "./util/loadRoomTexture";
 export { parseTileMapString } from "./util/parseTileMapString";
-export { IFurniture, IFurnitureBehavior } from "./objects/furniture/IFurniture";
-export { IFurnitureData, FurnitureInfo } from "./interfaces/IFurnitureData";
+export type { IFurnitureBehavior } from "./objects/furniture/IFurniture";
+export type { IFurniture } from "./objects/furniture/IFurniture";
+export type { IFurnitureExtended } from "./objects/furniture/IFurniture";
+export type { FurnitureInfo } from "./interfaces/IFurnitureData";
+export type { IFurnitureData } from "./interfaces/IFurnitureData";
 export { FurnitureData } from "./objects/furniture/FurnitureData";
 export { FurnitureHelper } from "./objects/furniture/FurnitureHelper";
 export { Shroom } from "./objects/Shroom";
@@ -30,7 +34,7 @@ export {
 } from "./objects/furniture/visualization/BasicFurnitureVisualization";
 export { FurnitureBottleVisualization } from "./objects/furniture/visualization/FurnitureBottleVisualization";
 export { FurnitureVisualization } from "./objects/furniture/visualization/FurnitureVisualization";
-export { IFurnitureVisualization } from "./objects/furniture/IFurnitureVisualization";
+export type { IFurnitureVisualization } from "./objects/furniture/IFurnitureVisualization";
 
 export { WallLeft } from "./objects/room/parts/WallLeft";
 export { WallRight } from "./objects/room/parts/WallRight";

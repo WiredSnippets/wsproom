@@ -1,4 +1,5 @@
-import { createLookServer, LookServer } from "./util";
+import { createLookServer } from "./util";
+import type { LookServer } from "./util";
 import { LookOptions } from "./util/createLookServer";
 import {
   AvatarLoaderResult,

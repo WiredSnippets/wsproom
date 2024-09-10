@@ -109,7 +109,7 @@ export async function createSpritesheet(
   const json = {
     // Global data about the generated file
     meta: {
-      app: "Shroom",
+      app: "WiredSnippets",
       version: 0,
       size: {
         w: width,

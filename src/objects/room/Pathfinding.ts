@@ -1,11 +1,11 @@
 import { Avatar, FloorFurniture, FurnitureData, Room } from "../../";
 import { FurnitureInfo } from "../../interfaces/IFurnitureData";
-import { RoomPosition } from "../..//types/RoomPosition";
-import { TileType } from "../..//types/TileType";
+import { RoomPosition } from "../../types/RoomPosition";
+import { TileType } from "../../types/TileType";
 
 import * as EasyStar from "easystarjs";
 
-export default class Pathfinding {
+export class Pathfinding {
 
     public grid: number[][] = [];
     public baseGrid: number[][];
