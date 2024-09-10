@@ -1,9 +1,7 @@
 import * as PIXI from "pixi.js";
 
 import { Room } from "./Room";
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-import TWEEN from "tween.js";
+import TWEEN from '@tweenjs/tween.js';
 
 export class RoomCamera extends PIXI.Container {
   private _state: RoomCameraState = { type: "WAITING" };
@@ -201,10 +199,10 @@ export class RoomCamera extends PIXI.Container {
     const tween = new TWEEN.Tween(newPos)
       .to({ x: 0, y: 0 }, duration)
       .easing(TWEEN.Easing.Quadratic.Out) // Use an easing function to make the animation smooth.
-      .onUpdate((value: number) => {
-        this._animatedOffsets = newPos;
+      .onUpdate((object: { x: number; y: number }, elapsed: number) => {
+        this._animatedOffsets = object;
 
-        if (value >= 1) {
+        if (elapsed >= 1) {
           this._state = { type: "WAITING" };
         }
 
