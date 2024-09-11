@@ -48,9 +48,6 @@ export async function dumpFurniture(
     logic: logic.toJson(),
   };
 
-  const logictest = logic.getLogics();
-  console.log(logictest);
-
   const jsonString = JSON.stringify(data);
   const encoder = new TextEncoder();
 

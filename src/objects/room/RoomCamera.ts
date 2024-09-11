@@ -101,7 +101,10 @@ export class RoomCamera extends PIXI.Container {
   };
 
   private _handlePointerMove = (event: PointerEvent) => {
-    const view = this._room.application.view;
+    const application = this._room.application;
+    if (!application) return;
+
+    const view = application.view;
     if (!view) return;
 
     const box = view.getBoundingClientRect();

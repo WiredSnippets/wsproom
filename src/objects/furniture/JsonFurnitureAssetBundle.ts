@@ -82,7 +82,7 @@ export class JsonFurnitureAssetBundle implements IFurnitureAssetBundle {
       visualization: new JsonFurnitureVisualizationData(json.visualization),
       index: json.index,
       spritesheet,
-      logic: new JsonFurnitureLogicData(new FurnitureLogicData(JSON.stringify(json.logic))),
+      logic: new JsonFurnitureLogicData(json.logic),
     };
   }
 }

@@ -40,8 +40,6 @@ export async function loadFurni(
   const validDirections = visualizationData.getDirections(64);
   const sortedDirections = [...validDirections].sort((a, b) => a - b);
 
-  console.log(logicData);
-
   const assetMap = assetsData.getAssets();
 
   const loadTextures = async () => {
@@ -66,6 +64,15 @@ export async function loadFurni(
   };
   const textures = await loadTextures();
 
+  // Retrocompatibility with old logic data
+  let updatedLogicData = logicData;
+  if (logicData.getLogic() && logicData !== undefined) {
+    // @ts-ignore
+    const key = Object.keys(logicData.getLogic())[0];
+    // @ts-ignore
+    updatedLogicData = logicData.getLogic()[key];
+  }
+
   return {
     getDrawDefinition: (direction: number, animation?: string) =>
       getFurniDrawDefinition(
@@ -86,7 +93,7 @@ export async function loadFurni(
     getExtraData: () => {
       return indexData;
     },
-    logicData,
+    logicData: updatedLogicData,
     visualizationData,
     directions: sortedDirections,
   };

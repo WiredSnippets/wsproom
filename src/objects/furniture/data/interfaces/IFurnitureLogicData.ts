@@ -1,6 +1,5 @@
 export interface IFurnitureLogicData {
-  getLogic(type: string): FurnitureLogic | undefined;
-  getLogics(): FurnitureLogic[];
+  getLogic(): FurnitureLogic | undefined;
 }
 
 export interface FurnitureLogic {

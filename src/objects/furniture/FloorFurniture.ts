@@ -254,7 +254,7 @@ export class FloorFurniture
   rotate() {
     return this._baseFurniture.rotate;
   }
-  
+
   /**
    * The x position of the avatar in the room.
    * The y-Axis is marked in the following graphic:
@@ -319,6 +319,10 @@ export class FloorFurniture
   set roomZ(value) {
     this._roomZ = value;
     this._updatePosition();
+  }
+
+  public get height() {
+    return this._baseFurniture.height;
   }
 
   public get visualization() {

@@ -207,6 +207,17 @@ export class BaseFurniture implements IFurnitureEventHandlers, IEventGroup {
     return this._dependencies != null;
   }
 
+  public get height(): Promise<number> {
+    return this._loadFurniResultPromise.then((result) => {
+      // TODO-DEV: Fix this
+      return (result.logicData as any)?.dimensions.z;
+    });
+  }
+
+  public set height(value) {
+    this.height = value;
+  }
+
   public get extradata() {
     return this._loadFurniResultPromise.then((result) => {
       return result.getExtraData();
@@ -328,12 +339,12 @@ export class BaseFurniture implements IFurnitureEventHandlers, IEventGroup {
   }
 
   public async rotate() {
-    if (!this._validDirections) { 
+    if (!this._validDirections) {
       this._validDirections = this._loadFurniResult?.directions || await this.validDirections;
     }
-    
+
     const currIndex = this._validDirections?.indexOf(this._direction);
-    this.direction = getDirectionForFurniture(this._validDirections[currIndex +1], this._validDirections);
+    this.direction = getDirectionForFurniture(this._validDirections[currIndex + 1], this._validDirections);
   }
 
   public get animation() {
@@ -525,7 +536,9 @@ export class BaseFurniture implements IFurnitureEventHandlers, IEventGroup {
       this._resolveLoadFurniResult && this._resolveLoadFurniResult(result);
       this._updateFurniture();
 
-      this._onLoad && this._onLoad();
+      if (this._onLoad) {
+        this._onLoad();
+      }
     });
 
     this._updateFurniture();
@@ -572,6 +585,8 @@ export class BaseFurniture implements IFurnitureEventHandlers, IEventGroup {
 
     return baseAlpha;
   }
+
+  public onLoad: (() => void) | undefined;
 }
 
 export interface IFurnitureRoomVisualization {

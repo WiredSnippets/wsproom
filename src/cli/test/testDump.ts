@@ -10,7 +10,7 @@ const jsdom = new JSDOM();
 global.DOMParser = jsdom.window.DOMParser;
 
 const main = async () => {
-  await extractSwfs(logger, "Furniture", ["./src/libs/@wiredsnippets/src/cli/test/wf_blob2.swf"], dumpFurniture);
+  await extractSwfs(logger, "Furniture", ["./src/libs/@wiredsnippets/src/cli/test/wf_trg_says_something.swf"], dumpFurniture);
 };
 
 main();

@@ -8,7 +8,7 @@ import {
 export class FurnitureLogicData
   extends XmlData
   implements IFurnitureLogicData {
-  private _logics = new Map<string, FurnitureLogic>();
+  private _logic: FurnitureLogic | undefined;
 
   constructor(xml: string) {
     super(xml);
@@ -29,7 +29,7 @@ export class FurnitureLogicData
     );
     const particleSystemElement = objectDataElement.querySelector("particlesystem");
 
-    this._logics.set(type, {
+    this._logic = {
       type,
       dimensions: {
         x: Number(dimensionsElement?.getAttribute("x") ?? 0),
@@ -40,34 +40,18 @@ export class FurnitureLogicData
       particleSystemSize: particleSystemElement
         ? Number(particleSystemElement.getAttribute("size"))
         : undefined,
-    });
+    };
   }
 
-  static async fromUrl(url: string) {
-    const response = await fetch(url);
-    const text = await response.text();
+  toJson(): FurnitureLogicJson | undefined {
 
-    return new FurnitureLogicData(text);
+    if(!this._logic) return undefined;
+
+    return this._logic;
   }
 
-  toJson(): FurnitureLogicJson {
-    const logics = this.getLogics();
-    const assetsObject: { [key: string]: FurnitureLogic } = {};
-
-
-    logics.forEach((logic) => {
-      assetsObject[logic.type] = logic;
-    });
-
-    return assetsObject;
-  }
-
-  getLogic(type: string): FurnitureLogic | undefined {
-    return this._logics.get(type);
-  }
-
-  getLogics() {
-    return Array.from(this._logics.values());
+  getLogic(): FurnitureLogic | undefined {
+    return this._logic;
   }
 
 }

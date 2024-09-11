@@ -1,14 +1,11 @@
-import { FurnitureLogicData } from "./FurnitureLogicData";
+import { FurnitureLogicJson } from "./FurnitureLogicJson";
 import { FurnitureLogic, IFurnitureLogicData } from "./interfaces/IFurnitureLogicData";
 
 export class JsonFurnitureLogicData implements IFurnitureLogicData {
-  constructor(private _logic: FurnitureLogicData) {}
+  constructor(private _logic: FurnitureLogicJson) {}
 
-  getLogic(type: string): FurnitureLogic | undefined {
-    return this._logic.getLogic(type);
-  }
-  getLogics(): FurnitureLogic[] {
-    return this._logic.getLogics();
+  getLogic(): FurnitureLogic | undefined {
+    return {...this._logic};
   }
 
 }
