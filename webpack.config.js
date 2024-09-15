@@ -10,6 +10,9 @@ module.exports = {
       filename: "[name].[fullhash].js",
       path: path.resolve(__dirname, "dist/webpack"),
     },
+    externals: {
+      '@tweenjs/tween.js': 'TWEEN'
+    },
     devtool: "source-map",
     resolve: {
       extensions: [".tsx", ".ts", ".js", ".mjs"],
