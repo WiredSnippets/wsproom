@@ -1,18 +1,13 @@
 import * as PIXI from "pixi.js";
 
 import { ClickHandler } from "../hitdetection/ClickHandler";
-import { FurniDrawPart } from "./util/DrawDefinition";
 import { IFurnitureEventHandlers } from "./util/IFurnitureEventHandlers";
 import { LoadFurniResult } from "./util/loadFurni";
-import { HitTexture } from "../hitdetection/HitTexture";
 import { MaskNode } from "../../interfaces/IRoomVisualization";
-import { HighlightFilter } from "./filter/HighlightFilter";
 import {
   FurnitureFetch,
   IFurnitureLoader,
 } from "../../interfaces/IFurnitureLoader";
-import { FurnitureAsset } from "./data/interfaces/IFurnitureAssetsData";
-import { FurnitureLayer } from "./data/interfaces/IFurnitureVisualizationData";
 import { IAnimationTicker } from "../../interfaces/IAnimationTicker";
 import { IRoomContext } from "../../interfaces/IRoomContext";
 import { Shroom } from "../Shroom";
@@ -29,8 +24,6 @@ import {
 import { NOOP_EVENT_MANAGER } from "../events/EventManager";
 import { FurnitureVisualizationView } from "./FurnitureVisualizationView";
 import { EventOverOutHandler } from "../events/EventOverOutHandler";
-
-const highlightFilter = new HighlightFilter(0x999999, 0xffffff);
 
 type MaskIdGetter = (direction: number) => string | undefined;
 

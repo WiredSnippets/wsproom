@@ -20,7 +20,7 @@ import {
 import { FurniDrawDefinition, FurniDrawPart } from "./util/DrawDefinition";
 import { LoadFurniResult } from "./util/loadFurni";
 
-const highlightFilter = new HighlightFilter(0x999999, 0xffffff);
+const highlightFilter = new HighlightFilter(0x7dabab, 0xffffff, 1);
 
 export class FurnitureVisualizationView
   implements IFurnitureVisualizationView, IBaseFurniture, IEventGroup {
@@ -424,9 +424,9 @@ class FurnitureVisualizationLayer
     sprite.hitTexture = texture;
 
     // Apply asset styling
-    const highlight = this._highlight && layer?.ink == null && !shadow && !mask;
+    const highlight = this._highlight /* && layer?.ink == null */ && !shadow && !mask;
 
-    if (highlight) {
+    if(highlight) {
       sprite.filters = [highlightFilter];
     } else {
       sprite.filters = [];

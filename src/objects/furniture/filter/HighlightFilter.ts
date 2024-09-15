@@ -1,5 +1,7 @@
 import * as PIXI from "pixi.js";
 
+PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
+
 export class HighlightFilter extends PIXI.Filter {
   constructor(
     private _backgroundColor: number, 
@@ -56,8 +58,11 @@ void main(void) {
             gl_FragColor = borderColor;
         } else {
             vec4 modifiedBackgroundColor = vec4(backgroundColor.rgb * backgroundColor.a, backgroundColor.a);
-            gl_FragColor = mix(currentColor, modifiedBackgroundColor, 0.6);
+            gl_FragColor = mix(currentColor, modifiedBackgroundColor, 0.7);
+            gl_FragColor.a = max(currentColor.a, modifiedBackgroundColor.a);
         }
+    } else {
+        gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0); // Transparente para píxeles completamente transparentes
     }
 }
 `;
