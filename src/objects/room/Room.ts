@@ -302,7 +302,7 @@ export class Room
         new ParsedTileMap(tileMap)
     );
 
-    const currentVisualization = this.children[0] as RoomModelVisualization;
+      const currentVisualization = this.children[0] as RoomModelVisualization;
 
     [
         "hideWalls",
@@ -316,13 +316,17 @@ export class Room
 
     this.removeChildAt(0);
 
-    this.addChild(this._visualization);
 
     // refresh visualization data
     this.floorColor = this.floorColor;
     this.wallColor = this.wallColor;
     this.floorTexture = this.floorTexture;
     this.wallTexture = this.wallTexture;
+
+    if (this._roomObjectContainer.context) {
+      this._roomObjectContainer.context.visualization = this._visualization;
+    }
+    this.addChild(this._visualization);
   }
 
   getParsedTileTypes(): ParsedTileType[][] {
