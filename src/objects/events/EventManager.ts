@@ -21,6 +21,7 @@ export class EventManager {
   private _pointerDownElements: Set<EventManagerNode> = new Set();
   private _onBackgroundClick: ((event: InteractionEvent) => void) | undefined = undefined;
 
+
   public set onBackgroundClick(value: ((event: InteractionEvent) => void) | undefined) {
     this._onBackgroundClick = value;
   }

@@ -1,12 +1,13 @@
 {
   "name": "@wiredsnippets/shroom",
-  "version": "0.7.8-rc.5",
+  "version": "0.8.4-rc.1",
   "main": "dist/index.js",
   "license": "LGPL-3.0-or-later",
   "repository": {
     "type": "git",
     "url": "https://github.com/wiredsnippets/shroom.git"
   },
+
   "devDependencies": {
     "@types/axios": "^0.14.0",
     "@types/bluebird": "^3.5.33",
@@ -16,7 +17,7 @@
     "@types/jsdom": "^16.2.6",
     "@types/node": "^14.14.13",
     "@types/node-fetch": "^2.5.7",
-    "@types/rbush": "^3.0.0",
+    "@types/rbush": "^4.0.0",
     "@types/react": "^16.9.56",
     "@types/tween.js": "^18.6.1",
     "@types/ws": "^7.4.0",
@@ -54,21 +55,21 @@
     "bin-pack": "^1.0.2",
     "bluebird": "^3.7.2",
     "bytebuffer": "^5.0.1",
-    "canvas": "^2.6.1",
+    "canvas": "^3.1.0",
     "chalk": "^4.1.0",
     "detect-edges": "^1.0.1",
     "easystarjs": "^0.4.4",
     "events": "^3.2.0",
-    "frame-stream": "^2.0.3",
-    "glob": "^7.1.6",
-    "ink": "^3.0.8",
+    "frame-stream": "2.0.3",
+    "glob": "^11.0.1",
+    "ink": "^5.1.0",
     "jsdom": "^16.4.0",
     "jszip": "^3.5.0",
     "node-fetch": "^2.6.1",
     "parcel": "^2.9.0",
     "pixi-stats": "^1.1.2",
     "quadtree-lib": "^1.0.9",
-    "rbush": "^3.0.1",
+    "rbush": "^4.0.1",
     "react": "^18.2.0",
     "rxjs": "^6.6.3",
     "stream": "0.0.2",
@@ -78,7 +79,7 @@
     "tween.js": "^16.6.0",
     "ws": "^7.4.2",
     "xml2js": "^0.4.23",
-    "yargs": "^16.2.0"
+    "yargs": "^17.7.2"
   },
   "peerDependencies": {
     "pixi.js": "6.5.9"

@@ -2,7 +2,7 @@ import { getExternalVariableUrls } from "./getExternalVariableUrls";
 import { downloadAllFiles } from "./downloadAllFiles";
 import { Logger } from "./Logger";
 import { promisify } from "util";
-import g from "glob";
+import  g from "glob";
 import { extractSwfs } from "./extractSwfs";
 import { promises as fs } from "fs";
 import { FigureMapData } from "../../objects/avatar/data/FigureMapData";
@@ -10,7 +10,7 @@ import { createOffsetFile } from "./createOffsetFile";
 import { dumpFigure } from "./dumpFigure";
 import { dumpFurniture } from "./dumpFurniture";
 
-export const glob = promisify(g);
+export const glob = promisify(g.Glob);
 
 const separator = "=========================================";
 
