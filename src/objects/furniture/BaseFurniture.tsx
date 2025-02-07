@@ -200,10 +200,10 @@ export class BaseFurniture implements IFurnitureEventHandlers, IEventGroup {
     return this._dependencies != null;
   }
 
-  public get height(): Promise<number> {
+  public get height(): Promise<number | undefined> {
     return this._loadFurniResultPromise.then((result) => {
       // TODO-DEV: Fix this
-      return (result.logicData as any)?.dimensions.z;
+      return result.logicData?.dimensions.z;
     });
   }
 

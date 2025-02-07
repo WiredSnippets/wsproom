@@ -1,8 +1,6 @@
 import { notNullOrUndefined } from "../../../util/notNullOrUndefined";
 import { HitTexture } from "../../hitdetection/HitTexture";
-import { IFurnitureAssetsData } from "../data/interfaces/IFurnitureAssetsData";
-import { IFurnitureIndexData } from "../data/interfaces/IFurnitureIndexData";
-import { IFurnitureLogicData } from "../data/interfaces/IFurnitureLogicData";
+import { FurnitureLogic } from "../data/interfaces/IFurnitureLogicData";
 import { IFurnitureVisualizationData } from "../data/interfaces/IFurnitureVisualizationData";
 import { FurnitureExtraData } from "../FurnitureExtraData";
 import { IFurnitureAssetBundle } from "../IFurnitureAssetBundle";
@@ -24,7 +22,7 @@ export type LoadFurniResult = {
   getDrawDefinition: GetFurniDrawDefinition;
   getTexture: (name: string) => HitTexture | undefined;
   getExtraData: () => FurnitureExtraData;
-  logicData: IFurnitureLogicData;
+  logicData: FurnitureLogic | undefined;
   directions: number[];
   visualizationData: IFurnitureVisualizationData;
 };
@@ -64,15 +62,6 @@ export async function loadFurni(
   };
   const textures = await loadTextures();
 
-  // Retrocompatibility with old logic data
-  let updatedLogicData = logicData;
-  if (logicData.getLogic() && logicData !== undefined) {
-    // @ts-ignore
-    const key = Object.keys(logicData.getLogic())[0];
-    // @ts-ignore
-    updatedLogicData = logicData.getLogic()[key];
-  }
-
   return {
     getDrawDefinition: (direction: number, animation?: string) =>
       getFurniDrawDefinition(
@@ -93,7 +82,7 @@ export async function loadFurni(
     getExtraData: () => {
       return indexData;
     },
-    logicData: updatedLogicData,
+    logicData: logicData.getLogic(),
     visualizationData,
     directions: sortedDirections,
   };
