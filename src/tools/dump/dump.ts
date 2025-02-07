@@ -2,7 +2,7 @@ import { getExternalVariableUrls } from "./getExternalVariableUrls";
 import { downloadAllFiles } from "./downloadAllFiles";
 import { Logger } from "./Logger";
 import { promisify } from "util";
-import  g from "glob";
+import  {glob} from "glob";
 import { extractSwfs } from "./extractSwfs";
 import { promises as fs } from "fs";
 import { FigureMapData } from "../../objects/avatar/data/FigureMapData";
@@ -10,15 +10,13 @@ import { createOffsetFile } from "./createOffsetFile";
 import { dumpFigure } from "./dumpFigure";
 import { dumpFurniture } from "./dumpFurniture";
 
-export const glob = promisify(g.Glob);
-
 const separator = "=========================================";
 
 const logger: Logger = console;
 
 export async function dump({ externalVariables, downloadPath }: Options) {
   console.log(separator);
-  console.log("Shroom Asset Dumper");
+  console.log("WSProom Asset Dumper");
   console.log(separator);
 
   let stepCounter = 0;
