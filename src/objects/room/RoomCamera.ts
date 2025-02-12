@@ -75,6 +75,8 @@ export class RoomCamera extends PIXI.Container {
   }
 
   private _handlePointerUp = (event: PointerEvent) => {
+    if (event.altKey || event.shiftKey || event.ctrlKey) return; // Block all modifier keys.
+    
     if (this._state.type === "WAITING" || this._state.type === "ANIMATE_ZERO")
       return;
 
@@ -92,6 +94,10 @@ export class RoomCamera extends PIXI.Container {
   };
 
   private _handlePointerDown = (event: PIXI.InteractionEvent) => {
+    if (event.data.originalEvent.altKey || 
+        event.data.originalEvent.shiftKey || 
+        event.data.originalEvent.ctrlKey) return; // Block all modifier keys.
+    
     const position = event.data.getLocalPosition(this.parent);
     if (this._state.type === "WAITING") {
       this._enterWaitingForDistance(position, event.data.pointerId);
