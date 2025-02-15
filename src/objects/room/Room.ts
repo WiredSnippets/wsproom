@@ -324,6 +324,7 @@ export class Room
         newVisualization[property] = this._visualization[property];
     });
 
+    this._eventManager.reset();
     this.removeChildAt(0);
     this._visualization.destroy();
 

@@ -20,10 +20,17 @@ export class EventManager {
   private _currentOverElements: Set<EventManagerNode> = new Set();
   private _pointerDownElements: Set<EventManagerNode> = new Set();
   private _onBackgroundClick: ((event: InteractionEvent) => void) | undefined = undefined;
-
+  private _targets: Set<IEventTarget> = new Set();
+  private _currentTarget: IEventTarget | undefined;
 
   public set onBackgroundClick(value: ((event: InteractionEvent) => void) | undefined) {
     this._onBackgroundClick = value;
+  }
+
+  public reset(): void {
+    this._targets.forEach(target => this.remove(target));
+    this._targets.clear();
+    this._currentTarget = undefined;
   }
 
   click(event: InteractionEvent, x: number, y: number) {
@@ -134,6 +141,7 @@ export class EventManager {
 
     const node = new EventManagerNode(target, this._bush);
     this._nodes.set(target, node);
+    this._targets.add(target);
 
     return node;
   }
@@ -143,6 +151,7 @@ export class EventManager {
     if (current == null) throw new Error("Target isn't in the event manager");
 
     current.destroy();
+    this._targets.delete(target);
   }
 
   private _performHitTest(x: number, y: number) {
