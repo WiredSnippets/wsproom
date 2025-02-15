@@ -295,38 +295,54 @@ export class Room
     return this._eventManager;
   }
 
-  changeTileMap (tileMap : TileType[][]) : void {
-    this._visualization = new RoomModelVisualization(
+  public changeTileMap (tileMap : TileType[][]) : void {
+    const currentObjects = [...this._roomObjectContainer.roomObjects];
+    
+    const newVisualization = new RoomModelVisualization(
         this._eventManager,
         this.application,
         new ParsedTileMap(tileMap)
     );
 
-      const currentVisualization = this.children[0] as RoomModelVisualization;
-
     [
         "hideWalls",
+        "hideFloor",
+        "hideTileCursor",
         "wallDepth",
         "tileHeight",
         "wallHeight",
+        "wallTexture",
+        "floorTexture",
+        "wallLeftColor",
+        "wallRightColor",
+        "wallTopColor",
+        "tileLeftColor",
+        "tileRightColor",
+        "tileTopColor"
     ].forEach(property => {
         // @ts-ignore
-        this._visualization[property] = currentVisualization[property];
+        newVisualization[property] = this._visualization[property];
     });
 
     this.removeChildAt(0);
+    this._visualization.destroy();
 
-
-    // refresh visualization data
-    this.floorColor = this.floorColor;
-    this.wallColor = this.wallColor;
-    this.floorTexture = this.floorTexture;
-    this.wallTexture = this.wallTexture;
+    this._visualization = newVisualization;
+    this.addChild(this._visualization);
 
     if (this._roomObjectContainer.context) {
       this._roomObjectContainer.context.visualization = this._visualization;
+      this._roomObjectContainer.context.landscapeContainer = this._visualization;
     }
-    this.addChild(this._visualization);
+
+    currentObjects.forEach(object => {
+      this._roomObjectContainer.removeRoomObject(object);
+      this.addRoomObject(object);
+    });
+
+    this._visualization.onTileClick.subscribe((value) => {
+      this.onTileClick && this.onTileClick(value.position, value.event);
+    });
   }
 
   getParsedTileTypes(): ParsedTileType[][] {
