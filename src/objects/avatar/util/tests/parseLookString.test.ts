@@ -22,3 +22,20 @@ test("parseLookString parses look string", () => {
     )
   ).toEqual(expected);
 });
+
+test("parseLookString parse unhandled parts", () => {
+  const expected: ParsedLook = new Map();
+  expected.set("hd", { setId: 5042, colorId: 10 });
+  expected.set("ch", { setId: 255, colorId: 66 });
+  expected.set("lg", { setId: 280, colorId: 110 });
+  expected.set("sh", { setId: 305, colorId: 62 });
+  expected.set("ha", { setId: 1012, colorId: 110 });
+  expected.set("hr", { setId: 828, colorId: 61 });
+
+  expect(
+    parseLookString(
+      "hd-5042-10.ch-255-66.lg-280-110.sh-305-62.ha-1012-110.hr-828-61"
+    )
+  ).toEqual(expected);
+});
+

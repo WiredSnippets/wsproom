@@ -1,6 +1,6 @@
 {
   "name": "@wiredsnippets/shroom",
-  "version": "0.8.4-rc.6",
+  "version": "0.8.5",
   "main": "dist/index.js",
   "license": "LGPL-3.0-or-later",
   "repository": {
@@ -66,7 +66,7 @@
     "jszip": "^3.5.0",
     "node-fetch": "^2.6.1",
     "parcel": "^2.9.0",
-    "pixi-stats": "^1.1.2",
+    "pixi-stats": "5.1.7",
     "quadtree-lib": "^1.0.9",
     "rbush": "^4.0.1",
     "react": "^18.2.0",
