@@ -5,10 +5,11 @@ module.exports = {
     "**/?(*.)+(spec|test).+(ts|tsx|js)"
   ],
   transform: {
-    "^.+\\.(ts|tsx)$": "ts-jest"
+    "^.+\\.(ts|tsx)$": ["ts-jest", { tsconfig: "tsconfig.test.json" }]
   },
+  testEnvironment: "jsdom",
+  setupFiles: ["jest-canvas-mock", "<rootDir>/src/__mocks__/setupTests.js"],
   transformIgnorePatterns: ["/node_modules/(?!rbush)"],
-  testEnvironmentOptions: { "resources": "usable" },
   moduleNameMapper: {
     "rbush": "<rootDir>/node_modules/rbush/rbush.js"
   }

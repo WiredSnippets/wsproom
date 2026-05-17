@@ -21,6 +21,18 @@ export class HitTexture {
     return new HitTexture(texture);
   }
 
+  static fromHitmap(hitmap: Uint32Array, width: number, height: number): HitTexture {
+    const baseTexture = {
+      resource: { source: { width, height } },
+      resolution: 1,
+      realWidth: width,
+    } as any;
+    const texture = { baseTexture, orig: { x: 0, y: 0 } } as any;
+    const instance = new HitTexture(texture);
+    (instance as any)._cachedHitmap = hitmap;
+    return instance;
+  }
+
   static async fromBlob(blob: Blob) {
     const url = await loadImageFromBlob(blob);
 

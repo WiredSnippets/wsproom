@@ -19,6 +19,7 @@ export class EventManager {
   private _bush = new RBush<EventManagerNode>();
   private _currentOverElements: Set<EventManagerNode> = new Set();
   private _pointerDownElements: Set<EventManagerNode> = new Set();
+  private _pointerDownPosition: { x: number; y: number } | undefined = undefined;
   private _onBackgroundClick: ((event: InteractionEvent) => void) | undefined = undefined;
   private _targets: Set<IEventTarget> = new Set();
   private _currentTarget: IEventTarget | undefined;
@@ -35,7 +36,11 @@ export class EventManager {
 
   click(event: InteractionEvent, x: number, y: number) {
     const elements = this._performHitTest(x, y);
-    new Propagation(event, elements.activeNodes, (target, event) =>
+    let nodes = elements.activeNodes;
+    if (nodes.length === 0 && this._pointerDownElements.size > 0) {
+      nodes = Array.from(this._pointerDownElements);
+    }
+    new Propagation(event, nodes, (target, event) =>
       target.triggerClick(event)
     );
   }
@@ -44,6 +49,7 @@ export class EventManager {
     const elements = this._performHitTest(x, y);
 
     this._pointerDownElements = new Set(elements.activeNodes);
+    this._pointerDownPosition = { x, y };
 
     new Propagation(event, elements.activeNodes, (target, event) =>
       target.triggerPointerDown(event)
@@ -52,14 +58,23 @@ export class EventManager {
 
   pointerUp(event: InteractionEvent, x: number, y: number) {
     const elements = this._performHitTest(x, y);
-
     const elementsSet = new Set(elements.activeNodes);
-    const clickedNodes = new Set<EventManagerNode>();
+    const downGroups = new Set<IEventGroup>();
     this._pointerDownElements.forEach((node) => {
-      if (elementsSet.has(node)) {
+      downGroups.add(node.target.getGroup());
+    });
+
+    let clickedNodes = new Set<EventManagerNode>();
+    elements.activeNodes.forEach((node) => {
+      if (downGroups.has(node.target.getGroup())) {
         clickedNodes.add(node);
       }
     });
+
+    if (clickedNodes.size === 0 && this._pointerDownElements.size === 0 && this._pointerDownPosition) {
+      const downElements = this._performHitTest(this._pointerDownPosition.x, this._pointerDownPosition.y);
+      downElements.activeNodes.forEach((node) => clickedNodes.add(node));
+    }
 
     if (elements.activeNodes.length === 0 && clickedNodes.size === 0 && this._onBackgroundClick) {
       this._onBackgroundClick(event);

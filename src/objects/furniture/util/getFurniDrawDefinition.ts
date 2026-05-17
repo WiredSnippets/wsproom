@@ -132,7 +132,7 @@ function getDrawPart({
       .flatMap((frameNumber) => new Array<number>(repeat).fill(frameNumber))
       .map(
         (frameNumber): FurnitureAsset => {
-          const asset = assetsData.getAsset(getAssetName(frameNumber));
+          const asset = assetsData.getAsset(getAssetName(frameNumber)) ?? baseAsset;
 
           if (asset == null)
             return { x: 0, y: 0, flipH: false, name: "unknown", valid: true };

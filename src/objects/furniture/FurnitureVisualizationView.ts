@@ -112,6 +112,9 @@ export class FurnitureVisualizationView
   }
 
   setDisplayAnimation(animation?: string): void {
+    if (this._animation !== animation) {
+      this._cache.clear();
+    }
     this._animation = animation;
   }
 
