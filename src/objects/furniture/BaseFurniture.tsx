@@ -181,6 +181,9 @@ export class BaseFurniture implements IFurnitureEventHandlers, IEventGroup {
 
   public set dependencies(value) {
     this._dependencies = value;
+    // Allow recycling furniture across room.changeTileMap / re-addRoomObject.
+    this._destroyed = false;
+    this._clickHandler.reset();
     this._loadFurniture();
   }
 

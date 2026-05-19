@@ -91,4 +91,12 @@ export class ClickHandler {
       timeout: window.setTimeout(() => this._resetDoubleClick(), 350),
     };
   }
+
+  public reset() {
+    if (this._doubleClickInfo != null) {
+      clearTimeout(this._doubleClickInfo.timeout);
+      this._doubleClickInfo = undefined;
+    }
+    this._map.clear();
+  }
 }

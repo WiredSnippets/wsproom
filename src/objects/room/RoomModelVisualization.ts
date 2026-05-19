@@ -90,6 +90,7 @@ export class RoomModelVisualization
 
   private _refreshRoom = false;
   private _rebuildRoom = false;
+  private _eventManagerContainer: EventManagerContainer | undefined;
 
   constructor(
     private _eventManager: EventManager,
@@ -126,7 +127,7 @@ export class RoomModelVisualization
 
     this.addChild(this._positionalContainer);
 
-    new EventManagerContainer(this._application, this._eventManager);
+    this._eventManagerContainer = new EventManagerContainer(this._application, this._eventManager);
 
     this._updateHeightmap();
 
@@ -337,6 +338,9 @@ export class RoomModelVisualization
   destroy() {
     super.destroy();
     this._destroyAllSprites();
+    this._eventManagerContainer?.destroy();
+    this._eventManagerContainer = undefined;
+    this._application.ticker.remove(this._handleTick);
   }
 
   addMask(id: string, element: PIXI.Sprite): MaskNode {
