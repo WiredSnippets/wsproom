@@ -184,6 +184,7 @@ export class BaseFurniture implements IFurnitureEventHandlers, IEventGroup {
     // Allow recycling furniture across room.changeTileMap / re-addRoomObject.
     this._destroyed = false;
     this._clickHandler.reset();
+    PIXI.Ticker.shared.add(this._onTicker);
     this._loadFurniture();
   }
 

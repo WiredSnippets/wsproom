@@ -20,7 +20,7 @@ export class TileCursor
   private _roomZ: number;
   private _graphics: PIXI.Graphics;
   private _hover = false;
-  private _destroyed = false;
+  private _isTileCursorDestroyed = false;
   private _subject = new BehaviorSubject<Rectangle | undefined>(undefined);
 
   constructor(
@@ -73,13 +73,13 @@ export class TileCursor
   triggerPointerUp(event: IEventManagerEvent): void {}
 
   triggerPointerOver(event: IEventManagerEvent): void {
-    if (this._destroyed) return;
+    if (this._isTileCursorDestroyed) return;
     this._updateHover(true);
     this.onOver({ roomX: this._roomX, roomY: this._roomY, roomZ: this._roomZ });
   }
 
   triggerPointerOut(event: IEventManagerEvent): void {
-    if (this._destroyed) return;
+    if (this._isTileCursorDestroyed) return;
     this._updateHover(false);
     this.onOut({ roomX: this._roomX, roomY: this._roomY, roomZ: this._roomZ });
   }
@@ -110,7 +110,7 @@ export class TileCursor
   }
 
   destroy() {
-    this._destroyed = true;
+    this._isTileCursorDestroyed = true;
     this._eventManager.remove(this);
     this._graphics.destroy();
     super.destroy();
@@ -140,7 +140,7 @@ export class TileCursor
   }
 
   private _updateGraphics() {
-    if (this._destroyed) return;
+    if (this._isTileCursorDestroyed) return;
     const graphics = this._graphics;
     if (graphics == null) return;
 

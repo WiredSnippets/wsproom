@@ -20,6 +20,7 @@ import { getTileColors, getWallColors } from "./util/getTileColors";
 import { EventManager } from "../events/EventManager";
 import { InteractionEvent } from "pixi.js";
 import { IEventManagerEvent } from "../events/interfaces/IEventManagerEvent";
+import { Subject, Subscription } from "rxjs";
 
 export interface Dependencies {
   animationTicker: IAnimationTicker;
@@ -53,8 +54,6 @@ export class Room
   extends PIXI.Container
   implements IRoomGeometry, IRoomObjectContainer, ITileMap {
   public readonly application: PIXI.Application;
-  declare x: number;
-  declare y: number;
 
   private _roomObjectContainer: RoomObjectContainer;
   private _visualization: RoomModelVisualization;
@@ -77,8 +76,11 @@ export class Room
 
   private _application: PIXI.Application;
 
+  private _activeTileSubject = new Subject<RoomPosition>();
+  private _activeTileSubscription: Subscription | undefined;
+
   public get onActiveTileChange() {
-    return this._visualization.onActiveTileChange;
+    return this._activeTileSubject.asObservable();
   }
 
   public get onActiveWallChange() {
@@ -135,6 +137,15 @@ export class Room
     this._visualization.onTileClick.subscribe((value) => {
       this.onTileClick && this.onTileClick(value.position, value.event);
     });
+
+    this._resubscribeActiveTile();
+  }
+
+  private _resubscribeActiveTile() {
+    this._activeTileSubscription?.unsubscribe();
+    this._activeTileSubscription = this._visualization.onActiveTileChange.subscribe(
+      (pos) => this._activeTileSubject.next(pos)
+    );
   }
 
   /**
@@ -332,6 +343,7 @@ export class Room
 
     this._visualization = newVisualization;
     this.addChild(this._visualization);
+    this._resubscribeActiveTile();
 
     if (this._roomObjectContainer.context) {
       this._roomObjectContainer.context.visualization = this._visualization;
