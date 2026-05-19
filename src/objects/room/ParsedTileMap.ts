@@ -19,4 +19,8 @@ export class ParsedTileMap {
   constructor(private tilemap: TileType[][]) {
     this._data = parseTileMap(tilemap);
   }
+
+  public getRawTileMap(): TileType[][] {
+    return this.tilemap.map((row) => [...row]);
+  }
 }

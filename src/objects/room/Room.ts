@@ -53,6 +53,8 @@ export class Room
   extends PIXI.Container
   implements IRoomGeometry, IRoomObjectContainer, ITileMap {
   public readonly application: PIXI.Application;
+  declare x: number;
+  declare y: number;
 
   private _roomObjectContainer: RoomObjectContainer;
   private _visualization: RoomModelVisualization;
@@ -348,6 +350,49 @@ export class Room
 
   getParsedTileTypes(): ParsedTileType[][] {
     return this._visualization.parsedTileMap.parsedTileTypes;
+  }
+
+  getTileMap(): TileType[][] {
+    return this._visualization.parsedTileMap.getRawTileMap();
+  }
+
+  getWallOffsets(): { x: number; y: number } {
+    return this._visualization.parsedTileMap.wallOffsets;
+  }
+
+  setTileAt(x: number, y: number, type: TileType): void {
+    const current = this.getTileMap();
+    if (y < 0 || y >= current.length) return;
+    if (x < 0 || x >= current[y].length) return;
+    current[y][x] = type;
+    this.changeTileMap(current);
+  }
+
+  resizeTileMap(cols: number, rows: number): void {
+    const current = this.getTileMap();
+    const currentRows = current.length;
+    const currentCols = currentRows > 0 ? current[0].length : 0;
+
+    const resized: TileType[][] = [];
+    for (let y = 0; y < rows; y++) {
+      const newRow: TileType[] = [];
+      for (let x = 0; x < cols; x++) {
+        if (y < currentRows && x < currentCols) {
+          newRow.push(current[y][x]);
+        } else {
+          // Preserve wall structure: first row and first col are walls
+          const isWallRow = y === 0;
+          const isWallCol = x === 0 && y > 0 && (currentRows === 0 || current[y < currentRows ? y : 0]?.[0] === "x");
+          newRow.push(isWallRow || isWallCol ? "x" : "0");
+        }
+      }
+      resized.push(newRow);
+    }
+    this.changeTileMap(resized);
+  }
+
+  getTileMapString(): string {
+    return this.getTileMap().map((row) => row.join("")).join("\n");
   }
 
   /**

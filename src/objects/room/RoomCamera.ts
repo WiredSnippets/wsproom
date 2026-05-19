@@ -5,6 +5,7 @@ import TWEEN from '@tweenjs/tween.js';
 
 export class RoomCamera extends PIXI.Container {
   private _state: RoomCameraState = { type: "WAITING" };
+  private _enabled = true;
 
   private _offsets: { x: number; y: number } = { x: 0, y: 0 };
   private _animatedOffsets: { x: number; y: number } = { x: 0, y: 0 };
@@ -58,6 +59,15 @@ export class RoomCamera extends PIXI.Container {
     return new RoomCamera(room, () => room.application.screen, options);
   }
 
+  setEnabled(enabled: boolean) {
+    this._enabled = enabled;
+    this._parentContainer.interactive = enabled;
+    if (!enabled) {
+      this._state = { type: "WAITING" };
+      this._updatePosition();
+    }
+  }
+
   destroy() {
     this._parentContainer.removeListener(
       "pointerdown",
@@ -94,8 +104,9 @@ export class RoomCamera extends PIXI.Container {
   };
 
   private _handlePointerDown = (event: PIXI.InteractionEvent) => {
-    if (event.data.originalEvent.altKey || 
-        event.data.originalEvent.shiftKey || 
+    if (!this._enabled) return;
+    if (event.data.originalEvent.altKey ||
+        event.data.originalEvent.shiftKey ||
         event.data.originalEvent.ctrlKey) return; // Block all modifier keys.
     
     const position = event.data.getLocalPosition(this.parent);
@@ -107,6 +118,8 @@ export class RoomCamera extends PIXI.Container {
   };
 
   private _handlePointerMove = (event: PointerEvent) => {
+    if (!this._enabled) return;
+
     const application = this._room.application;
     if (!application) return;
 

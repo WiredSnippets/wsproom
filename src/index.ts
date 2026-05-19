@@ -39,6 +39,8 @@ export type { IFurnitureVisualization } from "./objects/furniture/IFurnitureVisu
 export { WallLeft } from "./objects/room/parts/WallLeft";
 export { WallRight } from "./objects/room/parts/WallRight";
 export { RoomModelVisualization } from "./objects/room/RoomModelVisualization";
+export { TileMapEditorLayer } from "./objects/room/TileMapEditorLayer";
+export type { EditorPaintCallback } from "./objects/room/TileMapEditorLayer";
 
 export {
   AVATAR,
