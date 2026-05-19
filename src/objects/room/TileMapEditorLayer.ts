@@ -59,6 +59,17 @@ export class TileMapEditorLayer extends PIXI.Container {
 
   private _onPaint: EditorPaintCallback;
   private _room: Room;
+  private _isPanMode = false;
+
+  setPanning(active: boolean) {
+    this._isPanMode = active;
+    if (active) {
+      this._isPainting = false;
+      this._dragStart  = null;
+      this._dragEnd    = null;
+      this._selectionLayer.clear();
+    }
+  }
 
   constructor(room: Room, onPaint: EditorPaintCallback) {
     super();
@@ -124,14 +135,11 @@ export class TileMapEditorLayer extends PIXI.Container {
     const extMaxX = maxWalkX + EXTEND;
     const extMaxY = maxWalkY + EXTEND;
 
-    // Internal tiles
-    let _dbgLogged = false;
     this._gridInternal.lineStyle(0.8, GRID_COLOR, GRID_ALPHA);
     for (let ry = 0; ry < rows; ry++) {
       for (let rx = 0; rx < cols; rx++) {
         if (this._tilemap[ry][rx] === "x") continue;
         const { x: sx, y: sy } = this._isoPos(rx, ry);
-        if (!_dbgLogged) { console.log(`[TileMapEditor] first tile rx=${rx} ry=${ry} => sx=${sx} sy=${sy}`); _dbgLogged = true; }
         this._tilePositions.push({ rx, ry, sx, sy, external: false });
         this._drawDiamondLine(this._gridInternal, sx, sy);
       }
@@ -307,6 +315,7 @@ export class TileMapEditorLayer extends PIXI.Container {
 
     const onDown = (e: PointerEvent) => {
       if (e.button !== 0) return;
+      if (this._isPanMode) return;
       const rect = view.getBoundingClientRect();
       const tile = this._hitTest(e.clientX - rect.left, e.clientY - rect.top);
       if (!tile) return;
