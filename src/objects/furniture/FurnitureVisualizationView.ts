@@ -12,6 +12,7 @@ import { HitTexture } from "../hitdetection/HitTexture";
 import { FurnitureAsset } from "./data/interfaces/IFurnitureAssetsData";
 import { IFurnitureVisualizationData } from "./data/interfaces/IFurnitureVisualizationData";
 import { HighlightFilter } from "./filter/HighlightFilter";
+import { ActiveWiredFilter } from "./filter/ActiveWiredFilter";
 import { FurnitureSprite } from "./FurnitureSprite";
 import {
   IFurnitureVisualizationLayer,
@@ -21,6 +22,9 @@ import { FurniDrawDefinition, FurniDrawPart } from "./util/DrawDefinition";
 import { LoadFurniResult } from "./util/loadFurni";
 
 const highlightFilter = new HighlightFilter(0x7dabab, 0xffffff, 1);
+const highlightFilterPrimary = new HighlightFilter(0xb8d45a, 0xffffff, 1);
+const highlightFilterSecondary = new HighlightFilter(0x727dd9, 0xffffff, 1);
+const activeWiredFilter = new ActiveWiredFilter();
 
 export class FurnitureVisualizationView
   implements IFurnitureVisualizationView, IBaseFurniture, IEventGroup {
@@ -34,7 +38,16 @@ export class FurnitureVisualizationView
   private _y: number | undefined;
   private _zIndex: number | undefined;
   private _alpha: number | undefined;
-  private _highlight: boolean | undefined;
+  private _highlight: boolean | 'primary' | 'secondary' | undefined;
+  private _activeWired = false;
+
+  public get activeWired() {
+    return this._activeWired;
+  }
+
+  public set activeWired(value) {
+    this._activeWired = value;
+  }
 
   public get x() {
     if (this._x == null) throw new Error("x not set");
@@ -129,6 +142,7 @@ export class FurnitureVisualizationView
       layer.zIndex = this.zIndex;
       layer.alpha = this.alpha;
       layer.highlight = this.highlight;
+      layer.activeWired = this.activeWired;
       layer.update();
     });
   }
@@ -187,7 +201,8 @@ class FurnitureVisualizationLayer
   private _y: number | undefined;
   private _zIndex: number | undefined;
   private _alpha: number | undefined;
-  private _highlight: boolean | undefined;
+  private _highlight: boolean | 'primary' | 'secondary' | undefined;
+  private _activeWired: boolean | undefined;
 
   private _spritePositionChanged = false;
   private _spritesChanged = false;
@@ -206,6 +221,17 @@ class FurnitureVisualizationLayer
     if (value === this._highlight) return;
 
     this._highlight = value;
+    this._spritesChanged = true;
+  }
+
+  public get activeWired() {
+    return this._activeWired ?? false;
+  }
+
+  public set activeWired(value) {
+    if (value === this._activeWired) return;
+
+    this._activeWired = value;
     this._spritesChanged = true;
   }
 
@@ -429,8 +455,13 @@ class FurnitureVisualizationLayer
     // Apply asset styling
     const highlight = this._highlight /* && layer?.ink == null */ && !shadow && !mask;
 
-    if(highlight) {
-      sprite.filters = [highlightFilter];
+    if (highlight) {
+      const filter = this._highlight === 'primary' ? highlightFilterPrimary
+        : this._highlight === 'secondary' ? highlightFilterSecondary
+        : highlightFilter;
+      sprite.filters = this._activeWired ? [filter, activeWiredFilter] : [filter];
+    } else if (this._activeWired && !shadow && !mask) {
+      sprite.filters = [activeWiredFilter];
     } else {
       sprite.filters = [];
     }
@@ -522,5 +553,6 @@ export interface IBaseFurniture {
   y: number;
   zIndex: number;
   alpha: number;
-  highlight: boolean;
+  highlight: boolean | 'primary' | 'secondary';
+  activeWired: boolean;
 }

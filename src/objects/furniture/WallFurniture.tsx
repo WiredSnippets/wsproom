@@ -68,6 +68,14 @@ export class WallFurniture extends RoomObject {
     this._baseFurniture.highlight = value;
   }
 
+  public get activeWired() {
+    return this._baseFurniture.activeWired;
+  }
+
+  public set activeWired(value) {
+    this._baseFurniture.activeWired = value;
+  }
+
   public get alpha() {
     return this._baseFurniture.alpha;
   }

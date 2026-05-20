@@ -81,7 +81,8 @@ export class BaseFurniture implements IFurnitureEventHandlers, IEventGroup {
   private _refreshFurniture = false;
   private _refreshZIndex = false;
 
-  private _highlight = false;
+  private _highlight: boolean | 'primary' | 'secondary' = false;
+  private _activeWired = false;
   private _alpha = 1;
   private _destroyed = false;
 
@@ -234,6 +235,18 @@ export class BaseFurniture implements IFurnitureEventHandlers, IEventGroup {
   public set highlight(value) {
     this._highlight = value;
     this._refreshFurniture = true;
+  }
+
+  public get activeWired() {
+    return this._activeWired;
+  }
+
+  public set activeWired(value) {
+    this._activeWired = value;
+    if (this._view != null) {
+      this._view.activeWired = value;
+      this._view.updateLayers();
+    }
   }
 
   public get alpha() {
@@ -485,6 +498,7 @@ export class BaseFurniture implements IFurnitureEventHandlers, IEventGroup {
     view.zIndex = this.zIndex;
     view.alpha = this.alpha ?? 1;
     view.highlight = this.highlight ?? false;
+    view.activeWired = this.activeWired ?? false;
 
     this._view = view;
 
