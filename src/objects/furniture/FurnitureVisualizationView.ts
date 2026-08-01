@@ -208,6 +208,7 @@ class FurnitureVisualizationLayer
   private _spritesChanged = false;
   private _frameIndex = 0;
   private _color: number | undefined;
+  private _allSpritesMounted = false;
 
   private _mountedSprites = new Set<FurnitureSprite>();
 
@@ -333,6 +334,11 @@ class FurnitureVisualizationLayer
   }
 
   update() {
+    if (!this._allSpritesMounted) {
+      this._allSpritesMounted = true;
+      this._mountAllSprites();
+    }
+
     if (this._spritePositionChanged) {
       this._spritePositionChanged = false;
       this._updateSpritesPosition();
@@ -383,7 +389,22 @@ class FurnitureVisualizationLayer
     }
   }
 
+  // Mounts every frame's sprite (hidden) up front. Layers are processed in
+  // draw order, so this pins the container insertion order to the layer
+  // order. With lazy mounting, sprites of equal zIndex were stacked by
+  // whichever layer created a new frame sprite last, making upper layers
+  // (e.g. the "b" overlay of wired selectors) intermittently disappear
+  // behind lower ones.
+  private _mountAllSprites() {
+    for (let i = 0; i < this.assetCount; i++) {
+      const sprite = this._getSprite(i);
+      if (sprite != null) this._addSprite(sprite);
+    }
+  }
+
   private _updateSprites() {
+    this._mountAllSprites();
+
     const frameIndex = this._frameIndex;
     const sprite = this._getSprite(frameIndex);
 

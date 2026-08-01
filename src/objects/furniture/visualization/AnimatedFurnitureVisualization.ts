@@ -192,11 +192,15 @@ export class AnimatedFurnitureVisualization extends FurnitureVisualization {
 
       const frameProgress = this._frame % frameCount;
 
+      // Each layer cycles through its own frame sequence independently, like
+      // the official client. The global frame count only bounds the animation
+      // as a whole — layers with a shorter sequence (or a different
+      // frameRepeat) wrap around instead of freezing on their last frame.
       let frameIndex = Math.floor(frameProgress / part.frameRepeat);
-      const assetCount = part.assetCount - 1;
-
-      if (frameIndex > assetCount) {
-        frameIndex = assetCount;
+      if (part.assetCount > 0) {
+        frameIndex = frameIndex % part.assetCount;
+      } else {
+        frameIndex = 0;
       }
 
       if (frameProgress === frameCount - 1) {
