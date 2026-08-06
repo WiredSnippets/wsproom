@@ -60,6 +60,7 @@ export class HitSprite extends PIXI.Sprite implements IEventTarget {
     this._tag = tag;
     this.mirrored = this._mirrored;
     this._eventManager = eventManager;
+    this.onRender = this._emitRectangle;
 
     eventManager.register(this);
   }
@@ -107,17 +108,17 @@ export class HitSprite extends PIXI.Sprite implements IEventTarget {
     this._eventEmitter.trigger("pointerout", event);
   }
 
-  createDebugSprite(): PIXI.Sprite | undefined {
+  createDebugSprite(): PIXI.TilingSprite | undefined {
     if (this._hitTexture == null) return;
 
     const hitMap = this._hitTexture.getHitMap();
     if (hitMap == null) return;
 
-    const sprite = new PIXI.TilingSprite(
-      PIXI.Texture.WHITE,
-      this._hitTexture.texture.width,
-      this._hitTexture.texture.height
-    );
+    const sprite = new PIXI.TilingSprite({
+      texture: PIXI.Texture.WHITE,
+      width: this._hitTexture.texture.width,
+      height: this._hitTexture.texture.height,
+    });
 
     sprite.alpha = 0.1;
 
@@ -229,9 +230,7 @@ export class HitSprite extends PIXI.Sprite implements IEventTarget {
 
   private _lastRect: Rectangle | undefined;
 
-  updateTransform() {
-    super.updateTransform();
-
+  private _emitRectangle = () => {
     let width = this.texture.width;
     let height = this.texture.height;
     let x = this.worldTransform.tx - (this._mirrored ? width : 0);
@@ -258,7 +257,7 @@ export class HitSprite extends PIXI.Sprite implements IEventTarget {
 
     this._lastRect = { x, y, width, height };
     this._rectangleSubject.next(this._lastRect);
-  }
+  };
 }
 
 export type HitSpriteEventMap = {

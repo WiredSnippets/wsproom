@@ -15,15 +15,16 @@ jest.mock('pixi.js', () => {
     ...actual,
     Texture: {
       ...actual.Texture,
-      from: (source) => {
-        const baseTexture = {
-          resource: { source },
+      from: (resource) => {
+        const source = {
+          resource,
           resolution: 1,
-          realWidth: source.width || 2,
-          realHeight: source.height || 2,
+          pixelWidth: resource.width || 2,
+          pixelHeight: resource.height || 2,
+          scaleMode: "linear",
         };
         return {
-          baseTexture,
+          source,
           orig: { x: 0, y: 0 },
         };
       },

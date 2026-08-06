@@ -148,24 +148,19 @@ export class Landscape extends RoomObject implements IRoomPart {
           0
         );
 
-        wall.transform.setFromMatrix(new PIXI.Matrix(1, -0.5, 0, 1));
+        wall.setFromMatrix(new PIXI.Matrix(1, -0.5, 0, 1));
 
         wall.x = position.x;
         wall.y = position.y + 16;
 
         if (this._leftTexture != null) {
-          const graphics = new PIXI.TilingSprite(
-            this._leftTexture,
+          const graphics = new PIXI.TilingSprite({
+            texture: this._leftTexture,
             width,
-            this._leftTexture.height
-          );
+            height: this._leftTexture.height,
+          });
 
-          graphics.tilePosition = new PIXI.ObservablePoint(
-            () => {}, 
-            self, 
-            offsetRow, 
-            0
-          );
+          graphics.tilePosition.set(offsetRow, 0);
           graphics.texture = this._leftTexture;
           graphics.x = 0;
           graphics.y = -this._leftTexture.height;
@@ -184,26 +179,21 @@ export class Landscape extends RoomObject implements IRoomPart {
           0
         );
 
-        wall.transform.setFromMatrix(new PIXI.Matrix(1, 0.5, 0, 1));
+        wall.setFromMatrix(new PIXI.Matrix(1, 0.5, 0, 1));
 
         wall.x = position.x + 32;
         wall.y = position.y;
 
         if (this._rightTexture != null) {
-          const graphics = new PIXI.TilingSprite(
-            this._rightTexture,
+          const graphics = new PIXI.TilingSprite({
+            texture: this._rightTexture,
             width,
-            this._rightTexture.height
-          );
+            height: this._rightTexture.height,
+          });
           graphics.texture = this._rightTexture;
           graphics.x = 0;
           graphics.y = -this._rightTexture.height;
-          graphics.tilePosition = new PIXI.ObservablePoint(
-            () => {}, 
-            self, 
-            offsetCol, 
-            0
-          );
+          graphics.tilePosition.set(offsetCol, 0);
           wall.addChild(graphics);
         }
 

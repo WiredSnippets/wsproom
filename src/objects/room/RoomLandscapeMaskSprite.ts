@@ -1,7 +1,7 @@
 import * as PIXI from "pixi.js";
 import { Room } from "./Room";
 
-const negativeFilter = new PIXI.filters.ColorMatrixFilter();
+const negativeFilter = new PIXI.ColorMatrixFilter();
 negativeFilter.negative(false);
 
 /**
@@ -84,7 +84,7 @@ export class RoomLandscapeMaskSprite extends PIXI.Sprite {
     container.x = -this._roomBounds.minX;
     this.x = this._roomBounds.minX;
 
-    this._renderer.render(container, texture);
+    this._renderer.render({ container, target: texture });
 
     this.texture = texture;
   }

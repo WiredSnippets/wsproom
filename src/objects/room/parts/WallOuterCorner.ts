@@ -34,12 +34,12 @@ export class WallOuterCorner extends PIXI.Container implements IRoomPart {
   }
 
   private _createTopSprite() {
-    const border = new PIXI.TilingSprite(
-      PIXI.Texture.WHITE,
-      this._borderWidth,
-      this._borderWidth
-    );
-    border.transform.setFromMatrix(new PIXI.Matrix(1, 0.5, 1, -0.5));
+    const border = new PIXI.TilingSprite({
+      texture: PIXI.Texture.WHITE,
+      width: this._borderWidth,
+      height: this._borderWidth,
+    });
+    border.setFromMatrix(new PIXI.Matrix(1, 0.5, 1, -0.5));
     border.tint = this._wallTopColor;
     border.x = -this._borderWidth;
     border.y =

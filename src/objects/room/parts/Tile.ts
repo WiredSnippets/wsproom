@@ -78,17 +78,17 @@ export class Tile extends PIXI.Container implements IRoomPart {
     const tileMatrix = getFloorMatrix(0, 0);
 
     const top = new PIXI.Graphics()
-      .beginTextureFill({
-        texture: this._texture ?? PIXI.Texture.WHITE,
-        color: this._roomPartData?.tileTopColor ?? 0,
-        matrix: new PIXI.Matrix(1, 0.5, 1, -0.5, 0, 0)
-      })
       .moveTo(0, 0)
       .lineTo(32, -16)
       .lineTo(64, 0)
       .lineTo(32, 16)
       .lineTo(0, 0)
-      .endFill();
+      .fill({
+        textureSpace: "global",
+        texture: this._texture ?? PIXI.Texture.WHITE,
+        color: this._roomPartData?.tileTopColor ?? 0,
+        matrix: new PIXI.Matrix(1, 0.5, 1, -0.5, 0, 0),
+      });
 
     top.position.set(tileMatrix.tx, tileMatrix.ty);
     this.addChild(top);
@@ -100,16 +100,16 @@ export class Tile extends PIXI.Container implements IRoomPart {
       });
 
       const left: PIXI.Graphics = new PIXI.Graphics()
-        .beginTextureFill({
-          texture: this._texture ?? PIXI.Texture.WHITE,
-          color: this._roomPartData?.tileLeftColor ?? 0,
-          matrix: borderLeftMatrix
-        })
         .moveTo(0, 0)
         .lineTo(0, this.tileHeight)
         .lineTo(32, 16 + this.tileHeight)
         .lineTo(32, 16)
-        .endFill();
+        .fill({
+          textureSpace: "global",
+          texture: this._texture ?? PIXI.Texture.WHITE,
+          color: this._roomPartData?.tileLeftColor ?? 0,
+          matrix: borderLeftMatrix,
+        });
       left.position.set(0, 16);
       this.addChild(left);
     }
@@ -120,17 +120,17 @@ export class Tile extends PIXI.Container implements IRoomPart {
         height: this.tileHeight,
       });
       const right: PIXI.Graphics = new PIXI.Graphics()
-        .beginTextureFill({
-          texture: this._texture ?? PIXI.Texture.WHITE,
-          color: this._roomPartData?.tileRightColor ?? 0,
-          matrix: borderRightMatrix
-        })
         .moveTo(32, 16)
         .lineTo(32, 16 + this.tileHeight)
         .lineTo(64, this.tileHeight)
         .lineTo(64, 0)
         .lineTo(32, 16)
-        .endFill();
+        .fill({
+          textureSpace: "global",
+          texture: this._texture ?? PIXI.Texture.WHITE,
+          color: this._roomPartData?.tileRightColor ?? 0,
+          matrix: borderRightMatrix,
+        });
 
       right.position.set(0, 16);
       this.addChild(right);

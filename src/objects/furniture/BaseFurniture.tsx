@@ -628,5 +628,5 @@ export class BaseFurniture implements IFurnitureEventHandlers, IEventGroup {
 
 export interface IFurnitureRoomVisualization {
   container: PIXI.Container;
-  addMask(maskId: string, element: PIXI.DisplayObject): MaskNode;
+  addMask(maskId: string, element: PIXI.Container): MaskNode;
 }

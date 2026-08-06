@@ -104,12 +104,12 @@ export class RoomModelVisualization
       y: this.parsedTileMap.wallOffsets.y,
     });
 
-    this._behindWallLayer.name = "BEHIND_WALL";
-    this._wallLayer.name = "WALL";
-    this._wallHitAreaLayer.name = "WALL_HIT";
-    this._tileLayer.name = "TILES";
-    this._landscapeLayer.name = "LANDSCAPE";
-    this._primaryLayer.name = "PRIMARY";
+    this._behindWallLayer.label = "BEHIND_WALL";
+    this._wallLayer.label = "WALL";
+    this._wallHitAreaLayer.label = "WALL_HIT";
+    this._tileLayer.label = "TILES";
+    this._landscapeLayer.label = "LANDSCAPE";
+    this._primaryLayer.label = "PRIMARY";
 
     this.addChild(this._behindWallLayer);
     this.addChild(this._wallLayer);
@@ -405,12 +405,6 @@ export class RoomModelVisualization
     };
   }
 
-  private _setCache(cache: boolean) {
-    [this._tileLayer, this._wallLayer].forEach(
-      (container) => (container.cacheAsBitmap = cache)
-    );
-  }
-
   private _getLargestWallHeight() {
     return this.parsedTileMap.largestDiff * 32 + this._wallHeight;
   }
@@ -443,12 +437,10 @@ export class RoomModelVisualization
   }
 
   private _updateParts() {
-    this._setCache(false);
     const currentRoomPartData = this._getCurrentRoomPartData();
     [...this._tiles, ...this._walls, ...this._parts].forEach((tile) =>
       tile.update(currentRoomPartData)
     );
-    this._setCache(true);
   }
 
   private _createHeightmapElement(

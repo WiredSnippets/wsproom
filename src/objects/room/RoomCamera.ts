@@ -30,7 +30,7 @@ export class RoomCamera extends PIXI.Container {
 
     this._parentContainer = new PIXI.Container();
     this._parentContainer.hitArea = this._parentBounds();
-    this._parentContainer.interactive = true;
+    this._parentContainer.eventMode = "static";
 
     this._container = new PIXI.Container();
     this._container.addChild(this._room);
@@ -61,7 +61,7 @@ export class RoomCamera extends PIXI.Container {
 
   setEnabled(enabled: boolean) {
     this._enabled = enabled;
-    this._parentContainer.interactive = enabled;
+    this._parentContainer.eventMode = enabled ? "static" : "none";
     if (!enabled) {
       this._state = { type: "WAITING" };
       this._updatePosition();
@@ -103,17 +103,17 @@ export class RoomCamera extends PIXI.Container {
     }
   };
 
-  private _handlePointerDown = (event: PIXI.InteractionEvent) => {
+  private _handlePointerDown = (event: PIXI.FederatedPointerEvent) => {
     if (!this._enabled) return;
-    if (event.data.originalEvent.altKey ||
-        event.data.originalEvent.shiftKey ||
-        event.data.originalEvent.ctrlKey) return; // Block all modifier keys.
-    
-    const position = event.data.getLocalPosition(this.parent);
+    if (event.nativeEvent.altKey ||
+        event.nativeEvent.shiftKey ||
+        event.nativeEvent.ctrlKey) return; // Block all modifier keys.
+
+    const position = event.getLocalPosition(this.parent!);
     if (this._state.type === "WAITING") {
-      this._enterWaitingForDistance(position, event.data.pointerId);
+      this._enterWaitingForDistance(position, event.pointerId);
     } else if (this._state.type === "ANIMATE_ZERO") {
-      this._changingDragWhileAnimating(position, event.data.pointerId);
+      this._changingDragWhileAnimating(position, event.pointerId);
     }
   };
 
@@ -123,13 +123,13 @@ export class RoomCamera extends PIXI.Container {
     const application = this._room.application;
     if (!application) return;
 
-    const view = application.view;
+    const view = application.canvas;
     if (!view) return;
 
     const box = view.getBoundingClientRect();
     const position = new PIXI.Point(
-      event.clientX - box.x - this.parent.worldTransform.tx,
-      event.clientY - box.y - this.parent.worldTransform.ty
+      event.clientX - box.x - this.parent!.worldTransform.tx,
+      event.clientY - box.y - this.parent!.worldTransform.ty
     );
 
     switch (this._state.type) {
@@ -177,8 +177,8 @@ export class RoomCamera extends PIXI.Container {
   }
 
   private _isOutOfBounds(offsets: { x: number; y: number }) {
-    const roomX = this.parent.transform.position.x + this._room.x;
-    const roomY = this.parent.transform.position.y + this._room.y;
+    const roomX = this.parent!.position.x + this._room.x;
+    const roomY = this.parent!.position.y + this._room.y;
 
     if (roomX + this._room.roomWidth + offsets.x <= 0) {
       // The room is out of bounds to the left side.

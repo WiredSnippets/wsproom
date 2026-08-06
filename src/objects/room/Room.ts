@@ -18,7 +18,7 @@ import { RoomModelVisualization } from "./RoomModelVisualization";
 import { ParsedTileMap } from "./ParsedTileMap";
 import { getTileColors, getWallColors } from "./util/getTileColors";
 import { EventManager } from "../events/EventManager";
-import { InteractionEvent } from "pixi.js";
+import { FederatedPointerEvent } from "pixi.js";
 import { IEventManagerEvent } from "../events/interfaces/IEventManagerEvent";
 import { Subject, Subscription } from "rxjs";
 
@@ -448,7 +448,7 @@ export class Room
     this._visualization.destroy();
   }
 
-  public set onBackgroundClick(value: ((event: InteractionEvent) => void) | undefined) {
+  public set onBackgroundClick(value: ((event: FederatedPointerEvent) => void) | undefined) {
     this._eventManager.onBackgroundClick = value;
   }
 

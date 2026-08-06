@@ -67,15 +67,11 @@ export class JsonFurnitureAssetBundle implements IFurnitureAssetBundle {
     const imageUrl = await loadImageFromBlob(blob);
     const baseTextureImage = await loadImageFromUrl(imageUrl);
 
-    const baseTexture = PIXI.BaseTexture.from(baseTextureImage);
+    const texture = PIXI.Texture.from(baseTextureImage);
 
-    const spritesheet = new PIXI.Spritesheet(baseTexture, json.spritesheet);
+    const spritesheet = new PIXI.Spritesheet(texture, json.spritesheet);
 
-    await new Promise<void>((resolve) => {
-      spritesheet.parse().then(() => {
-        resolve();
-      });
-    });
+    await spritesheet.parse();
 
     return {
       assets: new JsonFurnitureAssetsData(json.assets),

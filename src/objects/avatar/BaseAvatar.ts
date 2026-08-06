@@ -59,7 +59,7 @@ export interface BaseAvatarDependencies {
   avatarLoader: IAvatarLoader;
 }
 
-export class BaseAvatar extends PIXI.Container implements PIXI.DisplayObject, IEventGroup {
+export class BaseAvatar extends PIXI.Container implements IEventGroup {
   private _container: PIXI.Container | undefined;
   private _avatarLoaderResult: AvatarLoaderResult | undefined;
   private _avatarDrawDefinition: AvatarDrawDefinition | undefined;
@@ -285,7 +285,7 @@ export class BaseAvatar extends PIXI.Container implements PIXI.DisplayObject, IE
     drawDefinition: AvatarDrawDefinition,
     currentFrame: number
   ) {
-    if (this._destroyed) throw new Error("BaseAvatar was destroyed already");
+    if (this._avatarDestroyed) throw new Error("BaseAvatar was destroyed already");
     if (!this.mounted) return;
 
     this._sprites.forEach((value) => {
@@ -350,7 +350,7 @@ export class BaseAvatar extends PIXI.Container implements PIXI.DisplayObject, IE
 
         switch (part.ink) {
           case 33:
-            sprite.blendMode = PIXI.BLEND_MODES.ADD;
+            sprite.blendMode = "add";
             break;
         }
 
@@ -435,7 +435,7 @@ export class BaseAvatar extends PIXI.Container implements PIXI.DisplayObject, IE
           skipCaching: this._skipCaching,
         })
         .then((result) => {
-          if (this._destroyed) return;
+          if (this._avatarDestroyed) return;
           if (requestId !== this._updateId) return;
 
           this._avatarLoaderResult = result;

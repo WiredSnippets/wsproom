@@ -3,6 +3,7 @@ node_modules
 /resources
 /public
 /dist
+/dist-esm
 /example/public/hof_furni
 /example/public/figure
 /example/public/resources

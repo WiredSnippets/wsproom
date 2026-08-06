@@ -1,0 +1,13 @@
+allowBuilds:
+  '@parcel/watcher': true
+  '@swc/core': true
+  lmdb: true
+  msgpackr-extract: true
+onlyBuiltDependencies:
+  - "@parcel/watcher"
+  - "@swc/core"
+  - lmdb
+  - msgpackr-extract
+peerDependencyRules:
+  ignoreMissing:
+    - canvas

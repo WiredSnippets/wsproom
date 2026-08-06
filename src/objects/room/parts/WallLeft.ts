@@ -18,7 +18,7 @@ export class WallLeft extends PIXI.Container implements IRoomPart {
   private _hideBorder = false;
   private _roomZ = 0;
 
-  private _hitAreaElement: PIXI.DisplayObject | undefined;
+  private _hitAreaElement: PIXI.Graphics | undefined;
 
   constructor(private props: WallProps) {
     super();
@@ -91,30 +91,28 @@ export class WallLeft extends PIXI.Container implements IRoomPart {
     this.addChild(top);
 
     const graphics = new PIXI.Graphics();
-    graphics.beginFill(0xff00ff);
-    graphics.drawPolygon(hitArea);
+    graphics.poly(this._getDisplayPoints()).fill(0xff00ff);
     graphics.alpha = this._drawHitArea ? 1 : 0;
-    graphics.endFill();
 
-    const handleMoveEvent = (event: PIXI.InteractionEvent) => {
+    const handleMoveEvent = (event: PIXI.FederatedPointerEvent) => {
       if (event.target === graphics) {
-        const position = event.data.getLocalPosition(graphics);
+        const position = event.getLocalPosition(graphics);
         this.props.onMouseMove({ offsetX: position.x, offsetY: position.y });
       }
     };
 
-    graphics.addListener("mousemove", handleMoveEvent);
-    graphics.addListener("mouseover", handleMoveEvent);
-    graphics.addListener("mouseout", () => {
+    graphics.on("pointermove", handleMoveEvent);
+    graphics.on("pointerover", handleMoveEvent);
+    graphics.on("pointerout", () => {
       this.props.onMouseOut();
     });
 
-    graphics.interactive = true;
+    graphics.eventMode = "static";
 
     this._hitAreaElement = graphics;
     this._hitAreaElement.x = this.x;
     this._hitAreaElement.y = this.y;
-    this._hitAreaElement.scale = this.scale;
+    this._hitAreaElement.scale.copyFrom(this.scale);
     this.props.hitAreaContainer.addChild(this._hitAreaElement);
   }
 
@@ -144,12 +142,12 @@ export class WallLeft extends PIXI.Container implements IRoomPart {
   }
 
   private _createPrimarySprite() {
-    const sprite = new PIXI.TilingSprite(
-      this._wallTexture ?? PIXI.Texture.WHITE,
-      this._wallWidth,
-      this.wallHeight
-    );
-    sprite.transform.setFromMatrix(new PIXI.Matrix(-1, 0.5, 0, 1));
+    const sprite = new PIXI.TilingSprite({
+      texture: this._wallTexture ?? PIXI.Texture.WHITE,
+      width: this._wallWidth,
+      height: this.wallHeight,
+    });
+    sprite.setFromMatrix(new PIXI.Matrix(-1, 0.5, 0, 1));
     sprite.x = this._getOffsetX() + this._borderWidth + this._wallWidth;
     sprite.y = this.wallY;
     sprite.tint = this._wallLeftColor;
@@ -158,12 +156,12 @@ export class WallLeft extends PIXI.Container implements IRoomPart {
   }
 
   private _createBorderSprite() {
-    const border = new PIXI.TilingSprite(
-      PIXI.Texture.WHITE,
-      this._borderWidth,
-      this._wallHeight + this._tileHeight
-    );
-    border.transform.setFromMatrix(new PIXI.Matrix(-1, -0.5, 0, 1));
+    const border = new PIXI.TilingSprite({
+      texture: PIXI.Texture.WHITE,
+      width: this._borderWidth,
+      height: this._wallHeight + this._tileHeight,
+    });
+    border.setFromMatrix(new PIXI.Matrix(-1, -0.5, 0, 1));
     border.y = this.wallY + this._wallWidth / 2;
     border.x = this._getOffsetX() + this._borderWidth;
 
@@ -173,12 +171,12 @@ export class WallLeft extends PIXI.Container implements IRoomPart {
   }
 
   private _createTopSprite() {
-    const border = new PIXI.TilingSprite(
-      PIXI.Texture.WHITE,
-      this._borderWidth,
-      this._wallWidth
-    );
-    border.transform.setFromMatrix(new PIXI.Matrix(1, 0.5, 1, -0.5));
+    const border = new PIXI.TilingSprite({
+      texture: PIXI.Texture.WHITE,
+      width: this._borderWidth,
+      height: this._wallWidth,
+    });
+    border.setFromMatrix(new PIXI.Matrix(1, 0.5, 1, -0.5));
     border.x = this._getOffsetX() + 0;
     border.y = this.wallY + this._wallWidth / 2 - this._borderWidth / 2;
 

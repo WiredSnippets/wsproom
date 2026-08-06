@@ -12,21 +12,21 @@ import {
   TILE_CURSOR,
 } from "./interfaces/IEventGroup";
 import { IEventManager } from "./interfaces/IEventManager";
-import { DisplayObject, InteractionEvent, Matrix } from "pixi.js";
+import { Container, FederatedPointerEvent, Matrix } from "pixi.js";
 
 export class EventManager {
-  public coordinateRoot: DisplayObject | undefined;
+  public coordinateRoot: Container | undefined;
 
   private _nodes = new Map<IEventTarget, EventManagerNode>();
   private _bush = new RBush<EventManagerNode>();
   private _currentOverElements: Set<EventManagerNode> = new Set();
   private _pointerDownElements: Set<EventManagerNode> = new Set();
   private _pointerDownPosition: { x: number; y: number } | undefined = undefined;
-  private _onBackgroundClick: ((event: InteractionEvent) => void) | undefined = undefined;
+  private _onBackgroundClick: ((event: FederatedPointerEvent) => void) | undefined = undefined;
   private _targets: Set<IEventTarget> = new Set();
   private _currentTarget: IEventTarget | undefined;
 
-  public set onBackgroundClick(value: ((event: InteractionEvent) => void) | undefined) {
+  public set onBackgroundClick(value: ((event: FederatedPointerEvent) => void) | undefined) {
     this._onBackgroundClick = value;
   }
 
@@ -36,7 +36,7 @@ export class EventManager {
     this._currentTarget = undefined;
   }
 
-  click(event: InteractionEvent, x: number, y: number) {
+  click(event: FederatedPointerEvent, x: number, y: number) {
     const elements = this._performHitTest(x, y);
     let nodes = elements.activeNodes;
     if (nodes.length === 0 && this._pointerDownElements.size > 0) {
@@ -47,7 +47,7 @@ export class EventManager {
     );
   }
 
-  pointerDown(event: InteractionEvent, x: number, y: number) {
+  pointerDown(event: FederatedPointerEvent, x: number, y: number) {
     const elements = this._performHitTest(x, y);
 
     this._pointerDownElements = new Set(elements.activeNodes);
@@ -58,7 +58,7 @@ export class EventManager {
     );
   }
 
-  pointerUp(event: InteractionEvent, x: number, y: number) {
+  pointerUp(event: FederatedPointerEvent, x: number, y: number) {
     const elements = this._performHitTest(x, y);
     const elementsSet = new Set(elements.activeNodes);
     const downGroups = new Set<IEventGroup>();
@@ -91,7 +91,7 @@ export class EventManager {
     });
   }
 
-  move(event: InteractionEvent, x: number, y: number) {
+  move(event: FederatedPointerEvent, x: number, y: number) {
     const elements = this._performHitTest(x, y);
     const current = new Set(
       elements.activeNodes.filter(
@@ -223,7 +223,7 @@ class Propagation {
   private _stopped = false;
 
   constructor(
-    private event: InteractionEvent,
+    private event: FederatedPointerEvent,
     private path: EventManagerNode[],
     private _trigger: (target: IEventTarget, event: IEventManagerEvent) => void
   ) {
@@ -257,7 +257,7 @@ class Propagation {
   private _createEvent(): IEventManagerEvent {
     return {
       interactionEvent: this.event,
-      mouseEvent: this.event.data.originalEvent,
+      mouseEvent: this.event.nativeEvent,
       stopPropagation: () => {
         this._stopped = true;
       },

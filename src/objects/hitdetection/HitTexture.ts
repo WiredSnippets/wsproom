@@ -18,16 +18,20 @@ export class HitTexture {
 
   static async fromSpriteSheet(spritesheet: PIXI.Spritesheet, name: string) {
     const texture = spritesheet.textures[name];
+    if (texture == null) {
+      throw new Error(`Texture "${name}" not found in spritesheet`);
+    }
     return new HitTexture(texture);
   }
 
   static fromHitmap(hitmap: Uint32Array, width: number, height: number): HitTexture {
-    const baseTexture = {
-      resource: { source: { width, height } },
+    const source = {
+      resource: { width, height },
       resolution: 1,
-      realWidth: width,
+      pixelWidth: width,
+      scaleMode: "nearest",
     } as any;
-    const texture = { baseTexture, orig: { x: 0, y: 0 } } as any;
+    const texture = { source, orig: { x: 0, y: 0 } } as any;
     const instance = new HitTexture(texture);
     (instance as any)._cachedHitmap = hitmap;
     return instance;
@@ -84,12 +88,12 @@ export class HitTexture {
     }
     y = y - transform.y;
 
-    const baseTexture = this._texture.baseTexture;
+    const source = this._texture.source;
     const hitmap = this._getHitMap();
 
-    const dx = Math.round(this._texture.orig.x + x * baseTexture.resolution);
-    const dy = Math.round(this._texture.orig.y + y * baseTexture.resolution);
-    const ind = dx + dy * baseTexture.realWidth;
+    const dx = Math.round(this._texture.orig.x + x * source.resolution);
+    const dy = Math.round(this._texture.orig.y + y * source.resolution);
+    const ind = dx + dy * source.pixelWidth;
     const ind1 = ind % 32;
     const ind2 = (ind / 32) | 0;
     return (hitmap[ind2] & (1 << ind1)) !== 0;
@@ -98,7 +102,7 @@ export class HitTexture {
   private _getHitMap() {
     if (this._cachedHitmap == null) {
       this._cachedHitmap = generateHitMap(
-        (this._texture.baseTexture.resource as any).source
+        this._texture.source.resource as HTMLImageElement
       );
     }
 

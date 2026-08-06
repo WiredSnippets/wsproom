@@ -12,13 +12,11 @@ export class FurnitureHelper {
         animation: "0",
         direction: 2,
         type: { type: furniId, kind: "type" },
-        onLoad: () => {
-          const image = shroom.dependencies.application.renderer.plugins.extract.image(container);
+        onLoad: async () => {
+          const image = (await shroom.dependencies.application.renderer.extract.image(container)) as HTMLImageElement;
 
-          image.onload = () => {
-            resolve(image);
-            container.destroy();
-          };
+          resolve(image);
+          container.destroy();
         },
       });
     });
@@ -32,13 +30,11 @@ export class FurnitureHelper {
         animation: "0",
         direction: 2,
         type: { type: furniId, kind: "type" },
-        onLoad: () => {
-          const image = shroom.dependencies.application.renderer.plugins.extract.image(container);
+        onLoad: async () => {
+          const image = (await shroom.dependencies.application.renderer.extract.image(container)) as HTMLImageElement;
 
-          image.onload = () => {
-            resolve(image);
-            container.destroy();
-          };
+          resolve(image);
+          container.destroy();
         },
       });
   });

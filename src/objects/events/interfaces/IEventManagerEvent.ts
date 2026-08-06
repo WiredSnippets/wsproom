@@ -1,10 +1,10 @@
-import { InteractionEvent } from "pixi.js";
+import { FederatedPointerEvent } from "pixi.js";
 import { EventGroupIdentifier } from "./IEventGroup";
 
 export interface IEventManagerEvent {
   tag?: string;
-  mouseEvent: MouseEvent | TouchEvent | PointerEvent;
-  interactionEvent: InteractionEvent;
+  mouseEvent: FederatedPointerEvent["nativeEvent"];
+  interactionEvent: FederatedPointerEvent;
   stopPropagation(): void;
   skip(...identifiers: EventGroupIdentifierParam[]): void;
   skipExcept(...identifiers: EventGroupIdentifierParam[]): void;

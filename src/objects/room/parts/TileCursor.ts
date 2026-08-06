@@ -25,19 +25,20 @@ export class TileCursor
 
   constructor(
     private _eventManager: IEventManager,
-    private _position: RoomPosition,
+    private _roomPosition: RoomPosition,
     private onClick: (position: RoomPosition, event: IEventManagerEvent) => void,
     private onOver: (position: RoomPosition) => void,
     private onOut: (position: RoomPosition) => void
   ) {
     super();
-    this._roomX = _position.roomX;
-    this._roomY = _position.roomY;
-    this._roomZ = _position.roomZ;
+    this._roomX = _roomPosition.roomX;
+    this._roomY = _roomPosition.roomY;
+    this._roomZ = _roomPosition.roomZ;
     this._graphics = this._createGraphics();
     this._updateGraphics();
 
     this.addChild(this._graphics);
+    this.onRender = this._emitRectangle;
 
     this._eventManager.register(this);
   }
@@ -118,9 +119,7 @@ export class TileCursor
 
   private _lastRect: Rectangle | undefined;
 
-  updateTransform() {
-    super.updateTransform();
-
+  private _emitRectangle = () => {
     let x = this.worldTransform.tx;
     let y = this.worldTransform.ty;
     let width = 64;
@@ -139,7 +138,7 @@ export class TileCursor
 
     this._lastRect = { x, y, width, height };
     this._subject.next(this._lastRect);
-  }
+  };
 
   private _createGraphics() {
     const graphics = new PIXI.Graphics();
@@ -167,9 +166,9 @@ export class TileCursor
     this._updateGraphics();
 
     if (hover) {
-      this.onOver(this._position);
+      this.onOver(this._roomPosition);
     } else {
-      this.onOut(this._position);
+      this.onOut(this._roomPosition);
     }
   }
 
@@ -191,17 +190,19 @@ function drawBorder(
   alpha = 1,
   offsetY: number
 ) {
-  graphics.beginFill(color, alpha);
-  graphics.moveTo(points.p1.x, points.p1.y + offsetY);
-  graphics.lineTo(points.p2.x, points.p2.y + offsetY);
-  graphics.lineTo(points.p3.x, points.p3.y + offsetY);
-  graphics.lineTo(points.p4.x, points.p4.y + offsetY);
-  graphics.endFill();
+  graphics
+    .moveTo(points.p1.x, points.p1.y + offsetY)
+    .lineTo(points.p2.x, points.p2.y + offsetY)
+    .lineTo(points.p3.x, points.p3.y + offsetY)
+    .lineTo(points.p4.x, points.p4.y + offsetY)
+    .closePath()
+    .fill({ color, alpha });
 
-  graphics.beginHole();
-  graphics.moveTo(points.p1.x + 6, points.p1.y + offsetY);
-  graphics.lineTo(points.p2.x, points.p2.y + 3 + offsetY);
-  graphics.lineTo(points.p3.x - 6, points.p3.y + offsetY);
-  graphics.lineTo(points.p4.x, points.p4.y - 3 + offsetY);
-  graphics.endHole();
+  graphics
+    .moveTo(points.p1.x + 6, points.p1.y + offsetY)
+    .lineTo(points.p2.x, points.p2.y + 3 + offsetY)
+    .lineTo(points.p3.x - 6, points.p3.y + offsetY)
+    .lineTo(points.p4.x, points.p4.y - 3 + offsetY)
+    .closePath()
+    .cut();
 }

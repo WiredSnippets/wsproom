@@ -354,6 +354,8 @@ export class FloorFurniture
   }
 
   private _updatePosition() {
+    if (!this.mounted) return;
+
     const { roomX, roomY, roomZ } = this._getDisplayRoomPosition();
 
     const { x, y } = this.geometry.getPosition(roomX, roomY, roomZ);
