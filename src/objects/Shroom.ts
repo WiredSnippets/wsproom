@@ -7,6 +7,15 @@ import * as PIXI from "pixi.js";
 
 PIXI.TextureSource.defaultOptions.scaleMode = "nearest";
 
+const patchAdditiveBlendForTransparentCanvas = (
+  application: PIXI.Application
+) => {
+  const state = (application.renderer as { state?: { blendModesMap?: Record<string, number[]> } }).state;
+  if (state?.blendModesMap?.add != null) {
+    state.blendModesMap.add = [1, 1, 0, 1];
+  }
+};
+
 export class Shroom {
   constructor(public readonly dependencies: Dependencies) {}
 
@@ -46,6 +55,8 @@ export class Shroom {
 
     return {
       for: (application: PIXI.Application) => {
+        patchAdditiveBlendForTransparentCanvas(application);
+
         const _animationTicker =
           animationTicker ?? AnimationTicker.create(application);
 

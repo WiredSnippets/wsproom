@@ -524,8 +524,7 @@ class FurnitureVisualizationLayer
         if (this.highlight) {
           sprite.visible = false;
         }
-        sprite.blendMode =
-          layer.ink === "ADD" ? "add" : "normal";
+        sprite.blendMode = inkToBlendMode(layer.ink);
       }
     }
 
@@ -573,6 +572,13 @@ class FurnitureVisualizationLayer
 
 const getAssetTextureName = (asset: FurnitureAsset) =>
   asset.source ?? asset.name;
+
+const inkToBlendMode = (ink: string): PIXI.BLEND_MODES => {
+  if (ink === "ADD" || ink === "33" || Number(ink) === 33) return "add";
+  if (ink === "SCREEN" || Number(ink) === 3) return "screen";
+  if (ink === "MULTIPLY") return "multiply";
+  return "normal";
+};
 
 export interface IBaseFurniture {
   x: number;
