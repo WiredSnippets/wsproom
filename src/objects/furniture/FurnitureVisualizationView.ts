@@ -293,6 +293,18 @@ class FurnitureVisualizationLayer
     return this._part.layer?.tag;
   }
 
+  public get z() {
+    return this._part.z ?? 0;
+  }
+
+  public get ink() {
+    return this._part.layer?.ink;
+  }
+
+  getSprites(): PIXI.Sprite[] {
+    return Array.from(this._sprites.values());
+  }
+
   constructor(
     private _parent: FurnitureVisualizationView,
     private _container: PIXI.Container,

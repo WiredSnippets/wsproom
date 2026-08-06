@@ -1,3 +1,4 @@
+import type * as PIXI from "pixi.js";
 import { IFurnitureVisualizationData } from "./data/interfaces/IFurnitureVisualizationData";
 
 /**
@@ -60,4 +61,9 @@ export interface IFurnitureVisualizationLayer {
    */
   setCurrentFrameIndex(frame: number): void;
   setColor(color: number): void;
+  alpha: number;
+  readonly z: number;
+  readonly ink?: string;
+  update(): void;
+  getSprites(): PIXI.Sprite[];
 }

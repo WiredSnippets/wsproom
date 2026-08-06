@@ -392,6 +392,7 @@ export class BaseFurniture implements IFurnitureEventHandlers, IEventGroup {
     this._cancelTicker && this._cancelTicker();
     this._cancelTicker = undefined;
 
+    this._visualization?.destroy();
     this._view?.destroy();
   }
 
