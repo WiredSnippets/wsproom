@@ -36,18 +36,16 @@ export class EventManagerNode implements IEventManagerNode {
     public readonly target: IEventTarget,
     private _bush: RBush<EventManagerNode>
   ) {
-    let initialRectangle : Rectangle | undefined;
     this._subscription = target.getRectangleObservable().subscribe((value) => {
       // avoid updating for no reason as it lowers FPS in more than half
-      if (initialRectangle?.height != value?.height ||
-        initialRectangle?.width != value?.width ||
-        initialRectangle?.x != value?.x ||
-        initialRectangle?.y != value?.y 
-        ) {
+      const current = this._rectangle;
+      if (
+        current?.height != value?.height ||
+        current?.width != value?.width ||
+        current?.x != value?.x ||
+        current?.y != value?.y
+      ) {
         this._updateRectangle(value);
-      }
-      if (!initialRectangle) {
-        initialRectangle = value;
       }
     });
   }

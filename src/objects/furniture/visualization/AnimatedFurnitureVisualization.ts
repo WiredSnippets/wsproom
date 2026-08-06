@@ -145,8 +145,17 @@ export class AnimatedFurnitureVisualization extends FurnitureVisualization {
     this._update(true);
   }
 
-  isAnimated() {
-    return true;
+  isAnimated(animation = "0") {
+    if (!this.mounted) return true;
+
+    const data = this.view.getVisualizationData();
+    const animationId = Number(animation);
+
+    if (Number.isNaN(animationId)) return true;
+    if (data.getTransitionForAnimation(64, animationId) != null) return true;
+
+    const frameCount = data.getFrameCount(64, animationId) ?? 1;
+    return frameCount > 1;
   }
 
   private _getCurrentProgress(frame: number) {

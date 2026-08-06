@@ -12,9 +12,11 @@ import {
   TILE_CURSOR,
 } from "./interfaces/IEventGroup";
 import { IEventManager } from "./interfaces/IEventManager";
-import { InteractionEvent } from "pixi.js";
+import { DisplayObject, InteractionEvent, Matrix } from "pixi.js";
 
 export class EventManager {
+  public coordinateRoot: DisplayObject | undefined;
+
   private _nodes = new Map<IEventTarget, EventManagerNode>();
   private _bush = new RBush<EventManagerNode>();
   private _currentOverElements: Set<EventManagerNode> = new Set();
@@ -169,12 +171,25 @@ export class EventManager {
     this._targets.delete(target);
   }
 
+  getCoordinateRootMatrix(): Matrix | undefined {
+    return this.coordinateRoot?.worldTransform;
+  }
+
   private _performHitTest(x: number, y: number) {
+    let indexX = x;
+    let indexY = y;
+
+    const m = this.getCoordinateRootMatrix();
+    if (m != null) {
+      indexX = (x - m.tx) / m.a;
+      indexY = (y - m.ty) / m.d;
+    }
+
     const qualifyingElements = this._bush.search({
-      minX: x,
-      minY: y,
-      maxX: x,
-      maxY: y,
+      minX: indexX,
+      minY: indexY,
+      maxX: indexX,
+      maxY: indexY,
     });
 
     const sortedElements = qualifyingElements

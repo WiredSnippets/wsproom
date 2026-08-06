@@ -124,9 +124,15 @@ export class RoomModelVisualization
     this._positionalContainer.y = -this.roomBounds.minY;
     this._primaryLayer.sortableChildren = true;
     this._tileLayer.sortableChildren = true;
+    this._primaryLayer.interactiveChildren = false;
+    this._tileLayer.interactiveChildren = false;
+    this._behindWallLayer.interactiveChildren = false;
+    this._landscapeLayer.interactiveChildren = false;
+    this._masksLayer.interactiveChildren = false;
 
     this.addChild(this._positionalContainer);
 
+    this._eventManager.coordinateRoot = this;
     this._eventManagerContainer = new EventManagerContainer(this._application, this._eventManager);
 
     this._updateHeightmap();

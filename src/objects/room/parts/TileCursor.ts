@@ -116,21 +116,29 @@ export class TileCursor
     super.destroy();
   }
 
+  private _lastRect: Rectangle | undefined;
+
   updateTransform() {
     super.updateTransform();
 
-    this._subject.next(this._getCurrentRectangle());
-  }
+    let x = this.worldTransform.tx;
+    let y = this.worldTransform.ty;
+    let width = 64;
+    let height = 32;
 
-  private _getCurrentRectangle(): Rectangle {
-    const position = this.getGlobalPosition();
+    const m = this._eventManager.getCoordinateRootMatrix?.();
+    if (m != null) {
+      x = (x - m.tx) / m.a;
+      y = (y - m.ty) / m.d;
+      width = width / m.a;
+      height = height / m.d;
+    }
 
-    return {
-      x: position.x,
-      y: position.y,
-      width: 64,
-      height: 32,
-    };
+    const last = this._lastRect;
+    if (last != null && last.x === x && last.y === y) return;
+
+    this._lastRect = { x, y, width, height };
+    this._subject.next(this._lastRect);
   }
 
   private _createGraphics() {

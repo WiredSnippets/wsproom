@@ -122,8 +122,6 @@ export class BaseFurniture implements IFurnitureEventHandlers, IEventGroup {
       this.dependencies = dependencies;
     }
 
-    PIXI.Ticker.shared.add(this._onTicker);
-
     this._loadFurniResultPromise = new Promise<LoadFurniResult>((resolve) => {
       this._resolveLoadFurniResult = resolve;
     });
@@ -185,7 +183,6 @@ export class BaseFurniture implements IFurnitureEventHandlers, IEventGroup {
     // Allow recycling furniture across room.changeTileMap / re-addRoomObject.
     this._destroyed = false;
     this._clickHandler.reset();
-    PIXI.Ticker.shared.add(this._onTicker);
     this._loadFurniture();
   }
 
@@ -235,6 +232,7 @@ export class BaseFurniture implements IFurnitureEventHandlers, IEventGroup {
   public set highlight(value) {
     this._highlight = value;
     this._refreshFurniture = true;
+    this._scheduleTicker();
   }
 
   public get activeWired() {
@@ -256,6 +254,7 @@ export class BaseFurniture implements IFurnitureEventHandlers, IEventGroup {
   public set alpha(value) {
     this._alpha = value;
     this._refreshFurniture = true;
+    this._scheduleTicker();
   }
 
   public get onClick() {
@@ -314,6 +313,7 @@ export class BaseFurniture implements IFurnitureEventHandlers, IEventGroup {
     if (value !== this.x) {
       this._x = value;
       this._refreshPosition = true;
+      this._scheduleTicker();
     }
   }
 
@@ -325,6 +325,7 @@ export class BaseFurniture implements IFurnitureEventHandlers, IEventGroup {
     if (value !== this.y) {
       this._y = value;
       this._refreshPosition = true;
+      this._scheduleTicker();
     }
   }
 
@@ -336,6 +337,7 @@ export class BaseFurniture implements IFurnitureEventHandlers, IEventGroup {
     if (value !== this.zIndex) {
       this._zIndex = value;
       this._refreshZIndex = true;
+      this._scheduleTicker();
     }
   }
 
@@ -386,14 +388,35 @@ export class BaseFurniture implements IFurnitureEventHandlers, IEventGroup {
     this._destroySprites();
 
     this._destroyed = true;
-    PIXI.Ticker.shared.remove(this._onTicker);
+    BaseFurniture._dirtyFurniture.delete(this);
     this._cancelTicker && this._cancelTicker();
     this._cancelTicker = undefined;
 
     this._view?.destroy();
   }
 
+  private static _dirtyFurniture = new Set<BaseFurniture>();
+  private static _flushScheduled = false;
+
+  private static _flushDirty = () => {
+    BaseFurniture._flushScheduled = false;
+    const dirty = Array.from(BaseFurniture._dirtyFurniture);
+    BaseFurniture._dirtyFurniture.clear();
+    dirty.forEach((furniture) => furniture._onTicker());
+  };
+
+  private _scheduleTicker() {
+    BaseFurniture._dirtyFurniture.add(this);
+
+    if (!BaseFurniture._flushScheduled) {
+      BaseFurniture._flushScheduled = true;
+      PIXI.Ticker.shared.addOnce(BaseFurniture._flushDirty);
+    }
+  }
+
   private _onTicker = () => {
+    if (this._destroyed) return;
+
     if (this._refreshFurniture) {
       this._refreshFurniture = false;
       this._updateFurniture();
@@ -560,8 +583,11 @@ export class BaseFurniture implements IFurnitureEventHandlers, IEventGroup {
       this.visualization.isAnimated(this.animation) &&
       this._cancelTicker == null
     ) {
+      let lastFrame: number | undefined;
       this._cancelTicker = this.dependencies.animationTicker.subscribe(
         (frame) => {
+          if (frame === lastFrame) return;
+          lastFrame = frame;
           this.visualization.updateFrame(frame);
         }
       );

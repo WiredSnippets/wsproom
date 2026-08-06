@@ -207,6 +207,7 @@ class FurnitureVisualizationLayer
   private _spritePositionChanged = false;
   private _spritesChanged = false;
   private _frameIndex = 0;
+  private _appliedFrameIndex: number | undefined;
   private _color: number | undefined;
   private _allSpritesMounted = false;
 
@@ -314,6 +315,9 @@ class FurnitureVisualizationLayer
   }
 
   setCurrentFrameIndex(value: number): void {
+    if (this._appliedFrameIndex === value) return;
+    this._appliedFrameIndex = value;
+
     const previousFrameIndex = this._frameIndex;
     this._frameIndex = value;
 
@@ -377,6 +381,7 @@ class FurnitureVisualizationLayer
     });
     this._sprites = new Map();
     this._mountedSprites = new Set();
+    this._appliedFrameIndex = undefined;
   }
 
   private _setSpriteVisible(sprite: FurnitureSprite, visible: boolean) {

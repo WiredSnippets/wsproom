@@ -227,10 +227,37 @@ export class HitSprite extends PIXI.Sprite implements IEventTarget {
     return false;
   }
 
+  private _lastRect: Rectangle | undefined;
+
   updateTransform() {
     super.updateTransform();
 
-    this._rectangleSubject.next(this.getHitBox());
+    let width = this.texture.width;
+    let height = this.texture.height;
+    let x = this.worldTransform.tx - (this._mirrored ? width : 0);
+    let y = this.worldTransform.ty;
+
+    const m = this._eventManager.getCoordinateRootMatrix?.();
+    if (m != null) {
+      x = (x - m.tx) / m.a;
+      y = (y - m.ty) / m.d;
+      width = width / m.a;
+      height = height / m.d;
+    }
+
+    const last = this._lastRect;
+    if (
+      last != null &&
+      last.x === x &&
+      last.y === y &&
+      last.width === width &&
+      last.height === height
+    ) {
+      return;
+    }
+
+    this._lastRect = { x, y, width, height };
+    this._rectangleSubject.next(this._lastRect);
   }
 }
 

@@ -88,7 +88,7 @@ export class FurnitureLoader implements IFurnitureLoader {
       typeWithColor,
       await this._getAssetBundle(type, revision)
     );
-    this._furnitureCache.set(type, furniture);
+    this._furnitureCache.set(typeWithColor, furniture);
 
     return furniture;
   }
