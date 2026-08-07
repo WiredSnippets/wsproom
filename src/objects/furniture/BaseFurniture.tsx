@@ -225,6 +225,12 @@ export class BaseFurniture implements IFurnitureEventHandlers, IEventGroup {
     });
   }
 
+  public get validAnimations(): Promise<number[]> {
+    return this._loadFurniResultPromise.then((result) => {
+      return result.visualizationData?.getAnimationIds(64) ?? [];
+    });
+  }
+
   public get highlight() {
     return this._highlight;
   }

@@ -2,6 +2,7 @@ export interface IFurnitureVisualizationData {
   getLayerCount(size: number): number;
   getLayer(size: number, layerId: number): FurnitureLayer | undefined;
   getDirections(size: number): number[];
+  getAnimationIds(size: number): number[];
   getDirectionLayer(
     size: number,
     direction: number,

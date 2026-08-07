@@ -25,6 +25,13 @@ export class JsonFurnitureVisualizationData
     ).map((direction) => Number(direction));
   }
 
+  getAnimationIds(size: number): number[] {
+    return Object.keys(this._getVisualization(size).animations ?? {})
+      .map((id) => Number(id))
+      .filter((id) => !Number.isNaN(id))
+      .sort((a, b) => a - b);
+  }
+
   getDirectionLayer(
     size: number,
     direction: number,
