@@ -62,9 +62,15 @@ export class JsonFurnitureAssetBundle implements IFurnitureAssetBundle {
     );
 
     const blob = await this._assetBundle.getBlob("spritesheet.png");
-    const baseTextureImage = await createImageBitmap(blob);
+    const baseTextureImage = await createImageBitmap(blob, {
+      premultiplyAlpha: "none",
+      colorSpaceConversion: "none",
+    });
 
     const texture = PIXI.Texture.from(baseTextureImage);
+    texture.source.scaleMode = "nearest";
+    texture.source.antialias = false;
+    texture.source.autoGenerateMipmaps = false;
 
     const spritesheet = new PIXI.Spritesheet(texture, json.spritesheet);
 
