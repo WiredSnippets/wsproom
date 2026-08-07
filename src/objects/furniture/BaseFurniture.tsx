@@ -604,12 +604,11 @@ export class BaseFurniture implements IFurnitureEventHandlers, IEventGroup {
       );
     }
 
-    if (
-      !this.visualization.isAnimated(this.animation) &&
-      this._cancelTicker != null
-    ) {
-      this._cancelTicker();
-      this._cancelTicker = undefined;
+    if (!this.visualization.isAnimated(this.animation)) {
+      if (this._cancelTicker != null) {
+        this._cancelTicker();
+        this._cancelTicker = undefined;
+      }
 
       this.visualization.update(this);
       this.visualization.updateFrame(
