@@ -48,12 +48,37 @@ export class WallFurniture extends RoomObject {
     });
   }
 
+  /**
+   * Moves the furniture to another spot on the walls.
+   *
+   * @param roomX New x-Position
+   * @param roomY New y-Position
+   * @param offsetX New x-Offset within the wall tile
+   * @param offsetY New y-Offset within the wall tile
+   */
+  move(roomX: number, roomY: number, offsetX: number, offsetY: number) {
+    this._roomX = roomX;
+    this._roomY = roomY;
+    this._offsetX = offsetX;
+    this._offsetY = offsetY;
+
+    this._updatePosition();
+  }
+
   public get extradata() {
     return this._baseFurniture.extradata;
   }
 
   public get validDirections() {
     return this._baseFurniture.validDirections;
+  }
+
+  public get validAnimations() {
+    return this._baseFurniture.validAnimations;
+  }
+
+  public get height() {
+    return this._baseFurniture.height;
   }
 
   public get id() {
@@ -177,6 +202,22 @@ export class WallFurniture extends RoomObject {
 
   public set onPointerUp(value) {
     this._baseFurniture.onPointerUp = value;
+  }
+
+  public get onPointerOver() {
+    return this._baseFurniture.onPointerOver;
+  }
+
+  public set onPointerOver(value) {
+    this._baseFurniture.onPointerOver = value;
+  }
+
+  public get onPointerOut() {
+    return this._baseFurniture.onPointerOut;
+  }
+
+  public set onPointerOut(value) {
+    this._baseFurniture.onPointerOut = value;
   }
 
   destroyed(): void {
