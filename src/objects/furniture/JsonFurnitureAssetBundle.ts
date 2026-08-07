@@ -1,8 +1,6 @@
 import * as PIXI from "pixi.js";
 
 import { IAssetBundle } from "../../assets/IAssetBundle";
-import { loadImageFromBlob } from "../../util/loadImageFromBlob";
-import { loadImageFromUrl } from "../../util/loadImageFromUrl";
 import { HitTexture } from "../hitdetection/HitTexture";
 import { FurnitureJson } from "./data/FurnitureJson";
 import { IFurnitureAssetsData } from "./data/interfaces/IFurnitureAssetsData";
@@ -64,8 +62,7 @@ export class JsonFurnitureAssetBundle implements IFurnitureAssetBundle {
     );
 
     const blob = await this._assetBundle.getBlob("spritesheet.png");
-    const imageUrl = await loadImageFromBlob(blob);
-    const baseTextureImage = await loadImageFromUrl(imageUrl);
+    const baseTextureImage = await createImageBitmap(blob);
 
     const texture = PIXI.Texture.from(baseTextureImage);
 
