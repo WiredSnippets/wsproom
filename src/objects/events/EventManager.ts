@@ -14,6 +14,8 @@ import {
 import { IEventManager } from "./interfaces/IEventManager";
 import { Container, FederatedPointerEvent, Matrix } from "pixi.js";
 
+const DRAG_THRESHOLD = 10;
+
 export class EventManager {
   public coordinateRoot: Container | undefined;
 
@@ -37,6 +39,8 @@ export class EventManager {
   }
 
   click(event: FederatedPointerEvent, x: number, y: number) {
+    if (this._exceededDragThreshold(x, y)) return;
+
     const elements = this._performHitTest(x, y);
     let nodes = elements.activeNodes;
     if (nodes.length === 0 && this._pointerDownElements.size > 0) {
@@ -59,6 +63,8 @@ export class EventManager {
   }
 
   pointerUp(event: FederatedPointerEvent, x: number, y: number) {
+    const dragged = this._exceededDragThreshold(x, y);
+
     const elements = this._performHitTest(x, y);
     const elementsSet = new Set(elements.activeNodes);
     const downGroups = new Set<IEventGroup>();
@@ -78,7 +84,16 @@ export class EventManager {
       downElements.activeNodes.forEach((node) => clickedNodes.add(node));
     }
 
-    if (elements.activeNodes.length === 0 && clickedNodes.size === 0 && this._onBackgroundClick) {
+    if (dragged) {
+      clickedNodes = new Set();
+    }
+
+    if (
+      !dragged &&
+      elements.activeNodes.length === 0 &&
+      clickedNodes.size === 0 &&
+      this._onBackgroundClick
+    ) {
       this._onBackgroundClick(event);
     }
 
@@ -89,6 +104,17 @@ export class EventManager {
     new Propagation(event, Array.from(clickedNodes), (target, event) => {
       target.triggerClick(event);
     });
+
+    this._pointerDownPosition = undefined;
+  }
+
+  private _exceededDragThreshold(x: number, y: number) {
+    const start = this._pointerDownPosition;
+    if (start == null) return false;
+
+    const distance = Math.sqrt((x - start.x) ** 2 + (y - start.y) ** 2);
+
+    return distance >= DRAG_THRESHOLD;
   }
 
   move(event: FederatedPointerEvent, x: number, y: number) {

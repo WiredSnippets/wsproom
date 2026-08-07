@@ -427,3 +427,43 @@ test("event.skipExcept() skips elements except the specified", () => {
   expect(target3.triggerClick).toHaveBeenCalledTimes(0);
   expect(target4.triggerClick).toHaveBeenCalledTimes(1);
 });
+
+const makeDragTarget = () => {
+  const group = { getEventGroupIdentifier: () => FURNITURE };
+  return {
+  getEventZOrder: () => 10,
+  getGroup: () => group,
+  getRectangleObservable: () =>
+    new BehaviorSubject<Rectangle>({ x: 0, y: 0, width: 100, height: 100 }),
+  hits: () => true,
+  triggerClick: jest.fn(),
+  triggerPointerDown: jest.fn(),
+  triggerPointerOut: jest.fn(),
+  triggerPointerOver: jest.fn(),
+  triggerPointerUp: jest.fn(),
+  triggerPointerTargetChanged: jest.fn(),
+  };
+};
+
+test("does not click when the pointer was dragged", () => {
+  const manager = new EventManager();
+  const target: IEventTarget = makeDragTarget();
+  manager.register(target);
+
+  manager.pointerDown(interactionEvent, 10, 10);
+  manager.pointerUp(interactionEvent, 60, 60);
+
+  expect(target.triggerPointerUp).toHaveBeenCalledTimes(1);
+  expect(target.triggerClick).not.toHaveBeenCalled();
+});
+
+test("clicks when the pointer barely moved", () => {
+  const manager = new EventManager();
+  const target: IEventTarget = makeDragTarget();
+  manager.register(target);
+
+  manager.pointerDown(interactionEvent, 10, 10);
+  manager.pointerUp(interactionEvent, 12, 11);
+
+  expect(target.triggerClick).toHaveBeenCalledTimes(1);
+});
