@@ -31,7 +31,11 @@ export class HitTexture {
       pixelWidth: width,
       scaleMode: "nearest",
     } as any;
-    const texture = { source, orig: { x: 0, y: 0 } } as any;
+    const texture = {
+      source,
+      orig: { x: 0, y: 0 },
+      frame: { x: 0, y: 0, width, height },
+    } as any;
     const instance = new HitTexture(texture);
     (instance as any)._cachedHitmap = hitmap;
     return instance;
@@ -91,12 +95,18 @@ export class HitTexture {
     }
     y = (y - transform.y) / scaleY;
 
-    const source = this._texture.source;
+    const frame = this._texture.frame;
+    const width = Math.max(1, Math.round(frame.width));
+    const height = Math.max(1, Math.round(frame.height));
+
+    const dx = Math.round(x);
+    const dy = Math.round(y);
+
+    if (dx < 0 || dy < 0 || dx >= width || dy >= height) return false;
+
     const hitmap = this._getHitMap();
 
-    const dx = Math.round(this._texture.orig.x + x * source.resolution);
-    const dy = Math.round(this._texture.orig.y + y * source.resolution);
-    const ind = dx + dy * source.pixelWidth;
+    const ind = dx + dy * width;
     const ind1 = ind % 32;
     const ind2 = (ind / 32) | 0;
     return (hitmap[ind2] & (1 << ind1)) !== 0;
@@ -104,29 +114,41 @@ export class HitTexture {
 
   private _getHitMap() {
     if (this._cachedHitmap == null) {
-      this._cachedHitmap = generateHitMap(
-        this._texture.source.resource as HTMLImageElement
-      );
+      this._cachedHitmap = generateHitMap(this._texture);
     }
 
-    return this._cachedHitmap ?? new Uint8ClampedArray();
+    return this._cachedHitmap ?? new Uint32Array();
   }
 }
 
-function generateHitMap(image: HTMLImageElement) {
-  const canvas = document.createElement("canvas");
-  canvas.width = image.width;
-  canvas.height = image.height;
-  const context = canvas.getContext("2d");
+function generateHitMap(texture: PIXI.Texture) {
+  const source = texture.source.resource as CanvasImageSource | undefined;
+  if (source == null) return new Uint32Array();
 
+  const frame = texture.frame;
+  const w = Math.max(1, Math.round(frame.width));
+  const h = Math.max(1, Math.round(frame.height));
+
+  const canvas = document.createElement("canvas");
+  canvas.width = w;
+  canvas.height = h;
+
+  const context = canvas.getContext("2d", { willReadFrequently: true });
   if (context == null) throw new Error("Invalid context 2d");
 
+  context.drawImage(
+    source,
+    Math.round(frame.x),
+    Math.round(frame.y),
+    w,
+    h,
+    0,
+    0,
+    w,
+    h
+  );
+
   const threshold = 25;
-
-  const w = canvas.width;
-  const h = canvas.height;
-  context.drawImage(image, 0, 0);
-
   const imageData = context.getImageData(0, 0, w, h);
 
   const hitmap = new Uint32Array(Math.ceil((w * h) / 32));
