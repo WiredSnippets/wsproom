@@ -213,6 +213,18 @@ export class BaseFurniture implements IFurnitureEventHandlers, IEventGroup {
     this.height = value;
   }
 
+  /**
+   * Tile footprint of the furniture, in room tiles.
+   */
+  public get dimensions(): Promise<{ x: number; y: number } | undefined> {
+    return this._loadFurniResultPromise.then((result) => {
+      const dimensions = result.logicData?.dimensions;
+      if (dimensions == null) return undefined;
+
+      return { x: dimensions.x, y: dimensions.y };
+    });
+  }
+
   public get extradata() {
     return this._loadFurniResultPromise.then((result) => {
       return result.getExtraData();

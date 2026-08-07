@@ -241,6 +241,10 @@ export class FloorFurniture
     return this._baseFurniture.validAnimations;
   }
 
+  public get dimensions() {
+    return this._baseFurniture.dimensions;
+  }
+
   /**
    * Animation of the furniture
    */
