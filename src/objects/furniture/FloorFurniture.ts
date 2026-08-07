@@ -95,6 +95,19 @@ export class FloorFurniture
   }
 
   registered(): void {
+    const { x, y } = this.geometry.getPosition(
+      this.roomX,
+      this.roomY,
+      this.roomZ
+    );
+    this._baseFurniture.x = x;
+    this._baseFurniture.y = y;
+    this._baseFurniture.zIndex = getZOrder(
+      Math.round(this.roomX),
+      Math.round(this.roomY),
+      this.roomZ
+    );
+
     this._baseFurniture.dependencies = {
       animationTicker: this.animationTicker,
       furnitureLoader: this.furnitureLoader,
