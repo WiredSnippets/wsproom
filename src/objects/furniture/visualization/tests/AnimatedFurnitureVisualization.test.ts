@@ -346,3 +346,47 @@ test("plays transition animation before the target animation", () => {
   expect(view.setDisplayAnimation).toHaveBeenLastCalledWith("1");
   expect(layer.setCurrentFrameIndex).toHaveBeenLastCalledWith(0);
 });
+
+test("reapplies the same animation after the view is replaced", () => {
+  const visu = new AnimatedFurnitureVisualization();
+
+  const makeView = () => {
+    const layer: IFurnitureVisualizationLayer = {
+      assetCount: 1,
+      layerIndex: 0,
+      frameRepeat: 1,
+      setCurrentFrameIndex: jest.fn(),
+      setColor: jest.fn(),
+    };
+
+    const visualizationData = mock<IFurnitureVisualizationData>({
+      getTransitionForAnimation: jest.fn().mockReturnValue(undefined),
+      getAnimation: jest.fn().mockReturnValue({ id: 5 }),
+      getFrameCount: jest.fn().mockReturnValue(1),
+    });
+
+    return mock<IFurnitureVisualizationView>({
+      getLayers: jest.fn().mockReturnValue([layer]),
+      getVisualizationData: jest.fn().mockReturnValue(visualizationData),
+      setDisplayAnimation: jest.fn(),
+      setDisplayDirection: jest.fn(),
+      updateDisplay: jest.fn(),
+    });
+  };
+
+  const first = makeView();
+  visu.setView(first);
+  visu.updateDirection(0);
+  visu.updateAnimation("5");
+  visu.updateFrame(0);
+
+  expect(first.setDisplayAnimation).toHaveBeenLastCalledWith("5");
+
+  const second = makeView();
+  visu.setView(second);
+  visu.updateDirection(0);
+  visu.updateAnimation("5");
+  visu.updateFrame(1);
+
+  expect(second.setDisplayAnimation).toHaveBeenLastCalledWith("5");
+});

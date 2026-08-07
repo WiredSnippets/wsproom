@@ -1,6 +1,9 @@
 import { IFurnitureVisualizationData } from "../data/interfaces/IFurnitureVisualizationData";
 import { FurnitureSprite } from "../FurnitureSprite";
-import { IFurnitureVisualizationLayer } from "../IFurnitureVisualizationView";
+import {
+  IFurnitureVisualizationLayer,
+  IFurnitureVisualizationView,
+} from "../IFurnitureVisualizationView";
 import { FurniDrawDefinition, FurniDrawPart } from "../util/DrawDefinition";
 import { FurnitureVisualization } from "./FurnitureVisualization";
 
@@ -54,6 +57,13 @@ export class AnimatedFurnitureVisualization extends FurnitureVisualization {
   public set modifier(value) {
     this._modifier = value;
     this._updateFurniture();
+  }
+
+  setView(view: IFurnitureVisualizationView): void {
+    super.setView(view);
+    this._currentTargetAnimationId = undefined;
+    this._currentDirection = undefined;
+    this._currentAnimationId = undefined;
   }
 
   setCurrentAnimation(newAnimation: number) {
