@@ -150,10 +150,13 @@ export class RoomCamera extends PIXI.Container {
     const roomX = (anchor.x - this._offsets.x) / this._zoom;
     const roomY = (anchor.y - this._offsets.y) / this._zoom;
 
-    const targetOffsets = {
+    const previousZoom = this._zoom;
+    this._zoom = target;
+    const targetOffsets = this._clampOffsets({
       x: anchor.x - roomX * target,
       y: anchor.y - roomY * target,
-    };
+    });
+    this._zoom = previousZoom;
 
     this._zoomTween?.stop();
 
@@ -276,31 +279,26 @@ export class RoomCamera extends PIXI.Container {
     }
   }
 
-  private _isOutOfBounds(offsets: { x: number; y: number }) {
+  private _clampOffsets(offsets: { x: number; y: number }) {
+    const bounds = this._parentBounds();
     const roomX = this.parent!.position.x + this._room.x * this._zoom;
     const roomY = this.parent!.position.y + this._room.y * this._zoom;
+    const roomWidth = this._room.roomWidth * this._zoom;
+    const roomHeight = this._room.roomHeight * this._zoom;
 
-    if (roomX + this._room.roomWidth * this._zoom + offsets.x <= 0) {
-      // The room is out of bounds to the left side.
-      return true;
-    }
+    const margin = Math.min(roomWidth, bounds.width) / 2;
+    const marginY = Math.min(roomHeight, bounds.height) / 2;
 
-    if (roomX + offsets.x >= this._parentBounds().width) {
-      // The room is out of bounds to the right side.
-      return true;
-    }
-
-    if (roomY + this._room.roomHeight * this._zoom + offsets.y <= 0) {
-      // The room is out of bounds to the top side.
-      return true;
-    }
-
-    if (roomY + offsets.y >= this._parentBounds().height) {
-      // The room is out of bounds to the botoom side.
-      return true;
-    }
-
-    return false;
+    return {
+      x: Math.min(
+        Math.max(offsets.x, margin - roomX - roomWidth),
+        bounds.width - roomX - margin
+      ),
+      y: Math.min(
+        Math.max(offsets.y, marginY - roomY - roomHeight),
+        bounds.height - roomY - marginY
+      ),
+    };
   }
 
   private _returnToZero(
@@ -313,13 +311,15 @@ export class RoomCamera extends PIXI.Container {
     };
     const duration = this._options?.duration ?? 500;
 
+    const target = this._clampOffsets(current);
+
     this._animatedOffsets = current;
-    this._offsets = { x: 0, y: 0 };
+    this._offsets = target;
 
     const newPos = { ...this._animatedOffsets };
 
     const tween = new Tween(newPos, this._tweenGroup)
-      .to({ x: 0, y: 0 }, duration)
+      .to({ x: target.x, y: target.y }, duration)
       .easing(TWEEN.Easing.Quadratic.Out) // Use an easing function to make the animation smooth.
       .onUpdate((object: { x: number; y: number }, elapsed: number) => {
         this._animatedOffsets = object;
@@ -346,15 +346,14 @@ export class RoomCamera extends PIXI.Container {
       y: this._offsets.y + diffY,
     };
 
-    if (
-      this._isOutOfBounds(currentOffsets) ||
-      (state.skipBoundsCheck != null && state.skipBoundsCheck)
-    ) {
+    const clamped = this._clampOffsets(currentOffsets);
+
+    if (clamped.x !== currentOffsets.x || clamped.y !== currentOffsets.y) {
       this._returnToZero(state, currentOffsets);
       return true;
-    } else {
-      this._offsets = currentOffsets;
     }
+
+    this._offsets = currentOffsets;
 
     return false;
   }
