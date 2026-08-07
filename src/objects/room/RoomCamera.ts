@@ -280,6 +280,8 @@ export class RoomCamera extends PIXI.Container {
   }
 
   private _clampOffsets(offsets: { x: number; y: number }) {
+    if (!this._options?.bounded) return offsets;
+
     const bounds = this._parentBounds();
     const roomX = this.parent!.position.x + this._room.x * this._zoom;
     const roomY = this.parent!.position.y + this._room.y * this._zoom;
@@ -466,6 +468,7 @@ type RoomCameraState =
 type RoomCameraOptions = {
   duration?: number;
   target?: EventTarget;
+  bounded?: boolean;
   zoom?: {
     enabled: boolean;
     levels?: number[];
