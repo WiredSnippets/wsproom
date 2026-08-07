@@ -91,9 +91,14 @@ export class TileCursor
 
   hits(x: number, y: number): boolean {
     const pos = this.getGlobalPosition();
+    const transform = this.worldTransform;
+    const scaleX =
+      Math.sqrt(transform.a * transform.a + transform.b * transform.b) || 1;
+    const scaleY =
+      Math.sqrt(transform.c * transform.c + transform.d * transform.d) || 1;
 
-    const diffX = x - pos.x;
-    const diffY = y - pos.y;
+    const diffX = (x - pos.x) / scaleX;
+    const diffY = (y - pos.y) / scaleY;
 
     return this._pointInside(
       [diffX, diffY],
@@ -129,8 +134,6 @@ export class TileCursor
     if (m != null) {
       x = (x - m.tx) / m.a;
       y = (y - m.ty) / m.d;
-      width = width / m.a;
-      height = height / m.d;
     }
 
     const last = this._lastRect;

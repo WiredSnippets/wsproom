@@ -78,15 +78,18 @@ export class HitTexture {
   hits(
     x: number,
     y: number,
-    transform: { x: number; y: number },
+    transform: { x: number; y: number; scaleX?: number; scaleY?: number },
     options: { mirrorHorizonally?: boolean } = { mirrorHorizonally: false }
   ) {
+    const scaleX = transform.scaleX ?? 1;
+    const scaleY = transform.scaleY ?? 1;
+
     if (options.mirrorHorizonally) {
-      x = -(x - transform.x);
+      x = -(x - transform.x) / scaleX;
     } else {
-      x = x - transform.x;
+      x = (x - transform.x) / scaleX;
     }
-    y = y - transform.y;
+    y = (y - transform.y) / scaleY;
 
     const source = this._texture.source;
     const hitmap = this._getHitMap();

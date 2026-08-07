@@ -30,7 +30,7 @@ export class HitSprite extends PIXI.Sprite implements IEventTarget {
     | (() => (
         x: number,
         y: number,
-        transform: { x: number; y: number }
+        transform: { x: number; y: number; scaleX?: number; scaleY?: number }
       ) => boolean)
     | undefined;
 
@@ -168,7 +168,7 @@ export class HitSprite extends PIXI.Sprite implements IEventTarget {
       this._getHitmap = () => (
         x: number,
         y: number,
-        transform: { x: number; y: number }
+        transform: { x: number; y: number; scaleX?: number; scaleY?: number }
       ) =>
         value.hits(x, y, transform, {
           mirrorHorizonally: this._mirrored,
@@ -188,21 +188,33 @@ export class HitSprite extends PIXI.Sprite implements IEventTarget {
 
   getHitBox(): Rectangle {
     const pos = this.getGlobalPosition();
+    const { x: scaleX, y: scaleY } = this._getGlobalScale();
+    const width = this.texture.width * scaleX;
+    const height = this.texture.height * scaleY;
 
     if (this._mirrored) {
       return {
-        x: pos.x - this.texture.width,
+        x: pos.x - width,
         y: pos.y,
-        width: this.texture.width,
-        height: this.texture.height,
+        width,
+        height,
       };
     }
 
     return {
       x: pos.x,
       y: pos.y,
-      width: this.texture.width,
-      height: this.texture.height,
+      width,
+      height,
+    };
+  }
+
+  private _getGlobalScale(): { x: number; y: number } {
+    const transform = this.worldTransform;
+
+    return {
+      x: Math.sqrt(transform.a * transform.a + transform.b * transform.b) || 1,
+      y: Math.sqrt(transform.c * transform.c + transform.d * transform.d) || 1,
     };
   }
 
@@ -219,9 +231,12 @@ export class HitSprite extends PIXI.Sprite implements IEventTarget {
     if (inBoundsX && inBoundsY) {
       const hits = this._getHitmap();
       const pos = this.getGlobalPosition();
+      const scale = this._getGlobalScale();
       return hits(x, y, {
         x: pos.x,
         y: pos.y,
+        scaleX: scale.x,
+        scaleY: scale.y,
       });
     }
 
@@ -240,8 +255,6 @@ export class HitSprite extends PIXI.Sprite implements IEventTarget {
     if (m != null) {
       x = (x - m.tx) / m.a;
       y = (y - m.ty) / m.d;
-      width = width / m.a;
-      height = height / m.d;
     }
 
     const last = this._lastRect;
