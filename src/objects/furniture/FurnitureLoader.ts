@@ -90,6 +90,10 @@ export class FurnitureLoader implements IFurnitureLoader {
     );
     this._furnitureCache.set(typeWithColor, furniture);
 
+    furniture.catch(() => {
+      this._furnitureCache.delete(typeWithColor);
+    });
+
     return furniture;
   }
 
@@ -100,6 +104,10 @@ export class FurnitureLoader implements IFurnitureLoader {
 
     const bundle = this._options.getAssetBundle(type, revision);
     this._assetBundles.set(key, bundle);
+
+    bundle.catch(() => {
+      this._assetBundles.delete(key);
+    });
 
     return bundle;
   }

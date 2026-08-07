@@ -72,6 +72,7 @@ export class BaseFurniture implements IFurnitureEventHandlers, IEventGroup {
   private _loadFurniResultPromise: Promise<LoadFurniResult>;
   private _validDirections: number[] | undefined;
   private _resolveLoadFurniResult: ResolveLoadFurniResult | undefined;
+  private _rejectLoadFurniResult: ((reason?: unknown) => void) | undefined;
   private _view: FurnitureVisualizationView | undefined;
 
   private _visualization: IFurnitureVisualization | undefined;
@@ -122,9 +123,14 @@ export class BaseFurniture implements IFurnitureEventHandlers, IEventGroup {
       this.dependencies = dependencies;
     }
 
-    this._loadFurniResultPromise = new Promise<LoadFurniResult>((resolve) => {
-      this._resolveLoadFurniResult = resolve;
-    });
+    this._loadFurniResultPromise = new Promise<LoadFurniResult>(
+      (resolve, reject) => {
+        this._resolveLoadFurniResult = resolve;
+        this._rejectLoadFurniResult = reject;
+      }
+    );
+
+    this._loadFurniResultPromise.catch(() => undefined);
   }
 
   static fromRoomContext(context: IRoomContext, props: BaseFurnitureProps) {
@@ -582,17 +588,24 @@ export class BaseFurniture implements IFurnitureEventHandlers, IEventGroup {
 
     this._unknownTexture = this.dependencies.placeholder ?? undefined;
 
-    this.dependencies.furnitureLoader.loadFurni(this._type).then((result) => {
-      if (this._destroyed) return;
+    this.dependencies.furnitureLoader
+      .loadFurni(this._type)
+      .then((result) => {
+        if (this._destroyed) return;
 
-      this._loadFurniResult = result;
-      this._resolveLoadFurniResult && this._resolveLoadFurniResult(result);
-      this._updateFurniture();
+        this._loadFurniResult = result;
+        this._resolveLoadFurniResult && this._resolveLoadFurniResult(result);
+        this._updateFurniture();
 
-      if (this._onLoad) {
-        this._onLoad();
-      }
-    });
+        if (this._onLoad) {
+          this._onLoad();
+        }
+      })
+      .catch((error) => {
+        if (this._destroyed) return;
+
+        this._rejectLoadFurniResult && this._rejectLoadFurniResult(error);
+      });
 
     this._updateFurniture();
   }
