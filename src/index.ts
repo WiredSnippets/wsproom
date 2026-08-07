@@ -38,6 +38,9 @@ export { FurnitureBottleVisualization } from "./objects/furniture/visualization/
 export { FurnitureVisualization } from "./objects/furniture/visualization/FurnitureVisualization";
 export type { IFurnitureVisualization } from "./objects/furniture/IFurnitureVisualization";
 
+export type { RoomPosition } from "./types/RoomPosition";
+export type { WallPosition } from "./types/WallPosition";
+
 export { WallLeft } from "./objects/room/parts/WallLeft";
 export { WallRight } from "./objects/room/parts/WallRight";
 export { RoomModelVisualization } from "./objects/room/RoomModelVisualization";

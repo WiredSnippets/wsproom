@@ -8,6 +8,7 @@ import { IRoomGeometry } from "../../interfaces/IRoomGeometry";
 import { IRoomObject } from "../../interfaces/IRoomObject";
 import { IRoomObjectContainer } from "../../interfaces/IRoomObjectContainer";
 import { RoomPosition } from "../../types/RoomPosition";
+import { WallPosition } from "../../types/WallPosition";
 import { TileType } from "../../types/TileType";
 import { ParsedTileType } from "../../util/parseTileMap";
 import { parseTileMapString } from "../../util/parseTileMapString";
@@ -79,12 +80,17 @@ export class Room
   private _activeTileSubject = new Subject<RoomPosition>();
   private _activeTileSubscription: Subscription | undefined;
 
+  private _activeWallSubject = new Subject<WallPosition | undefined>();
+  private _activeWallSubscription: Subscription | undefined;
+
+  private _tileClickSubscription: Subscription | undefined;
+
   public get onActiveTileChange() {
     return this._activeTileSubject.asObservable();
   }
 
   public get onActiveWallChange() {
-    return this._visualization.onActiveWallChange;
+    return this._activeWallSubject.asObservable();
   }
 
   constructor({
@@ -134,17 +140,27 @@ export class Room
 
     this.addChild(this._visualization);
 
-    this._visualization.onTileClick.subscribe((value) => {
-      this.onTileClick && this.onTileClick(value.position, value.event);
-    });
-
-    this._resubscribeActiveTile();
+    this._resubscribeVisualization();
   }
 
-  private _resubscribeActiveTile() {
+  /**
+   * The room exposes its own subjects, so a visualization swap (changeTileMap)
+   * stays invisible to whoever subscribed to the room.
+   */
+  private _resubscribeVisualization() {
     this._activeTileSubscription?.unsubscribe();
     this._activeTileSubscription = this._visualization.onActiveTileChange.subscribe(
       (pos) => this._activeTileSubject.next(pos)
+    );
+
+    this._activeWallSubscription?.unsubscribe();
+    this._activeWallSubscription = this._visualization.onActiveWallChange.subscribe(
+      (spot) => this._activeWallSubject.next(spot)
+    );
+
+    this._tileClickSubscription?.unsubscribe();
+    this._tileClickSubscription = this._visualization.onTileClick.subscribe(
+      (value) => this.onTileClick && this.onTileClick(value.position, value.event)
     );
   }
 
@@ -343,7 +359,7 @@ export class Room
 
     this._visualization = newVisualization;
     this.addChild(this._visualization);
-    this._resubscribeActiveTile();
+    this._resubscribeVisualization();
 
     if (this._roomObjectContainer.context) {
       this._roomObjectContainer.context.visualization = this._visualization;
@@ -353,10 +369,6 @@ export class Room
     currentObjects.forEach(object => {
       this._roomObjectContainer.removeRoomObject(object);
       this.addRoomObject(object);
-    });
-
-    this._visualization.onTileClick.subscribe((value) => {
-      this.onTileClick && this.onTileClick(value.position, value.event);
     });
   }
 
@@ -444,6 +456,10 @@ export class Room
   destroy() {
     super.destroy();
     this.roomObjects.forEach((object) => this.removeRoomObject(object));
+
+    this._activeTileSubscription?.unsubscribe();
+    this._activeWallSubscription?.unsubscribe();
+    this._tileClickSubscription?.unsubscribe();
 
     this._visualization.destroy();
   }

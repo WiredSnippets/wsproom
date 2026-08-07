@@ -6,6 +6,7 @@ import {
   PartNode,
 } from "../../interfaces/IRoomVisualization";
 import { RoomPosition } from "../../types/RoomPosition";
+import { WallPosition } from "../../types/WallPosition";
 import { getZOrder } from "../../util/getZOrder";
 import { ParsedTileType, ParsedTileWall } from "../../util/parseTileMap";
 import { EventManager } from "../events/EventManager";
@@ -65,16 +66,7 @@ export class RoomModelVisualization
   private _wallHeight = 116;
 
   private _onActiveTileChange = new Subject<RoomPosition>();
-  private _onActiveWallChange = new Subject<
-    | {
-        roomX: number;
-        roomY: number;
-        offsetX: number;
-        offsetY: number;
-        wall: "l" | "r";
-      }
-    | undefined
-  >();
+  private _onActiveWallChange = new Subject<WallPosition | undefined>();
 
   private _onTileClick = new Subject<{
     position: RoomPosition,
