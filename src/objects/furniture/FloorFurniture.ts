@@ -112,6 +112,7 @@ export class FloorFurniture
       animationTicker: this.animationTicker,
       furnitureLoader: this.furnitureLoader,
       placeholder: this.configuration.placeholder,
+      configuration: this.configuration,
       visualization: this.roomVisualization,
       eventManager: this.eventManager,
     };

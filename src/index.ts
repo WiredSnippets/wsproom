@@ -3,6 +3,8 @@ import { IEventManagerEvent } from "./objects/events/interfaces/IEventManagerEve
 export { RoomObject } from "./objects/RoomObject";
 export { Avatar } from "./objects/avatar/Avatar";
 export { FloorFurniture } from "./objects/furniture/FloorFurniture";
+export { HighlightFilter } from "./objects/furniture/filter/HighlightFilter";
+export { ActiveWiredFilter } from "./objects/furniture/filter/ActiveWiredFilter";
 export { WallFurniture } from "./objects/furniture/WallFurniture";
 export { Room } from "./objects/room/Room";
 export { RoomCamera } from "./objects/room/RoomCamera";

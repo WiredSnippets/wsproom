@@ -20,11 +20,15 @@ import {
 } from "./IFurnitureVisualizationView";
 import { FurniDrawDefinition, FurniDrawPart } from "./util/DrawDefinition";
 import { LoadFurniResult } from "./util/loadFurni";
+import { IConfiguration } from "../../interfaces/IConfiguration";
 
-const highlightFilter = new HighlightFilter(0x7dabab, 0xffffff, 1);
-const highlightFilterPrimary = new HighlightFilter(0xb8d45a, 0xffffff, 1);
-const highlightFilterSecondary = new HighlightFilter(0x727dd9, 0xffffff, 1);
 const activeWiredFilter = new ActiveWiredFilter();
+
+const DEFAULT_HIGHLIGHT_FILTERS: Record<string, PIXI.Filter> = {
+  default: new HighlightFilter(0x7dabab, 0xffffff, 1),
+  primary: new HighlightFilter(0xb8d45a, 0xffffff, 1),
+  secondary: new HighlightFilter(0x727dd9, 0xffffff, 1),
+};
 
 export class FurnitureVisualizationView
   implements IFurnitureVisualizationView, IBaseFurniture, IEventGroup {
@@ -38,7 +42,7 @@ export class FurnitureVisualizationView
   private _y: number | undefined;
   private _zIndex: number | undefined;
   private _alpha: number | undefined;
-  private _highlight: boolean | 'primary' | 'secondary' | undefined;
+  private _highlight: boolean | string | undefined;
   private _activeWired = false;
 
   public get activeWired() {
@@ -104,8 +108,13 @@ export class FurnitureVisualizationView
     private _clickHandler: ClickHandler,
     private _overOutHandler: EventOverOutHandler,
     private _container: PIXI.Container,
-    private _furniture: LoadFurniResult
+    private _furniture: LoadFurniResult,
+    private _configuration: IConfiguration = {}
   ) {}
+
+  public get configuration() {
+    return this._configuration;
+  }
 
   getEventGroupIdentifier(): EventGroupIdentifier {
     return FURNITURE;
@@ -201,7 +210,7 @@ class FurnitureVisualizationLayer
   private _y: number | undefined;
   private _zIndex: number | undefined;
   private _alpha: number | undefined;
-  private _highlight: boolean | 'primary' | 'secondary' | undefined;
+  private _highlight: boolean | string | undefined;
   private _activeWired: boolean | undefined;
 
   private _spritePositionChanged = false;
@@ -493,13 +502,23 @@ class FurnitureVisualizationLayer
     // Apply asset styling
     const highlight = this._highlight /* && layer?.ink == null */ && !shadow && !mask;
 
+    const configuration = this._parent.configuration;
+    const custom = configuration.highlightFilters;
+    const wiredFilter = configuration.activeWiredFilter ?? activeWiredFilter;
+
     if (highlight) {
-      const filter = this._highlight === 'primary' ? highlightFilterPrimary
-        : this._highlight === 'secondary' ? highlightFilterSecondary
-        : highlightFilter;
-      sprite.filters = this._activeWired ? [filter, activeWiredFilter] : [filter];
+      const key =
+        typeof this._highlight === 'string' ? this._highlight : 'default';
+
+      const filter =
+        custom?.[key] ??
+        DEFAULT_HIGHLIGHT_FILTERS[key] ??
+        custom?.default ??
+        DEFAULT_HIGHLIGHT_FILTERS.default;
+
+      sprite.filters = this._activeWired ? [filter, wiredFilter] : [filter];
     } else if (this._activeWired && !shadow && !mask) {
-      sprite.filters = [activeWiredFilter];
+      sprite.filters = [wiredFilter];
     } else {
       sprite.filters = [];
     }
@@ -597,6 +616,6 @@ export interface IBaseFurniture {
   y: number;
   zIndex: number;
   alpha: number;
-  highlight: boolean | 'primary' | 'secondary';
+  highlight: boolean | string;
   activeWired: boolean;
 }

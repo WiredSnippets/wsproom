@@ -5,4 +5,6 @@ export interface IConfiguration {
   tileColor?: { floorColor?: string; leftFade?: number; rightFade?: number };
   avatarMovementDuration?: number;
   furnitureMovementDuration?: number;
+  highlightFilters?: Record<string, PIXI.Filter>;
+  activeWiredFilter?: PIXI.Filter;
 }

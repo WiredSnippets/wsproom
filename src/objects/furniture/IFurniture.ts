@@ -11,7 +11,7 @@ export interface IFurniture extends IFurnitureEventHandlers {
   roomZ: number;
   direction: number;
   animation: string | undefined;
-  highlight: boolean | 'primary' | 'secondary' | undefined;
+  highlight: boolean | string | undefined;
   activeWired: boolean | undefined;
   placementType: "wall" | "floor";
   alpha: number;

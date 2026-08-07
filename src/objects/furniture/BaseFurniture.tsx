@@ -9,6 +9,7 @@ import {
   IFurnitureLoader,
 } from "../../interfaces/IFurnitureLoader";
 import { IAnimationTicker } from "../../interfaces/IAnimationTicker";
+import { IConfiguration } from "../../interfaces/IConfiguration";
 import { IRoomContext } from "../../interfaces/IRoomContext";
 import { Shroom } from "../Shroom";
 import { IFurnitureVisualization } from "./IFurnitureVisualization";
@@ -39,8 +40,9 @@ interface BaseFurnitureDependencies {
   visualization: IFurnitureRoomVisualization;
   animationTicker: IAnimationTicker;
   furnitureLoader: IFurnitureLoader;
-  application: PIXI.Application;
+  application?: PIXI.Application;
   eventManager: IEventManager;
+  configuration?: IConfiguration;
 }
 
 export interface BaseFurnitureProps {
@@ -82,7 +84,7 @@ export class BaseFurniture implements IFurnitureEventHandlers, IEventGroup {
   private _refreshFurniture = false;
   private _refreshZIndex = false;
 
-  private _highlight: boolean | 'primary' | 'secondary' = false;
+  private _highlight: boolean | string = false;
   private _activeWired = false;
   private _alpha = 1;
   private _destroyed = false;
@@ -95,13 +97,7 @@ export class BaseFurniture implements IFurnitureEventHandlers, IEventGroup {
 
   private _onLoad: (() => void) | undefined;
 
-  private _dependencies?: {
-    placeholder: PIXI.Texture | undefined;
-    visualization: IFurnitureRoomVisualization;
-    animationTicker: IAnimationTicker;
-    furnitureLoader: IFurnitureLoader;
-    eventManager: IEventManager;
-  };
+  private _dependencies?: BaseFurnitureDependencies;
 
   constructor({
     type,
@@ -142,6 +138,7 @@ export class BaseFurniture implements IFurnitureEventHandlers, IEventGroup {
         visualization: context.visualization,
         application: context.application,
         eventManager: context.eventManager,
+        configuration: context.configuration,
       },
       ...props,
     });
@@ -157,6 +154,7 @@ export class BaseFurniture implements IFurnitureEventHandlers, IEventGroup {
         animationTicker: shroom.dependencies.animationTicker,
         furnitureLoader: shroom.dependencies.furnitureLoader,
         placeholder: shroom.dependencies.configuration.placeholder,
+        configuration: shroom.dependencies.configuration,
         application: shroom.dependencies.application,
         eventManager: NOOP_EVENT_MANAGER,
         visualization: {
@@ -538,7 +536,8 @@ export class BaseFurniture implements IFurnitureEventHandlers, IEventGroup {
       this._clickHandler,
       this._overOutHandler,
       this.dependencies.visualization.container,
-      loadFurniResult
+      loadFurniResult,
+      this.dependencies.configuration
     );
 
     view.x = this.x;
