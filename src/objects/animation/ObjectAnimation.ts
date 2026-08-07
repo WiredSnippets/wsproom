@@ -34,6 +34,19 @@ export class ObjectAnimation<T> {
     return this._nextPosition;
   }
 
+  /**
+   * Drops the running interpolation and everything queued behind it, so the
+   * object can be placed somewhere else without gliding there first.
+   */
+  stop() {
+    this._enqueued = [];
+    this._finishCurrent = undefined;
+    this._current = undefined;
+    this._diff = undefined;
+    this._cancelTicker?.();
+    this._cancelTicker = undefined;
+  }
+
   destroy() {
     this._destroyed = true;
     if (this._cancelTicker != null) {

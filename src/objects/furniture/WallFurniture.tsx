@@ -57,6 +57,15 @@ export class WallFurniture extends RoomObject {
    * @param offsetY New y-Offset within the wall tile
    */
   move(roomX: number, roomY: number, offsetX: number, offsetY: number) {
+    if (
+      this._roomX === roomX &&
+      this._roomY === roomY &&
+      this._offsetX === offsetX &&
+      this._offsetY === offsetY
+    ) {
+      return;
+    }
+
     this._roomX = roomX;
     this._roomY = roomY;
     this._offsetX = offsetX;
@@ -272,16 +281,11 @@ export class WallFurniture extends RoomObject {
   }
 
   private _updatePosition() {
-    const offsets = this._getOffsets(this.direction);
-    if (offsets == null) return;
-
     const position = this._getOffsets(this.direction);
+    if (position == null) return;
 
     this._baseFurniture.x = position.x;
     this._baseFurniture.y = position.y;
-    this._baseFurniture.maskId = (direction) =>
-      getMaskId(direction, this.roomX, this.roomY);
-
     this._baseFurniture.zIndex = getZOrder(this.roomX, this.roomY, 0) - 1;
   }
 }

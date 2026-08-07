@@ -77,6 +77,30 @@ export class FloorFurniture
   }
 
   /**
+   * Places the furniture at a position without animating there. Dragging
+   * updates the position many times per second, where gliding would make the
+   * furniture trail the cursor instead of following it.
+   *
+   * @param roomX New x-Position
+   * @param roomY New y-Position
+   * @param roomZ New z-Position
+   */
+  setPosition(roomX: number, roomY: number, roomZ: number) {
+    if (this._roomX === roomX && this._roomY === roomY && this._roomZ === roomZ && !this._moving) {
+      return;
+    }
+
+    this._moveAnimation?.stop();
+    this._moving = false;
+
+    this._roomX = roomX;
+    this._roomY = roomY;
+    this._roomZ = roomZ;
+
+    this._updatePosition();
+  }
+
+  /**
    * Clears the enqueued movement animations of the furniture
    */
   clearMovement() {
