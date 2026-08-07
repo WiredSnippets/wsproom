@@ -1,7 +1,12 @@
 import * as PIXI from "pixi.js";
 
 import { Room } from "./Room";
-import TWEEN from '@tweenjs/tween.js';
+import TWEEN, { Group, Tween } from '@tweenjs/tween.js';
+
+const ZOOM_LEVELS = [0.5, 1, 2, 4, 8];
+const ZOOM_DURATION = 180;
+
+type ZoomTweenValues = { zoom: number; x: number; y: number };
 
 export class RoomCamera extends PIXI.Container {
   private _state: RoomCameraState = { type: "WAITING" };
@@ -16,6 +21,10 @@ export class RoomCamera extends PIXI.Container {
   private _tween: any;
   private _target: EventTarget;
   private isMobile: boolean = false;
+
+  private _zoom = 1;
+  private _zoomTween: Tween<ZoomTweenValues> | undefined;
+  private _tweenGroup: Group;
 
   constructor(
     private readonly _room: Room,
@@ -32,7 +41,7 @@ export class RoomCamera extends PIXI.Container {
     this._parentContainer.hitArea = this._parentBounds();
     this._parentContainer.eventMode = "static";
 
-    this._container = new PIXI.Container();
+    this._container = new PIXI.Container({ isRenderGroup: true });
     this._container.addChild(this._room);
     this._parentContainer.addChild(this._container);
 
@@ -46,13 +55,16 @@ export class RoomCamera extends PIXI.Container {
     );
     this._target.addEventListener("pointerup", this._handlePointerUp as any);
 
-    let last: number | undefined;
-    this._room.application.ticker.add(() => {
-      if (last == null) last = performance.now();
-      const value = performance.now() - last;
+    if (this._options?.zoom?.enabled) {
+      this._room.application.canvas.addEventListener(
+        "wheel",
+        this._handleWheel,
+        { passive: false }
+      );
+    }
 
-      TWEEN.update(value);
-    });
+    this._tweenGroup = new Group();
+    this._room.application.ticker.add(this._updateTweens);
   }
 
   static forScreen(room: Room, options?: RoomCameraOptions) {
@@ -78,10 +90,98 @@ export class RoomCamera extends PIXI.Container {
       this._handlePointerMove as any
     );
     this._target.removeEventListener("pointerup", this._handlePointerUp as any);
+    this._room.application.canvas.removeEventListener(
+      "wheel",
+      this._handleWheel
+    );
+    this._zoomTween?.stop();
+    this._tweenGroup.removeAll();
+    this._room.application.ticker.remove(this._updateTweens);
   }
 
   public get container() : PIXI.Container {
     return this._container;
+  }
+
+  public get zoom() {
+    return this._zoom;
+  }
+
+  public setZoom(value: number, anchor?: { x: number; y: number }) {
+    const bounds = this._parentBounds();
+    this._zoomTo(value, anchor ?? { x: bounds.width / 2, y: bounds.height / 2 });
+  }
+
+  private get _zoomLevels() {
+    return this._options?.zoom?.levels ?? ZOOM_LEVELS;
+  }
+
+  private _updateTweens = () => {
+    this._tweenGroup.update(TWEEN.now(), false);
+  };
+
+  private _handleWheel = (event: WheelEvent) => {
+    if (!this._enabled || !this._options?.zoom?.enabled) return;
+    event.preventDefault();
+
+    const levels = this._zoomLevels;
+    const index = levels.indexOf(this._zoom);
+    const current = index >= 0
+      ? index
+      : levels.reduce(
+          (best, level, i) =>
+            Math.abs(level - this._zoom) < Math.abs(levels[best] - this._zoom) ? i : best,
+          0
+        );
+
+    const next = event.deltaY < 0 ? current + 1 : current - 1;
+    if (next < 0 || next >= levels.length) return;
+
+    const box = this._room.application.canvas.getBoundingClientRect();
+    this._zoomTo(levels[next], {
+      x: event.clientX - box.x - this.parent!.worldTransform.tx,
+      y: event.clientY - box.y - this.parent!.worldTransform.ty,
+    });
+  };
+
+  private _zoomTo(target: number, anchor: { x: number; y: number }) {
+    if (target === this._zoom) return;
+
+    const roomX = (anchor.x - this._offsets.x) / this._zoom;
+    const roomY = (anchor.y - this._offsets.y) / this._zoom;
+
+    const targetOffsets = {
+      x: anchor.x - roomX * target,
+      y: anchor.y - roomY * target,
+    };
+
+    this._zoomTween?.stop();
+
+    const from: ZoomTweenValues = {
+      zoom: this._zoom,
+      x: this._offsets.x,
+      y: this._offsets.y,
+    };
+
+    this._zoomTween = new Tween(from, this._tweenGroup)
+      .to(
+        { zoom: target, x: targetOffsets.x, y: targetOffsets.y },
+        this._options?.zoom?.duration ?? ZOOM_DURATION
+      )
+      .easing(TWEEN.Easing.Cubic.Out)
+      .onUpdate((object: ZoomTweenValues) => {
+        this._zoom = object.zoom;
+        this._offsets = { x: object.x, y: object.y };
+        this._container.scale.set(object.zoom);
+        this._updatePosition();
+      })
+      .onComplete(() => {
+        this._zoom = target;
+        this._offsets = targetOffsets;
+        this._container.scale.set(target);
+        this._updatePosition();
+      })
+      .start();
   }
 
   private _handlePointerUp = (event: PointerEvent) => {
@@ -177,10 +277,10 @@ export class RoomCamera extends PIXI.Container {
   }
 
   private _isOutOfBounds(offsets: { x: number; y: number }) {
-    const roomX = this.parent!.position.x + this._room.x;
-    const roomY = this.parent!.position.y + this._room.y;
+    const roomX = this.parent!.position.x + this._room.x * this._zoom;
+    const roomY = this.parent!.position.y + this._room.y * this._zoom;
 
-    if (roomX + this._room.roomWidth + offsets.x <= 0) {
+    if (roomX + this._room.roomWidth * this._zoom + offsets.x <= 0) {
       // The room is out of bounds to the left side.
       return true;
     }
@@ -190,7 +290,7 @@ export class RoomCamera extends PIXI.Container {
       return true;
     }
 
-    if (roomY + this._room.roomHeight + offsets.y <= 0) {
+    if (roomY + this._room.roomHeight * this._zoom + offsets.y <= 0) {
       // The room is out of bounds to the top side.
       return true;
     }
@@ -218,7 +318,7 @@ export class RoomCamera extends PIXI.Container {
 
     const newPos = { ...this._animatedOffsets };
 
-    const tween = new TWEEN.Tween(newPos)
+    const tween = new Tween(newPos, this._tweenGroup)
       .to({ x: 0, y: 0 }, duration)
       .easing(TWEEN.Easing.Quadratic.Out) // Use an easing function to make the animation smooth.
       .onUpdate((object: { x: number; y: number }, elapsed: number) => {
@@ -364,4 +464,12 @@ type RoomCameraState =
   | CameraDraggingState
   | CameraAnimateZeroState;
 
-type RoomCameraOptions = { duration?: number; target?: EventTarget };
+type RoomCameraOptions = {
+  duration?: number;
+  target?: EventTarget;
+  zoom?: {
+    enabled: boolean;
+    levels?: number[];
+    duration?: number;
+  };
+};
