@@ -4,6 +4,10 @@ import { parseTileMap } from "../../util/parseTileMap";
 export class ParsedTileMap {
   private _data: ReturnType<typeof parseTileMap>;
 
+  public get highestTile() {
+    return this._data.highestTile;
+  }
+
   public get largestDiff() {
     return this._data.largestDiff;
   }

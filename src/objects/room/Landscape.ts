@@ -13,6 +13,47 @@ interface WallCollectionMeta {
   level: number;
 }
 
+/**
+ * A landscape is a stack of layers drawn behind the walls, in the same shape
+ * Habbo ships inside its room visualization data: a static layer is a material
+ * tiled across every wall of one orientation, an animated layer is a set of
+ * items that drift across it. Positions and speeds are normalised (0..1) over
+ * the whole landscape, which is what keeps it continuous from wall to wall.
+ */
+export interface LandscapeAnimationItem {
+  asset: string;
+  x: number;
+  y: number;
+  speedX: number;
+  speedY: number;
+  /** Spread added to `x`/`y` once when the landscape is set, so repeated items
+   * (clouds, birds) don't stack on top of each other. */
+  randomX?: number;
+  randomY?: number;
+}
+
+export interface LandscapeLayer {
+  material?: string;
+  color?: number;
+  align?: "top" | "bottom";
+  offset?: number;
+  items?: LandscapeAnimationItem[];
+}
+
+export interface LandscapeVisualization {
+  layers: LandscapeLayer[];
+}
+
+interface AnimatedSprite {
+  sprite: PIXI.Sprite;
+  item: LandscapeAnimationItem;
+  span: number;
+  height: number;
+  planeOffset: number;
+  wrapX: number;
+  wrapY: number;
+}
+
 type Unsubscribe = () => void;
 
 export class Landscape extends RoomObject implements IRoomPart {
@@ -31,6 +72,11 @@ export class Landscape extends RoomObject implements IRoomPart {
   private _masks: Map<string, PIXI.Sprite> = new Map();
   private _color: string | undefined;
   private _unsubscribe: Unsubscribe | undefined = undefined;
+
+  private _visualization: LandscapeVisualization | undefined;
+  private _assets: Map<string, PIXI.Texture> = new Map();
+  private _animated: AnimatedSprite[] = [];
+  private _startedAt: number | undefined;
 
   private _partNode: PartNode | undefined;
 
@@ -71,6 +117,24 @@ export class Landscape extends RoomObject implements IRoomPart {
     });
   }
 
+  setVisualization(
+    visualization: LandscapeVisualization,
+    assets: Record<string, PIXI.Texture> = {}
+  ) {
+    this._visualization = {
+      layers: visualization.layers.map((layer) => ({
+        ...layer,
+        items: layer.items?.map((item) => ({
+          ...item,
+          x: item.x + Math.random() * (item.randomX ?? 0),
+          y: item.y + Math.random() * (item.randomY ?? 0),
+        })),
+      })),
+    };
+    this._assets = new Map(Object.entries(assets));
+    this._updateLandscapeImages();
+  }
+
   update(data: RoomPartData): void {
     this._masks = data.masks;
     this._wallHeightWithZ = data.wallHeight;
@@ -80,13 +144,33 @@ export class Landscape extends RoomObject implements IRoomPart {
 
   destroyed(): void {
     this._unsubscribe && this._unsubscribe();
+    this._unsubscribe = undefined;
     this._container?.destroy();
     this._partNode?.remove();
   }
 
   registered(): void {
     this._partNode = this.roomVisualization.addPart(this);
+    this._unsubscribe = this.animationTicker.subscribe(() =>
+      this._updateAnimatedItems()
+    );
     this._updateLandscapeImages();
+  }
+
+  private _updateAnimatedItems() {
+    if (this._animated.length === 0) return;
+
+    if (this._startedAt == null) this._startedAt = performance.now();
+    const elapsed = performance.now() - this._startedAt;
+
+    this._animated.forEach(
+      ({ sprite, item, span, height, planeOffset, wrapX, wrapY }) => {
+        const point = getLandscapeItemPosition(item, span, height, elapsed);
+
+        sprite.x = point.x - planeOffset + wrapX * span;
+        sprite.y = point.y - height + wrapY * height;
+      }
+    );
   }
 
   private _createDefaultMask() {
@@ -105,12 +189,90 @@ export class Landscape extends RoomObject implements IRoomPart {
     return this._createDefaultMask();
   }
 
+  /**
+   * Draws one landscape layer into a wall. `planeOffset` is how far along the
+   * whole landscape this wall starts, and `span` its total width, so a material
+   * tiles seamlessly and an item drifting off one wall arrives on the next.
+   */
+  private _createLayer(
+    layer: LandscapeLayer,
+    wall: PIXI.Container,
+    width: number,
+    planeOffset: number,
+    span: number
+  ) {
+    const height = this._wallHeightWithZ;
+
+    if (layer.material != null) {
+      const texture = this._assets.get(layer.material);
+
+      if (texture != null) {
+        const material = new PIXI.TilingSprite({
+          texture,
+          width,
+          height: layer.align === "top" ? height : texture.height,
+        });
+
+        material.tilePosition.set(-planeOffset, 0);
+        material.x = 0;
+        material.y =
+          (layer.align === "top" ? -height : -texture.height) +
+          (layer.offset ?? 0);
+
+        if (layer.color != null) material.tint = layer.color;
+
+        wall.addChild(material);
+      }
+    } else if (layer.color != null) {
+      const colored = new PIXI.TilingSprite(PIXI.Texture.WHITE, width, height);
+      colored.tint = layer.color;
+      colored.y = -height;
+      wall.addChild(colored);
+    }
+
+    layer.items?.forEach((item) => {
+      const texture = this._assets.get(item.asset);
+      if (texture == null) return;
+
+      // Four copies, offset by a full landscape in each axis, so an item that
+      // walks off one edge is already arriving at the opposite one.
+      [
+        [0, 0],
+        [-1, 0],
+        [0, -1],
+        [-1, -1],
+      ].forEach(([wrapX, wrapY]) => {
+        const sprite = new PIXI.Sprite(texture);
+        wall.addChild(sprite);
+
+        this._animated.push({
+          sprite,
+          item,
+          span,
+          height,
+          planeOffset,
+          wrapX,
+          wrapY,
+        });
+      });
+    });
+  }
+
   private _updateLandscapeImages() {
     if (!this.mounted) return;
 
     const meta = getWallCollectionMeta(this.tilemap.getParsedTileTypes());
     this._container?.destroy();
+    this._animated = [];
     const container = new PIXI.Container();
+
+    const spanOf = (type: WallCollectionMeta["type"]) =>
+      meta
+        .filter((entry) => entry.type === type)
+        .reduce((total, entry) => total + Math.abs(entry.end - entry.start) * 32, 0);
+
+    const rowSpan = spanOf("rowWall");
+    const colSpan = spanOf("colWall");
 
     let offsetRow = 0;
     let offsetCol = 0;
@@ -120,21 +282,33 @@ export class Landscape extends RoomObject implements IRoomPart {
 
       const wall = new PIXI.Container();
 
-      const colored = new PIXI.TilingSprite(
-        PIXI.Texture.WHITE,
-        width,
-        this._wallHeightWithZ
-      );
+      if (this._visualization == null) {
+        const colored = new PIXI.TilingSprite(
+          PIXI.Texture.WHITE,
+          width,
+          this._wallHeightWithZ
+        );
 
-      if (this.color != null) {
-        colored.tint = parseInt(this.color.slice(1), 16);
+        if (this.color != null) {
+          colored.tint = parseInt(this.color.slice(1), 16);
+        } else {
+          colored.tint = 0xffffff;
+        }
+
+        colored.y = -this._wallHeightWithZ;
+
+        wall.addChild(colored);
       } else {
-        colored.tint = 0xffffff;
+        this._visualization.layers.forEach((layer) =>
+          this._createLayer(
+            layer,
+            wall,
+            width,
+            meta.type === "rowWall" ? offsetRow : offsetCol,
+            meta.type === "rowWall" ? rowSpan : colSpan
+          )
+        );
       }
-
-      colored.y = -this._wallHeightWithZ;
-
-      wall.addChild(colored);
 
       if (meta.type === "rowWall") {
         const maskLevel = this.landscapeContainer.getMaskLevel(meta.level, 0);
@@ -153,7 +327,7 @@ export class Landscape extends RoomObject implements IRoomPart {
         wall.x = position.x;
         wall.y = position.y + 16;
 
-        if (this._leftTexture != null) {
+        if (this._visualization == null && this._leftTexture != null) {
           const graphics = new PIXI.TilingSprite({
             texture: this._leftTexture,
             width,
@@ -184,7 +358,7 @@ export class Landscape extends RoomObject implements IRoomPart {
         wall.x = position.x + 32;
         wall.y = position.y;
 
-        if (this._rightTexture != null) {
+        if (this._visualization == null && this._rightTexture != null) {
           const graphics = new PIXI.TilingSprite({
             texture: this._rightTexture,
             width,
@@ -207,6 +381,34 @@ export class Landscape extends RoomObject implements IRoomPart {
 
     this.roomVisualization.landscapeContainer.addChild(container);
   }
+}
+
+const wrap = (value: number) => ((value % 1) + 1) % 1;
+
+/**
+ * Where an animated item sits after `elapsed` ms. Speeds are room units per
+ * second across the whole landscape, so the item crosses it in the same time
+ * no matter how large the room is.
+ */
+export function getLandscapeItemPosition(
+  item: LandscapeAnimationItem,
+  span: number,
+  height: number,
+  elapsed: number
+) {
+  const tilesX = span / 32;
+  const tilesY = height / 32;
+
+  return {
+    x: Math.trunc(
+      wrap(item.x + (tilesX > 0 ? (item.speedX / tilesX) * (elapsed / 1000) : 0)) *
+        span
+    ),
+    y: Math.trunc(
+      wrap(item.y + (tilesY > 0 ? (item.speedY / tilesY) * (elapsed / 1000) : 0)) *
+        height
+    ),
+  };
 }
 
 const getTile = (parsedTileMap: ParsedTileType[][], x: number, y: number) => {

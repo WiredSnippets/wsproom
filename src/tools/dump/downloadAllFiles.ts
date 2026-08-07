@@ -15,6 +15,7 @@ export async function downloadAllFiles(
     hofFurniUrl,
     effectMapUrl,
     gordonUrl,
+    roomUrl,
   }: ExternalVariables,
   logger: Logger
 ) {
@@ -41,6 +42,11 @@ export async function downloadAllFiles(
 
   const effectMap = await downloadFileWithMessage(
     { url: effectMapUrl, savePath: path.join(downloadPath, "effectmap.xml") },
+    logger
+  );
+
+  await downloadFileWithMessage(
+    { url: roomUrl, savePath: path.join(downloadPath, "room", "room.swf") },
     logger
   );
 

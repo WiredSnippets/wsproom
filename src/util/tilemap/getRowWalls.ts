@@ -9,16 +9,28 @@ export type RowWall = {
 };
 
 export function getRowWalls(tilemap: TileType[][]) {
-  let lastY = tilemap.length - 1;
-
-  let wallEndY: number | undefined;
-  let wallStartY: number | undefined;
-  let height: number | undefined;
-
   const walls: RowWall[] = [];
 
   for (let x = 0; x < tilemap[0].length; x++) {
-    for (let y = lastY; y >= 0; y--) {
+    let wallEndY: number | undefined;
+    let wallStartY: number | undefined;
+    let height: number | undefined;
+
+    const flush = () => {
+      if (wallEndY != null && wallStartY != null) {
+        walls.push({
+          startY: wallStartY,
+          endY: wallEndY,
+          x: x - 1,
+          height: height ?? 0,
+        });
+      }
+      wallEndY = undefined;
+      wallStartY = undefined;
+      height = undefined;
+    };
+
+    for (let y = tilemap.length - 1; y >= 0; y--) {
       const current = getTileInfo(tilemap, x, y);
 
       if (current.rowEdge && !current.rowDoor) {
@@ -27,25 +39,16 @@ export function getRowWalls(tilemap: TileType[][]) {
         }
 
         wallStartY = y;
-        lastY = y - 1;
 
         if (height == null || (current.height ?? 0) < height) {
           height = current.height;
         }
       } else {
-        if (wallEndY != null && wallStartY != null) {
-          walls.push({
-            startY: wallStartY,
-            endY: wallEndY,
-            x: x - 1,
-            height: height ?? 0,
-          });
-          wallEndY = undefined;
-          wallStartY = undefined;
-          height = undefined;
-        }
+        flush();
       }
     }
+
+    flush();
   }
 
   return walls;

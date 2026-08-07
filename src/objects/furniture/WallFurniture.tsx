@@ -19,6 +19,15 @@ export class WallFurniture extends RoomObject {
   private _offsetX = 0;
   private _offsetY = 0;
 
+  /**
+   * Absolute room height of the item, as Habbo ships it in the `a=` field of the
+   * wall location. When it is there we use it directly: it is the same value the
+   * server derived the offsets from, so it spares us guessing the height of the
+   * tile the item hangs on — which is exactly where a room model that only
+   * stores walkable tiles falls short.
+   */
+  private _altitude: number | undefined;
+
   constructor(
     options: {
       roomX: number;
@@ -27,6 +36,7 @@ export class WallFurniture extends RoomObject {
       offsetY: number;
       direction: number;
       animation?: string;
+      altitude?: number;
     } & FurnitureFetchInfo
   ) {
     super();
@@ -39,12 +49,16 @@ export class WallFurniture extends RoomObject {
 
     this._offsetX = options.offsetX;
     this._offsetY = options.offsetY;
+    this._altitude = options.altitude;
 
     this._baseFurniture = new BaseFurniture({
       animation: options.animation,
       direction: options.direction,
       type: getFurnitureFetch(options, "wall"),
-      getMaskId: (direction) => getMaskId(direction, this.roomX, this.roomY),
+      getMaskId: (direction) =>
+        this._touchesWall(direction)
+          ? getMaskId(direction, this.roomX, this.roomY)
+          : undefined,
     });
   }
 
@@ -246,6 +260,28 @@ export class WallFurniture extends RoomObject {
     this._updatePosition();
   }
 
+  /**
+   * A window only reveals the landscape while it sits in an actual wall plane —
+   * see RoomVisualization.updateRoomPlaneMasks, which binds a mask to a plane
+   * only when the object lies in it. Items dragged out into the room have no
+   * plane to cut open, so their glass stays transparent.
+   */
+  private _touchesWall(direction: number) {
+    const row = this.room?.getParsedTileTypes()?.[this.roomY];
+    const tile = row?.[this.roomX];
+    if (tile?.type !== "wall") return false;
+
+    switch (tile.kind) {
+      case "innerCorner":
+      case "outerCorner":
+        return true;
+      case "rowWall":
+        return direction === 2 || direction === 6;
+      case "colWall":
+        return direction === 0 || direction === 4;
+    }
+  }
+
   private _getOffsets(direction: number) {
     const geo = new LegacyWallGeometry(this.room.getParsedTileTypes());
     const roomPosition = geo.getLocation(
@@ -255,29 +291,20 @@ export class WallFurniture extends RoomObject {
       this._offsetY,
       direction === 2 ? "l" : "r"
     );
-    if (direction === 2) {
-      const position = this.room.getPosition(
-        roomPosition.x,
-        roomPosition.y,
-        roomPosition.z * 2 - 0.5
-      );
+    return this.room.getPosition(
+      roomPosition.x,
+      roomPosition.y,
+      this._altitude ?? roomPosition.z
+    );
+  }
 
-      return {
-        x: position.x,
-        y: position.y - this.room.wallHeight,
-      };
-    } else {
-      const position = this.room.getPosition(
-        roomPosition.x,
-        roomPosition.y - 0.5,
-        roomPosition.z * 2 - 0.5
-      );
+  public get altitude() {
+    return this._altitude;
+  }
 
-      return {
-        x: position.x,
-        y: position.y - this.room.wallHeight,
-      };
-    }
+  public set altitude(value) {
+    this._altitude = value;
+    this._updatePosition();
   }
 
   private _updatePosition() {

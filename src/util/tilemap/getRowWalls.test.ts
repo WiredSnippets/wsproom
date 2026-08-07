@@ -50,7 +50,7 @@ test("parses walls correctly with out of place tile", () => {
             xx0x00
             xxxx00
             x00000
-            x00000 
+            x00000
         `);
 
   expect(getRowWalls(tilemap)).toEqual([
@@ -68,39 +68,47 @@ test("parses walls correctly with out of place tile", () => {
     },
     {
       startY: 1,
-      endY: 1,
+      endY: 3,
       x: 3,
       height: 0,
     },
   ]);
 });
 
-test("parses walls correctly with out of place tile", () => {
+test("walls a room whose door sits in the top row", () => {
   const tilemap = parseTileMapString(`
-              xxxxxx
-              xxxx00
-              xx0x00
-              xxxx00
-              x00000
-              x00000
-          `);
+            x0xx
+            x000
+            x000
+        `);
 
   expect(getRowWalls(tilemap)).toEqual([
     {
-      startY: 4,
-      endY: 5,
+      startY: 0,
+      endY: 2,
+      x: 0,
+      height: 0,
+    },
+  ]);
+});
+
+test("walls every disjoint region, not just the first", () => {
+  const tilemap = parseTileMapString(`
+            xxxxxxx
+            x00x00x
+            x00x00x
+        `);
+
+  expect(getRowWalls(tilemap)).toEqual([
+    {
+      startY: 1,
+      endY: 2,
       x: 0,
       height: 0,
     },
     {
-      startY: 2,
-      endY: 2,
-      x: 1,
-      height: 0,
-    },
-    {
       startY: 1,
-      endY: 1,
+      endY: 2,
       x: 3,
       height: 0,
     },

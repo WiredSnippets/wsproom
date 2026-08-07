@@ -19,7 +19,15 @@ export type { IFurnitureData } from "./interfaces/IFurnitureData";
 export { FurnitureData } from "./objects/furniture/FurnitureData";
 export { FurnitureHelper } from "./objects/furniture/FurnitureHelper";
 export { Shroom } from "./objects/Shroom";
-export { Landscape } from "./objects/room/Landscape";
+export {
+  Landscape,
+  getLandscapeItemPosition,
+} from "./objects/room/Landscape";
+export type {
+  LandscapeVisualization,
+  LandscapeLayer,
+  LandscapeAnimationItem,
+} from "./objects/room/Landscape";
 export { AnimationTicker } from "./objects/animation/AnimationTicker";
 export { FurnitureLoader } from "./objects/furniture/FurnitureLoader";
 export { AvatarLoader } from "./objects/avatar/AvatarLoader";

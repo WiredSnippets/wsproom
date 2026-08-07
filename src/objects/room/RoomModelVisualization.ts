@@ -26,6 +26,7 @@ import { WallOuterCorner } from "./parts/WallOuterCorner";
 import { WallRight } from "./parts/WallRight";
 import { RoomLandscapeMaskSprite } from "./RoomLandscapeMaskSprite";
 import { getTileMapBounds } from "./util/getTileMapBounds";
+import { LegacyWallGeometry } from "./util/LegacyWallGeometry";
 
 export class RoomModelVisualization
   extends PIXI.Container
@@ -342,10 +343,9 @@ export class RoomModelVisualization
   }
 
   addMask(id: string, element: PIXI.Sprite): MaskNode {
-    /*
     const existing = this._masks.get(id);
     const current =
-      this._masks.get(id) ??
+      existing ??
       new RoomLandscapeMaskSprite({
         renderer: this._application.renderer,
         roomBounds: this.roomBounds,
@@ -362,16 +362,6 @@ export class RoomModelVisualization
     return {
       update: () => current.updateSprite(element),
       remove: () => current.removeSprite(element),
-      sprite: element,
-    };*/
-
-    return {
-      update: () => {
-        // Nothing
-      },
-      remove: () => {
-        // Nothing
-      },
       sprite: element,
     };
   }
@@ -397,8 +387,21 @@ export class RoomModelVisualization
     };
   }
 
+  /**
+   * Wall parts subtract their own tile height from this, so it is measured from
+   * tile height zero rather than from the lowest tile in the room. Habbo caps
+   * how far above the floor a wall may reach, which is what stops a room with a
+   * tall platform from growing walls several screens high.
+   */
   private _getLargestWallHeight() {
-    return this.parsedTileMap.largestDiff * 32 + this._wallHeight;
+    return (
+      Math.min(
+        LegacyWallGeometry.MAX_WALL_ADDITIONAL_HEIGHT,
+        this.parsedTileMap.highestTile
+      ) *
+        32 +
+      this._wallHeight
+    );
   }
 
   private _destroyAllSprites() {
@@ -626,12 +629,7 @@ export class RoomModelVisualization
           roomX,
           roomY,
           offsetX: -event.offsetX - 16,
-          offsetY:
-            event.offsetY / 2 +
-            this._wallHeight / 2 -
-            event.offsetX / 4 +
-            roomZ * 16 -
-            8,
+          offsetY: event.offsetY,
           wall: "r",
         });
       },
@@ -668,11 +666,7 @@ export class RoomModelVisualization
           roomX,
           roomY,
           offsetX: event.offsetX,
-          offsetY:
-            event.offsetY / 2 +
-            this._wallHeight / 2 -
-            event.offsetX / 4 +
-            roomZ * 16,
+          offsetY: event.offsetY,
           wall: "l",
         });
       },

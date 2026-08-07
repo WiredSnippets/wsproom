@@ -28,6 +28,8 @@ export async function getExternalVariableUrls(
 
   const effectMapUrl = `${gordonUrl}/effectmap.xml`;
 
+  const roomUrl = `${gordonUrl}/room.swf`;
+
   return {
     figureMapUrl,
     hofFurniUrl,
@@ -35,6 +37,7 @@ export async function getExternalVariableUrls(
     furniDataUrl,
     gordonUrl,
     effectMapUrl,
+    roomUrl,
   };
 }
 
@@ -45,4 +48,5 @@ export interface ExternalVariables {
   furniDataUrl: string;
   gordonUrl: string;
   effectMapUrl: string;
+  roomUrl: string;
 }

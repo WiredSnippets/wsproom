@@ -9,6 +9,7 @@ import { FigureMapData } from "../../objects/avatar/data/FigureMapData";
 import { createOffsetFile } from "./createOffsetFile";
 import { dumpFigure } from "./dumpFigure";
 import { dumpFurniture } from "./dumpFurniture";
+import { dumpRoom } from "./dumpRoom";
 
 const separator = "=========================================";
 
@@ -38,6 +39,7 @@ export async function dump({ externalVariables, downloadPath }: Options) {
       console.log("- Furni Data", variables.furniDataUrl);
       console.log("- Furniture:", variables.hofFurniUrl);
       console.log("- Effect Map:", variables.effectMapUrl);
+      console.log("- Room:", variables.roomUrl);
       console.log("");
 
       await downloadAllFiles(downloadPath, variables, logger);
@@ -66,6 +68,13 @@ export async function dump({ externalVariables, downloadPath }: Options) {
     );
 
     await extractSwfs(logger, "Effects", effectsSwf, dumpFigure);
+
+    const roomSwfs = await glob(`${downloadPath}/room/**/*.swf`);
+    console.log(
+      `Found ${roomSwfs.length} room swfs. Starting the extraction process.`
+    );
+
+    await extractSwfs(logger, "Room", roomSwfs, dumpRoom);
   });
 }
 

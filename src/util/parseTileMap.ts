@@ -31,6 +31,7 @@ export function parseTileMap(
 ): {
   tilemap: ParsedTileType[][];
   largestDiff: number;
+  highestTile: number;
   wallOffsets: { x: number; y: number };
   positionOffsets: { x: number; y: number };
   maskOffsets: { x: number; y: number };
@@ -162,6 +163,7 @@ export function parseTileMap(
   return {
     tilemap: result,
     largestDiff,
+    highestTile: highestTile ?? 0,
     wallOffsets,
     // When the tilemap has a door, we offset the objects in the room by one in the x direction.
     // This makes it so objects appear at the same position, for a room without a door
