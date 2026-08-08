@@ -1,7 +1,8 @@
 import { TileType } from "../types/TileType";
 import { getTileInfo } from "./getTileInfo";
-import { ColumnWall, getColumnWalls } from "./tilemap/getColumnWalls";
-import { getRowWalls, RowWall } from "./tilemap/getRowWalls";
+import { ColumnWall } from "./tilemap/getColumnWalls";
+import { RowWall } from "./tilemap/getRowWalls";
+import { wallsFromContour } from "./tilemap/wallsFromContour";
 import { padTileMap } from "./tilemap/padTileMap";
 
 export type ParsedTileWall = {
@@ -36,7 +37,8 @@ export function parseTileMap(
   positionOffsets: { x: number; y: number };
   maskOffsets: { x: number; y: number };
 } {
-  const wallInfo = new Walls(getRowWalls(tilemap), getColumnWalls(tilemap));
+  const contour = wallsFromContour(tilemap);
+  const wallInfo = new Walls(contour.rowWalls, contour.colWalls);
 
   padTileMap(tilemap);
 
