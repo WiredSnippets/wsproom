@@ -1,4 +1,5 @@
 import { TileType } from "../types/TileType";
+import { findEntranceTile } from "./tilemap/findEntranceTile";
 import { getTileInfo } from "./getTileInfo";
 import { ColumnWall } from "./tilemap/getColumnWalls";
 import { RowWall } from "./tilemap/getRowWalls";
@@ -39,6 +40,9 @@ export function parseTileMap(
 } {
   const contour = wallsFromContour(tilemap);
   const wallInfo = new Walls(contour.rowWalls, contour.colWalls);
+  const entrance = findEntranceTile(tilemap);
+  const isEntrance = (x: number, y: number) =>
+    entrance != null && entrance.x === x && entrance.y === y;
 
   padTileMap(tilemap);
 
@@ -123,7 +127,7 @@ export function parseTileMap(
         }
       }
 
-      if (!tileInfo.rowDoor || hasDoor) {
+      if (!isEntrance(x, y) || hasDoor) {
         if (tileInfo.stairs != null && tileInfo.height != null) {
           if (tileInfo.stairs.isCorner) {
             result[resultY][resultX] = {

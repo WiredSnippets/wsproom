@@ -11,6 +11,7 @@ export { RoomCamera } from "./objects/room/RoomCamera";
 export { Pathfinding } from "./objects/room/Pathfinding";
 export { loadRoomTexture } from "./util/loadRoomTexture";
 export { parseTileMapString } from "./util/parseTileMapString";
+export { hasWallTiles } from "./util/tilemap/hasWallTiles";
 export type { IFurnitureBehavior } from "./objects/furniture/IFurniture";
 export type { IFurniture } from "./objects/furniture/IFurniture";
 export type { IFurnitureExtended } from "./objects/furniture/IFurniture";

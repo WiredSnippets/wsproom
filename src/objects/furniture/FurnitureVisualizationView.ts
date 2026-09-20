@@ -183,6 +183,18 @@ export class FurnitureVisualizationView
     this._layers?.forEach((layer) => layer.destroy());
   }
 
+  /**
+   * Sprites of the furni's `_mask` asset. A window ships its own mask (see the
+   * `*_<direction>_mask` asset), and the landscape uses it to know which part of
+   * the wall the glass opens up — without registering it the wall has no mask
+   * at all and gets clipped away entirely.
+   */
+  getMaskSprites(): FurnitureSprite[] {
+    return (this._layers ?? [])
+      .filter((layer) => layer.isMask)
+      .flatMap((layer) => layer.getSprites() as FurnitureSprite[]);
+  }
+
   private _getDrawDefinition(direction: number, animation?: string) {
     animation = animation ?? "undefined";
 
@@ -308,6 +320,10 @@ class FurnitureVisualizationLayer
 
   public get ink() {
     return this._part.layer?.ink;
+  }
+
+  public get isMask() {
+    return this._part.mask === true;
   }
 
   getSprites(): PIXI.Sprite[] {

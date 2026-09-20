@@ -418,17 +418,23 @@ const getTile = (parsedTileMap: ParsedTileType[][], x: number, y: number) => {
   return row[x];
 };
 
-function getWallCollectionMeta(parsedTileMap: ParsedTileType[][]) {
-  const { x: startX, y: startY } = getStartingWall(parsedTileMap);
+export function getWallCollectionMeta(parsedTileMap: ParsedTileType[][]) {
+  const start = getStartingWall(parsedTileMap);
 
-  let x = startX;
-  let y = startY;
+  if (start == null) return [];
+
+  let x = start.x;
+  let y = start.y;
   let done = false;
   let meta: WallCollectionMeta | undefined = undefined;
   const arr: WallCollectionMeta[] = [];
 
-  // eslint-disable-next-line no-constant-condition
-  while (true) {
+  const maxSteps =
+    parsedTileMap.length +
+    parsedTileMap.reduce((max, row) => Math.max(max, row?.length ?? 0), 0) +
+    2;
+
+  for (let step = 0; step < maxSteps; step++) {
     const currentWall = getTile(parsedTileMap, x, y);
 
     const topWallPosition = { x, y: y - 1 };
@@ -515,23 +521,24 @@ function getWallCollectionMeta(parsedTileMap: ParsedTileType[][]) {
   return arr;
 }
 
-function getStartingWall(parsedTileMap: ParsedTileType[][]) {
+export function getStartingWall(
+  parsedTileMap: ParsedTileType[][]
+): { x: number; y: number } | undefined {
   const startY = parsedTileMap.length - 1;
-  let y = startY;
-  let x = 0;
+  const width = parsedTileMap.reduce(
+    (max, row) => Math.max(max, row?.length ?? 0),
+    0
+  );
 
-  // eslint-disable-next-line no-constant-condition
-  while (true) {
-    const current = getTile(parsedTileMap, x, y);
+  for (let x = 0; x < width; x++) {
+    for (let y = startY; y >= 0; y--) {
+      const current = getTile(parsedTileMap, x, y);
 
-    if (current != null && current.type === "wall") {
-      return { x, y };
-    } else {
-      y--;
-      if (y < 0) {
-        y = startY;
-        x++;
+      if (current != null && current.type === "wall") {
+        return { x, y };
       }
     }
   }
+
+  return undefined;
 }

@@ -1,5 +1,6 @@
 import { TileType } from "../../types/TileType";
 import { getNumberOfTileType } from "../getTileInfo";
+import { findEntranceTile } from "./findEntranceTile";
 
 /**
  * Habbo does not look for wall edges tile by tile. It picks a single seed — the
@@ -67,27 +68,30 @@ class HeightMatrix {
   public readonly width: number;
   public readonly height: number;
 
-  /** Bounding box of the tiles that actually hold floor. */
-  public readonly minX: number;
-  public readonly maxX: number;
-  public readonly minY: number;
-  public readonly maxY: number;
+  public minX!: number;
+  public maxX!: number;
+  public minY!: number;
+  public maxY!: number;
 
   constructor(tilemap: TileType[][]) {
     this.width = tilemap.reduce((max, row) => Math.max(max, row.length), 0);
     this.height = tilemap.length;
 
     this._values = tilemap.map((row) => {
-      const values = new Array<number>(this.width).fill(HOLE);
+      const values = new Array<number>(this.width).fill(BLOCKED);
 
       row.forEach((tile, x) => {
         const parsed = getNumberOfTileType(tile);
-        values[x] = parsed === "x" ? HOLE : parsed;
+        values[x] = parsed === "x" ? BLOCKED : parsed;
       });
 
       return values;
     });
 
+    this.updateBounds();
+  }
+
+  updateBounds() {
     let minX = this.width;
     let maxX = -1;
     let minY = this.height;
@@ -109,10 +113,12 @@ class HeightMatrix {
     this.maxY = maxY;
   }
 
-  /**
-   * Anything off the map reads as blocked, which is what keeps the walk from
-   * wandering: there is no padding ring, the bounds themselves are the edge.
-   */
+  set(x: number, y: number, value: number) {
+    if (this._values[y] == null) return;
+
+    this._values[y][x] = value;
+  }
+
   get(x: number, y: number) {
     if (x < 0 || x >= this.width || y < 0 || y >= this.height) return BLOCKED;
 
@@ -293,8 +299,8 @@ function trimAgainstHoles(matrix: HeightMatrix, walls: TracedWall[]) {
 
     for (let step = 0; step < wall.length; step++) {
       const height = matrix.get(
-        wall.x + step * along.x + normal.x,
-        wall.y + step * along.y + normal.y
+        wall.x + step * along.x - normal.x,
+        wall.y + step * along.y - normal.y
       );
 
       if (height === HOLE) {
@@ -388,18 +394,13 @@ function findOriginal(
   });
 }
 
-/**
- * Carries the spur verdict from the untrimmed outline over to the one that is
- * actually drawn. A stretch that cannot be matched back at all only exists
- * because a hole cut it loose, so it goes too.
- */
 function hideOriginallyHidden(walls: TracedWall[], original: TracedWall[]) {
   walls.forEach((wall) => {
     if (wall.hidden) return;
 
     const at = findOriginal({ x: wall.x, y: wall.y }, endPointOf(wall), original);
 
-    if (at >= 0 && original[at].hidden) wall.hidden = true;
+    if (at < 0 || original[at].hidden) wall.hidden = true;
   });
 }
 
@@ -435,31 +436,41 @@ function resolveCuts(walls: TracedWall[], original: TracedWall[]) {
 export function traceWalls(tilemap: TileType[][]): TracedWalls {
   const matrix = new HeightMatrix(tilemap);
 
-  // Habbo seeds the walk from its own minX, which is the first column that
-  // holds any floor at all — not column zero, since the model is usually padded
-  // with empty tiles on the left.
-  const seed = findSeed(matrix);
+  const entrance = findEntranceTile(tilemap);
+  const entranceHeight = entrance ? matrix.get(entrance.x, entrance.y) : 0;
 
-  if (seed == null) return { walls: [], heights: [] };
+  if (entrance) {
+    matrix.set(entrance.x, entrance.y, BLOCKED);
+    matrix.updateBounds();
+  }
 
-  // The outline Habbo renders, where a gap in the floor ends the room.
-  const walls = traceOutline(matrix, seed, true);
-  // The same walk with holes kept inside, which is how a shortened stretch can
-  // still be matched back to the run it belongs to.
-  const original = traceOutline(matrix, seed, false);
+  const trace = () => {
+    const seed = findSeed(matrix);
 
-  // Each pass works on its own outline. Spurs are judged on the untrimmed walk,
-  // where a one-tile finger still shows as one; holes are trimmed on the walk
-  // that stops at them; and only then is the verdict carried across.
-  hidePeninsulas(original);
-  trimAgainstHoles(matrix, walls);
-  hideOriginallyHidden(walls, original);
-  resolveCuts(walls, original);
+    if (seed == null) return { walls: [], heights: [] };
 
-  const visible = walls.filter((wall) => !wall.hidden);
+    const walls = traceOutline(matrix, seed, true);
+    const original = traceOutline(matrix, seed, false);
 
-  return {
-    walls: visible,
-    heights: visible.map((wall) => heightOf(matrix, wall)),
+    hidePeninsulas(original);
+    trimAgainstHoles(matrix, walls);
+    hideOriginallyHidden(walls, original);
+    resolveCuts(walls, original);
+
+    const visible = walls.filter((wall) => !wall.hidden);
+
+    return {
+      walls: visible,
+      heights: visible.map((wall) => heightOf(matrix, wall)),
+    };
   };
+
+  const traced = trace();
+
+  if (entrance) {
+    matrix.set(entrance.x, entrance.y, entranceHeight);
+    matrix.updateBounds();
+  }
+
+  return traced;
 }

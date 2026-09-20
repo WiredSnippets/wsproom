@@ -573,6 +573,26 @@ export class BaseFurniture implements IFurnitureEventHandlers, IEventGroup {
 
     this._handleAnimationChange();
     this._updatePosition();
+    this._updateMasks();
+  }
+
+  /**
+   * Hands the furni's mask sprites to the room, keyed by the wall they belong
+   * to. The landscape looks masks up by that id, so a window that never
+   * registers here leaves its wall unmasked.
+   */
+  private _updateMasks() {
+    const view = this._view;
+    if (view == null) return;
+
+    const maskId = this._getMaskId(this.direction);
+    if (maskId == null) return;
+
+    view.getMaskSprites().forEach((sprite) => {
+      this._maskNodes.push(
+        this.dependencies.visualization.addMask(maskId, sprite)
+      );
+    });
   }
 
   private _destroySprites() {
