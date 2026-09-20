@@ -217,6 +217,7 @@ class FurnitureVisualizationLayer
   public readonly assetCount: number;
 
   private _sprites = new Map<number, FurnitureSprite>();
+  private _maskSprites = new Set<FurnitureSprite>();
 
   private _x: number | undefined;
   private _y: number | undefined;
@@ -403,6 +404,11 @@ class FurnitureVisualizationLayer
   }
 
   private _addSprite(sprite: FurnitureSprite) {
+    // A mask asset is a black silhouette: it only ever gets drawn by the room,
+    // as the mask that cuts a wall open. Off the wall there is no such mask, so
+    // keeping it in the furni's own tree is what paints it black.
+    if (this._maskSprites.has(sprite)) return;
+
     if (this._mountedSprites.has(sprite)) return;
 
     this._mountedSprites.add(sprite);
@@ -418,6 +424,7 @@ class FurnitureVisualizationLayer
     });
     this._sprites = new Map();
     this._mountedSprites = new Set();
+    this._maskSprites = new Set();
     this._appliedFrameIndex = undefined;
   }
 
@@ -497,6 +504,8 @@ class FurnitureVisualizationLayer
       tag: layer?.tag,
       group: this._parent,
     });
+
+    if (mask) this._maskSprites.add(sprite);
 
     const ignoreMouse = layer?.ignoreMouse != null && layer.ignoreMouse;
     sprite.ignoreMouse = ignoreMouse;
