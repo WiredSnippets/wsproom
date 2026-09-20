@@ -453,7 +453,7 @@ export class RoomModelVisualization
         break;
 
       case "door":
-        this._createDoor(x, y, element.z);
+        this._createDoor(x, y, element.z, element.wall);
         break;
 
       case "stairs":
@@ -502,9 +502,12 @@ export class RoomModelVisualization
     this._createTileCursor(x, y, z + 1);
   }
 
-  private _createDoor(x: number, y: number, z: number) {
+  private _createDoor(x: number, y: number, z: number, wall: boolean) {
     this._createTileElement(x, y, z, this._behindWallLayer);
-    this._createLeftWall(x, y, z, { hideBorder: false, cutawayHeight: 90 });
+
+    if (wall) {
+      this._createLeftWall(x, y, z, { hideBorder: false, cutawayHeight: 90 });
+    }
   }
 
   private shouldShowBorders (x: number, y: number) : {
@@ -628,8 +631,8 @@ export class RoomModelVisualization
         this._onActiveWallChange.next({
           roomX,
           roomY,
-          offsetX: -event.offsetX - 16,
-          offsetY: event.offsetY,
+          offsetX: -event.offsetX,
+          offsetY: event.offsetY + wall.pixelHeight - 16 - event.offsetX,
           wall: "r",
         });
       },
@@ -666,7 +669,7 @@ export class RoomModelVisualization
           roomX,
           roomY,
           offsetX: event.offsetX,
-          offsetY: event.offsetY,
+          offsetY: event.offsetY + wall.pixelHeight,
           wall: "l",
         });
       },

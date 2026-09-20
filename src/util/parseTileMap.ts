@@ -1,4 +1,5 @@
 import { TileType } from "../types/TileType";
+import { findEntranceTile } from "./tilemap/findEntranceTile";
 import { getTileInfo } from "./getTileInfo";
 import { ColumnWall } from "./tilemap/getColumnWalls";
 import { RowWall } from "./tilemap/getRowWalls";
@@ -18,7 +19,7 @@ export type ParsedTileType =
   | { type: "hidden" }
   | { type: "stairs"; kind: 0 | 2; z: number }
   | { type: "stairCorner"; kind: "left" | "right" | "front"; z: number }
-  | { type: "door"; z: number };
+  | { type: "door"; z: number; wall: boolean };
 
 /**
  * Parses the standard tilemap format into a format with the following meta data:
@@ -39,6 +40,9 @@ export function parseTileMap(
 } {
   const contour = wallsFromContour(tilemap);
   const wallInfo = new Walls(contour.rowWalls, contour.colWalls);
+  const entrance = findEntranceTile(tilemap);
+  const isEntrance = (x: number, y: number) =>
+    entrance != null && entrance.x === x && entrance.y === y;
 
   padTileMap(tilemap);
 
@@ -123,7 +127,7 @@ export function parseTileMap(
         }
       }
 
-      if (!tileInfo.rowDoor || hasDoor) {
+      if (!isEntrance(x, y) || hasDoor) {
         if (tileInfo.stairs != null && tileInfo.height != null) {
           if (tileInfo.stairs.isCorner) {
             result[resultY][resultX] = {
@@ -146,7 +150,11 @@ export function parseTileMap(
         }
       } else {
         hasDoor = true;
-        result[resultY][resultX] = { type: "door", z: tileInfo.height ?? 0 };
+        result[resultY][resultX] = {
+          type: "door",
+          z: tileInfo.height ?? 0,
+          wall: wallInfo.getWall(x, y) != null,
+        };
       }
     }
   }
