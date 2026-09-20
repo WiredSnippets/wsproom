@@ -19,7 +19,7 @@ export type ParsedTileType =
   | { type: "hidden" }
   | { type: "stairs"; kind: 0 | 2; z: number }
   | { type: "stairCorner"; kind: "left" | "right" | "front"; z: number }
-  | { type: "door"; z: number };
+  | { type: "door"; z: number; wall: boolean };
 
 /**
  * Parses the standard tilemap format into a format with the following meta data:
@@ -150,7 +150,11 @@ export function parseTileMap(
         }
       } else {
         hasDoor = true;
-        result[resultY][resultX] = { type: "door", z: tileInfo.height ?? 0 };
+        result[resultY][resultX] = {
+          type: "door",
+          z: tileInfo.height ?? 0,
+          wall: wallInfo.getWall(x, y) != null,
+        };
       }
     }
   }

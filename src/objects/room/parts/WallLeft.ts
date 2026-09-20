@@ -31,6 +31,11 @@ export class WallLeft extends PIXI.Container implements IRoomPart {
     return this._roomZ;
   }
 
+  /** Height of the wall in pixels, measured from the tile's floor line up. */
+  public get pixelHeight() {
+    return this._wallHeight;
+  }
+
   public set roomZ(value) {
     this._roomZ = value;
     this._update();

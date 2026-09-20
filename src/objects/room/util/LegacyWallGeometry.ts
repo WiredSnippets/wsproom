@@ -47,6 +47,33 @@ export class LegacyWallGeometry {
     };
   }
 
+  /** Inverse of `getLocation`, ported from nitro's `getOldLocation`. */
+  public getSpot(
+    x: number,
+    y: number,
+    z: number,
+    wall: string
+  ): { roomX: number; roomY: number; offsetX: number; offsetY: number } {
+    const half = this._scale / 2;
+
+    if (wall == LegacyWallGeometry.RIGHT_WALL) {
+      const roomX = Math.floor(x - 0.5);
+      const roomY = Math.floor(y + 0.5);
+      const offsetX = half - (y - roomY + 0.5) * half;
+      const offsetY =
+        (this.getHeight(roomX, roomY) - z) * half + (half - offsetX) / 2;
+
+      return { roomX, roomY, offsetX, offsetY };
+    }
+
+    const roomX = Math.floor(x + 0.5);
+    const roomY = Math.floor(y - 0.5);
+    const offsetX = (x + 0.5 - roomX) * half;
+    const offsetY = (this.getHeight(roomX, roomY) - z) * half + offsetX / 2;
+
+    return { roomX, roomY, offsetX, offsetY };
+  }
+
   /**
    * Height of the tile a wall item hangs on. Anywhere there is no floor — a wall
    * or a gap in the model — Habbo answers with the height of the wall top, not
