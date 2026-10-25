@@ -6,14 +6,14 @@ import {
   RoomCamera,
   Avatar,
   FloorFurniture,
-} from "@wiredsnippets/shroom";
+} from "@wiredsnippets/wsproom";
 
-import { createShroom } from "./common/createShroom";
+import { createWsproom } from "./common/createWsproom";
 import tile from "./assets/tile2.png";
 
 export function DefaultRoom() {
-  return createShroom(({ application, shroom }) => {
-    const room = Room.create(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const room = Room.create(wsproom, {
       tilemap: `
         xxx
         x00
@@ -29,8 +29,8 @@ export function DefaultRoom() {
 }
 
 export function Stairs() {
-  return createShroom(({ application, shroom }) => {
-    const room = Room.create(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const room = Room.create(wsproom, {
       tilemap: `
         xxxxx
         x1100
@@ -48,8 +48,8 @@ export function Stairs() {
 }
 
 export function StairCorners() {
-  return createShroom(({ application, shroom }) => {
-    const room = Room.create(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const room = Room.create(wsproom, {
       tilemap: `
         xxxxxxx
         x000000
@@ -68,8 +68,8 @@ export function StairCorners() {
 }
 
 export function StairWalls() {
-  return createShroom(({ application, shroom }) => {
-    const room = Room.create(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const room = Room.create(wsproom, {
       tilemap: `
         xxxxxxxxx
         x44321000
@@ -89,8 +89,8 @@ export function StairWalls() {
 }
 
 export function MultipleSubsequentStairs() {
-  return createShroom(({ application, shroom }) => {
-    const room = Room.create(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const room = Room.create(wsproom, {
       tilemap: `
         xxxxxx
         x22100
@@ -109,8 +109,8 @@ export function MultipleSubsequentStairs() {
 }
 
 export function Holes() {
-  return createShroom(({ application, shroom }) => {
-    const room = Room.create(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const room = Room.create(wsproom, {
       tilemap: `
         xxxxxx
         x00000
@@ -129,8 +129,8 @@ export function Holes() {
 }
 
 export function AngledRoom() {
-  return createShroom(({ application, shroom }) => {
-    const room = Room.create(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const room = Room.create(wsproom, {
       tilemap: `
         xxxxxxx
         xxxx000
@@ -150,8 +150,8 @@ export function AngledRoom() {
 }
 
 export function HiddenWalls() {
-  return createShroom(({ application, shroom }) => {
-    const room = Room.create(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const room = Room.create(wsproom, {
       tilemap: `
         xxxxxxx
         xxxx000
@@ -172,8 +172,8 @@ export function HiddenWalls() {
 }
 
 export function TileTexture() {
-  return createShroom(({ application, shroom }) => {
-    const room = Room.create(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const room = Room.create(wsproom, {
       tilemap: `
         xxxxxxx
         xxxx000
@@ -195,8 +195,8 @@ export function TileTexture() {
 }
 
 export function WallTexture() {
-  return createShroom(({ application, shroom }) => {
-    const room = Room.create(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const room = Room.create(wsproom, {
       tilemap: `
         xxxxxxx
         xxxx000
@@ -218,8 +218,8 @@ export function WallTexture() {
 }
 
 export function CustomLook() {
-  return createShroom(({ application, shroom }) => {
-    const room = Room.create(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const room = Room.create(wsproom, {
       tilemap: `
         xxxxxxxxx
         xxxx11100
@@ -247,8 +247,8 @@ export function CustomLook() {
 }
 
 export function CustomColor() {
-  return createShroom(({ application, shroom }) => {
-    const room = Room.create(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const room = Room.create(wsproom, {
       tilemap: `
         xxxxxxxxxxxx
         xxxx11100000
@@ -283,8 +283,8 @@ export function CustomColor() {
 }
 
 export function Door() {
-  return createShroom(({ application, shroom }) => {
-    const room = Room.create(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const room = Room.create(wsproom, {
       tilemap: `
         xxxxx
         x0000
@@ -306,8 +306,8 @@ export function Door() {
 }
 
 export function LandscapeColor() {
-  return createShroom(({ application, shroom }) => {
-    const room = Room.create(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const room = Room.create(wsproom, {
       tilemap: `
         xxxxxxxxx
         xxxxx1100
@@ -362,8 +362,8 @@ export function LandscapeColor() {
 }
 
 export function RoomModelTest1() {
-  return createShroom(({ application, shroom }) => {
-    const room = Room.create(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const room = Room.create(wsproom, {
       tilemap: `
       xxxxxxxxxxxxxxxxxxx
       xxxxxxx222222222222
@@ -399,8 +399,8 @@ export function RoomModelTest1() {
 }
 
 export function RoomModelTest2() {
-  return createShroom(({ application, shroom }) => {
-    const room = Room.create(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const room = Room.create(wsproom, {
       tilemap: `
       xxxxxxxxxxxxxxxxxxxx
       x222221111111111111x
@@ -440,8 +440,8 @@ export function RoomModelTest2() {
 }
 
 export function OtherRoomShape() {
-  return createShroom(({ application, shroom }) => {
-    const room = Room.create(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const room = Room.create(wsproom, {
       tilemap: `
         xxxxxxx
         xxxx000
@@ -458,8 +458,8 @@ export function OtherRoomShape() {
 }
 
 export function HideTileCursor() {
-  return createShroom(({ application, shroom }) => {
-    const room = Room.create(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const room = Room.create(wsproom, {
       tilemap: `
         xxxxxxx
         x000000
@@ -475,8 +475,8 @@ export function HideTileCursor() {
 }
 
 export function TestTileClick() {
-  return createShroom(({ application, shroom }) => {
-    const room = Room.create(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const room = Room.create(wsproom, {
       tilemap: `
         xxxxxxxxxxxx
         xxxxxxxxxxxx

@@ -16,11 +16,11 @@ const patchAdditiveBlendForTransparentCanvas = (
   }
 };
 
-export class Shroom {
+export class Wsproom {
   constructor(public readonly dependencies: Dependencies) {}
 
   /**
-   * Create a shroom instance
+   * Create a wsproom instance
    */
   static create(
     options: {
@@ -32,8 +32,8 @@ export class Shroom {
   }
 
   /**
-   * Create a shared shroom instance. This is useful if you have multiple
-   * `PIXI.Application` which all share the same shroom dependencies.
+   * Create a shared wsproom instance. This is useful if you have multiple
+   * `PIXI.Application` which all share the same wsproom dependencies.
    */
   static createShared({
     resourcePath,
@@ -69,7 +69,7 @@ export class Shroom {
           application,
         };
 
-        return new Shroom(realDependencies);
+        return new Wsproom(realDependencies);
       },
     };
   }

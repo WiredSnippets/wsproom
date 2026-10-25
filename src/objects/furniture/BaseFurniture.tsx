@@ -11,7 +11,7 @@ import {
 import { IAnimationTicker } from "../../interfaces/IAnimationTicker";
 import { IConfiguration } from "../../interfaces/IConfiguration";
 import { IRoomContext } from "../../interfaces/IRoomContext";
-import { Shroom } from "../Shroom";
+import { Wsproom } from "../Wsproom";
 import { IFurnitureVisualization } from "./IFurnitureVisualization";
 import { FurnitureSprite } from "./FurnitureSprite";
 import { AnimatedFurnitureVisualization } from "./visualization/AnimatedFurnitureVisualization";
@@ -144,18 +144,18 @@ export class BaseFurniture implements IFurnitureEventHandlers, IEventGroup {
     });
   }
 
-  static fromShroom(
-    shroom: Shroom,
+  static fromWsproom(
+    wsproom: Wsproom,
     container: PIXI.Container,
     props: BaseFurnitureProps
   ) {
     return new BaseFurniture({
       dependencies: {
-        animationTicker: shroom.dependencies.animationTicker,
-        furnitureLoader: shroom.dependencies.furnitureLoader,
-        placeholder: shroom.dependencies.configuration.placeholder,
-        configuration: shroom.dependencies.configuration,
-        application: shroom.dependencies.application,
+        animationTicker: wsproom.dependencies.animationTicker,
+        furnitureLoader: wsproom.dependencies.furnitureLoader,
+        placeholder: wsproom.dependencies.configuration.placeholder,
+        configuration: wsproom.dependencies.configuration,
+        application: wsproom.dependencies.application,
         eventManager: NOOP_EVENT_MANAGER,
         visualization: {
           container,

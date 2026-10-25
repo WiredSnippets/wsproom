@@ -1,4 +1,4 @@
-import { IFurnitureBehavior, HitEvent, IFurniture } from "@wiredsnippets/shroom";
+import { IFurnitureBehavior, HitEvent, IFurniture } from "@wiredsnippets/wsproom";
 
 interface DiceState {
   state: "rolling" | "value" | "closed";

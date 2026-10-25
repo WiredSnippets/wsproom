@@ -11,13 +11,13 @@ We do this by specifying the `wallTexture` and `floorTexture` of the room.
 ```ts
 import * as PIXI from "pixi.js";
 
-import { Room, FloorFurniture, Avatar, Shroom } from "@wiredsnippets/shroom";
+import { Room, FloorFurniture, Avatar, Wsproom } from "@wiredsnippets/wsproom";
 
 const view = document.querySelector("#root") as HTMLCanvasElement;
 const application = new PIXI.Application({ view });
 
-const shroom = Shroom.create({ application, resourcePath: "./resources" });
-const room = Room.create(shroom, {
+const wsproom = Wsproom.create({ application, resourcePath: "./resources" });
+const room = Room.create(wsproom, {
   tilemap: `
     xxxxx
     x0000
@@ -50,7 +50,7 @@ which resolves after the texture is loaded. If the texture is not loaded before,
 
 ## Texture Format
 
-The texture you provide should have a normal two dimensional look. You don't need to skew it to make it look isometric, since shroom will take care of that automatically.
+The texture you provide should have a normal two dimensional look. You don't need to skew it to make it look isometric, since wsproom will take care of that automatically.
 
 The default tile texture commonly used looks like the following.
 <img alt="Docusaurus with Keytar" src={useBaseUrl('img/tile.png')} />

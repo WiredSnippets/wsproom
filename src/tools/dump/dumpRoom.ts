@@ -1,7 +1,7 @@
 import path from "path";
 import { promises as fs } from "fs";
 import { createSpritesheet } from "./createSpritesheet";
-import { ShroomAssetBundle } from "../../assets/ShroomAssetBundle";
+import { WsproomAssetBundle } from "../../assets/WsproomAssetBundle";
 import { LandscapeData } from "../../objects/room/data/LandscapeData";
 
 /**
@@ -51,7 +51,7 @@ export async function dumpRoom(
     outputFormat: "png",
   });
 
-  const bundle = new ShroomAssetBundle();
+  const bundle = new WsproomAssetBundle();
   bundle.addFile(
     "index.json",
     new TextEncoder().encode(

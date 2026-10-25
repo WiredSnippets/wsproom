@@ -8,7 +8,7 @@ import { ClickHandler } from "../hitdetection/ClickHandler";
 import { HitSprite } from "../hitdetection/HitSprite";
 import { isSetEqual } from "../../util/isSetEqual";
 import { IAnimationTicker } from "../../interfaces/IAnimationTicker";
-import { Shroom } from "../Shroom";
+import { Wsproom } from "../Wsproom";
 import { AvatarFigurePartType } from "./enum/AvatarFigurePartType";
 import {
   AvatarAsset,
@@ -205,10 +205,10 @@ export class BaseAvatar extends PIXI.Container implements IEventGroup {
     this._skipCaching = options.skipCaching ?? false;
   }
 
-  static fromShroom(shroom: Shroom, options: BaseAvatarOptions) {
+  static fromWsproom(wsproom: Wsproom, options: BaseAvatarOptions) {
     const avatar = new BaseAvatar({ ...options });
     avatar.dependencies = {
-      ...shroom.dependencies,
+      ...wsproom.dependencies,
       eventManager: NOOP_EVENT_MANAGER,
     };
     return avatar;

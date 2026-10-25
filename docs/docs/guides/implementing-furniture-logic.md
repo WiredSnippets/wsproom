@@ -12,14 +12,14 @@ When we double click the `deactivate` area, we disable the dice.
 
 When we dig deeper into the files of `edice`, there is a `index.bin` file, which specifies a `logic` attribute. This attribute is what we need to know to use the behavior of the dice explained above.
 
-So let's implement it with shroom.
+So let's implement it with wsproom.
 
 ```ts
 /**
  * ...
  */
 
-const room = Room.create(shroom, {
+const room = Room.create(wsproom, {
   tilemap: `
         xxxx
         x000

@@ -10,7 +10,7 @@ Avatars can have multiple different actions. Here is how you add and remove acti
  * ...
  */
 
-const room = Room.create(shroom, {
+const room = Room.create(wsproom, {
   tilemap: `
     xxxx
     x000

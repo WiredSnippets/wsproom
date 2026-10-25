@@ -1,4 +1,4 @@
-import { Room, Avatar } from "@wiredsnippets/shroom";
+import { Room, Avatar } from "@wiredsnippets/wsproom";
 import { renderAvatarDirections } from "./renderAvatarDirections";
 
 export default {

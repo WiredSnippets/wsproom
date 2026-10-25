@@ -13,8 +13,8 @@ import {
   IFurniture,
   Room,
   WallFurniture,
-} from "@wiredsnippets/shroom";
-import { createShroom } from "../common/createShroom";
+} from "@wiredsnippets/wsproom";
+import { createWsproom } from "../common/createWsproom";
 import { action } from "@storybook/addon-actions";
 import fetch from "node-fetch";
 import {
@@ -27,8 +27,8 @@ export default {
 };
 
 export function Default() {
-  return createShroom(({ application, shroom }) => {
-    const room = Room.create(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const room = Room.create(wsproom, {
       tilemap: `
        xxxxxxxxxxx
        x0000000000
@@ -103,8 +103,8 @@ export function Default() {
 }
 
 export function Animated() {
-  return createShroom(({ application, shroom }) => {
-    const room = Room.create(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const room = Room.create(wsproom, {
       tilemap: `
         xxxxxxxxxxx
         x0000000000
@@ -158,8 +158,8 @@ export function Animated() {
 }
 
 export function Movement() {
-  return createShroom(({ application, shroom }) => {
-    const room = Room.create(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const room = Room.create(wsproom, {
       tilemap: `
         xxxxxxxxxxx
         x0000000000
@@ -196,8 +196,8 @@ export function Movement() {
 }
 
 export function Highlighted() {
-  return createShroom(({ application, shroom }) => {
-    const room = Room.create(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const room = Room.create(wsproom, {
       tilemap: `
        xxxxxxxxxxx
        x0000000000
@@ -245,8 +245,8 @@ export function Highlighted() {
 }
 
 export function AlphaFurniture() {
-  return createShroom(({ application, shroom }) => {
-    const room = Room.create(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const room = Room.create(wsproom, {
       tilemap: `
        xxxxxxxxxxx
        x0000000000
@@ -286,8 +286,8 @@ export function AlphaFurniture() {
 }
 
 export function MultipleFurnitures() {
-  return createShroom(({ application, shroom }) => {
-    const room = Room.create(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const room = Room.create(wsproom, {
       tilemap: `
        xxxxxxxxxxx
        x0000000000
@@ -333,8 +333,8 @@ export function MultipleFurnitures() {
 }
 
 export function DifferentFetchTypes() {
-  return createShroom(({ application, shroom }) => {
-    const room = Room.create(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const room = Room.create(wsproom, {
       tilemap: `
        xxxxxxxxxxx
        x0000000000
@@ -375,13 +375,13 @@ export function DifferentFetchTypes() {
 }
 
 export function DetachedFurniture() {
-  return createShroom(({ application, shroom }) => {
+  return createWsproom(({ application, wsproom }) => {
     const container = new PIXI.Container();
     container.sortableChildren = true;
 
     application.stage.addChild(container);
 
-    const furniture = BaseFurniture.fromShroom(shroom, container, {
+    const furniture = BaseFurniture.fromWsproom(wsproom, container, {
       animation: "0",
       direction: 2,
       type: { type: "club_sofa", kind: "type" },
@@ -396,11 +396,11 @@ export function DetachedFurniture() {
 }
 
 export function GldGate() {
-  return createShroom(({ application, shroom }) => {
+  return createWsproom(({ application, wsproom }) => {
     const container = new PIXI.Container();
     application.stage.addChild(container);
 
-    const room = Room.create(shroom, {
+    const room = Room.create(wsproom, {
       tilemap: `
            xxxxxxxxxxx
            x0000000000
@@ -492,11 +492,11 @@ export function GldGate() {
 }
 
 export function TileCursorFloorItems() {
-  return createShroom(({ application, shroom }) => {
+  return createWsproom(({ application, wsproom }) => {
     const container = new PIXI.Container();
     application.stage.addChild(container);
 
-    const room = Room.create(shroom, {
+    const room = Room.create(wsproom, {
       tilemap: `
        xxxxxxxxxxx
        x0000000000
@@ -537,11 +537,11 @@ export function TileCursorFloorItems() {
 }
 
 export function ValidDirections() {
-  return createShroom(({ application, shroom }) => {
+  return createWsproom(({ application, wsproom }) => {
     const container = new PIXI.Container();
     application.stage.addChild(container);
 
-    const room = Room.create(shroom, {
+    const room = Room.create(wsproom, {
       tilemap: `
        xxxxxxxxxxx
        x0000000000
@@ -602,11 +602,11 @@ export function ValidDirections() {
 }
 
 export function DestroyFurniture() {
-  return createShroom(({ application, shroom }) => {
+  return createWsproom(({ application, wsproom }) => {
     const container = new PIXI.Container();
     application.stage.addChild(container);
 
-    const room = Room.create(shroom, {
+    const room = Room.create(wsproom, {
       tilemap: `
        xxxxxxxxxxx
        x0000000000
@@ -641,16 +641,16 @@ export function DestroyFurniture() {
 }
 
 export function DestroyFurnitureWhileLoading() {
-  return createShroom(({ application, shroom }) => {
+  return createWsproom(({ application, wsproom }) => {
     const container = new PIXI.Container();
     application.stage.addChild(container);
 
-    const furnitureLoader = shroom.dependencies
+    const furnitureLoader = wsproom.dependencies
       .furnitureLoader as FurnitureLoader;
 
     furnitureLoader.delay = 5000;
 
-    const room = Room.create(shroom, {
+    const room = Room.create(wsproom, {
       tilemap: `
        xxxxxxxxxxx
        x0000000000
@@ -685,11 +685,11 @@ export function DestroyFurnitureWhileLoading() {
 }
 
 export function WallWindowDestroy() {
-  return createShroom(({ application, shroom }) => {
+  return createWsproom(({ application, wsproom }) => {
     const container = new PIXI.Container();
     application.stage.addChild(container);
 
-    const room = Room.create(shroom, {
+    const room = Room.create(wsproom, {
       tilemap: `
        xxxxxxxxxxx
        x0000000000
@@ -725,16 +725,16 @@ export function WallWindowDestroy() {
 }
 
 export function WallWindowDestroyWhileLoading() {
-  return createShroom(({ application, shroom }) => {
+  return createWsproom(({ application, wsproom }) => {
     const container = new PIXI.Container();
     application.stage.addChild(container);
 
-    const furnitureLoader = shroom.dependencies
+    const furnitureLoader = wsproom.dependencies
       .furnitureLoader as FurnitureLoader;
 
     furnitureLoader.delay = 5000;
 
-    const room = Room.create(shroom, {
+    const room = Room.create(wsproom, {
       tilemap: `
        xxxxxxxxxxx
        x0000000000
@@ -770,8 +770,8 @@ export function WallWindowDestroyWhileLoading() {
 }
 
 export function FurnitureColoring() {
-  return createShroom(({ application, shroom }) => {
-    const room = Room.create(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const room = Room.create(wsproom, {
       tilemap: `
        xxxxxxxxxxx
        x0000000000
@@ -822,8 +822,8 @@ export function FurnitureColoring() {
 }
 
 export function WallFurniturePosition() {
-  return createShroom(({ application, shroom }) => {
-    const room = Room.create(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const room = Room.create(wsproom, {
       tilemap: `
       xxxxxxxxxxxx
       xxxxxxxxxxxx
@@ -896,8 +896,8 @@ export function WallFurniturePosition() {
 }
 
 export function FurnitureFlip() {
-  return createShroom(({ application, shroom }) => {
-    const room = Room.create(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const room = Room.create(wsproom, {
       tilemap: `
        xxxxxxxxxxx
        x0000000000
@@ -938,8 +938,8 @@ export function FurnitureFlip() {
 }
 
 export function LayingAvatarsBehindBed() {
-  return createShroom(({ application, shroom }) => {
-    const room = Room.create(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const room = Room.create(wsproom, {
       tilemap: `
        xxxxxxxxxxx
        x0000000000
@@ -985,8 +985,8 @@ export function LayingAvatarsBehindBed() {
 }
 
 export function LoadTest() {
-  return createShroom(({ application, shroom }) => {
-    const room = Room.create(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const room = Room.create(wsproom, {
       tilemap: `
        xxxxxxxxxxx
        x0000000000
@@ -1070,8 +1070,8 @@ export function LoadTest() {
 }
 
 export function AnimationResetTest() {
-  return createShroom(({ application, shroom }) => {
-    const room = Room.create(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const room = Room.create(wsproom, {
       tilemap: `
        xxxxxxxxxxx
        x0000000000

@@ -19,14 +19,14 @@ function getLatestChangelogMarkdown(): string {
   return "```" + matchingRelease.toString() + "```";
 }
 
-const packageName = "@wiredsnippets/shroom";
+const packageName = "@wiredsnippets/wsproom";
 
 const content = {
-  content: "A new version of shroom has been released.",
+  content: "A new version of wsproom has been released.",
   embeds: [
     {
-      title: `shroom ${GIT_VERSION_TAG}`,
-      description: `The following changes have been made. You can view the full CHANGELOG [here](https://github.com/tetreum/shroom/blob/${GIT_VERSION_TAG}/CHANGELOG.md). ${getLatestChangelogMarkdown()}`,
+      title: `wsproom ${GIT_VERSION_TAG}`,
+      description: `The following changes have been made. You can view the full CHANGELOG [here](https://github.com/WiredSnippets/wsproom/blob/${GIT_VERSION_TAG}/CHANGELOG.md). ${getLatestChangelogMarkdown()}`,
       url: `https://www.npmjs.com/package/${packageName}/v/${versionWithoutV}`,
       fields: [
         {
@@ -36,7 +36,7 @@ const content = {
         {
           name: "Report Issues",
           value:
-            "Please report any bugs or issues with this version on our [Github Issues](https://github.com/tetreum/shroom/issues).",
+            "Please report any bugs or issues with this version on our [Github Issues](https://github.com/WiredSnippets/wsproom/issues).",
         },
         {
           name: "Need help?",

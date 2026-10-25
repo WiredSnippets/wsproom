@@ -1,13 +1,13 @@
 import React, { useRef, useState } from "react";
 import * as PIXI from "pixi.js";
 import styled from "styled-components";
-import { Shroom } from "@wiredsnippets/shroom";
+import { Wsproom } from "@wiredsnippets/wsproom";
 
 import { TestMap } from "./TestMap";
 import { TestRenderer } from "./TestRenderer";
 import { tests } from "./tests";
 
-const shared = Shroom.createShared({ resourcePath: "./resources" });
+const shared = Wsproom.createShared({ resourcePath: "./resources" });
 
 export function TestRendererContent({ keys }: { keys: string[] }) {
   const ref = useRef<HTMLCanvasElement>(null);
@@ -47,9 +47,9 @@ export function TestRendererContent({ keys }: { keys: string[] }) {
       view: canvas,
       resizeTo: parent,
     });
-    const shroom = shared.for(application);
+    const wsproom = shared.for(application);
 
-    const cleanup = activeRenderer.render({ shroom, application });
+    const cleanup = activeRenderer.render({ wsproom, application });
 
     return () => {
       console.log("DESTROY APPLICATION", keys);

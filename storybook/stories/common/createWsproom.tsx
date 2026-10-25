@@ -1,16 +1,16 @@
 import * as PIXI from "pixi.js";
-import { Shroom } from "@wiredsnippets/shroom";
+import { Wsproom } from "@wiredsnippets/wsproom";
 import { useRef } from "react";
 import React from "react";
 
 type CleanupFn = () => void;
 type CallbackOptions = {
   application: PIXI.Application;
-  shroom: Shroom;
+  wsproom: Wsproom;
   container: HTMLDivElement;
 };
 
-export function createShroom(
+export function createWsproom(
   cb: (options: CallbackOptions) => CleanupFn | void
 ) {
   const App = () => {
@@ -28,7 +28,7 @@ export function createShroom(
         width: 1400,
         height: 850,
       });
-      const shroom = Shroom.create({
+      const wsproom = Wsproom.create({
         resourcePath: "./resources",
         application: application,
         configuration: {
@@ -36,7 +36,7 @@ export function createShroom(
         },
       });
 
-      const cleanup = cb({ application, shroom, container });
+      const cleanup = cb({ application, wsproom, container });
 
       return () => {
         cleanup && cleanup();

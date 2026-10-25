@@ -4,7 +4,7 @@ import { createSpritesheet } from "./createSpritesheet";
 import { FurnitureVisualizationData } from "../../objects/furniture/data/FurnitureVisualizationData";
 import { FurnitureIndexData } from "../../objects/furniture/data/FurnitureIndexData";
 import { FurnitureAssetsData } from "../../objects/furniture/data/FurnitureAssetsData";
-import { ShroomAssetBundle } from "../../assets/ShroomAssetBundle";
+import { WsproomAssetBundle } from "../../assets/WsproomAssetBundle";
 import { FurnitureLogicData } from "../../objects/furniture/data/FurnitureLogicData";
 
 export async function dumpFurniture(
@@ -51,7 +51,7 @@ export async function dumpFurniture(
   const jsonString = JSON.stringify(data);
   const encoder = new TextEncoder();
 
-  const furnitureFile = new ShroomAssetBundle();
+  const furnitureFile = new WsproomAssetBundle();
   furnitureFile.addFile("index.json", encoder.encode(jsonString));
   furnitureFile.addFile("spritesheet.png", image);
 

@@ -1,7 +1,7 @@
 import { promises as fs } from "fs";
 import * as path from "path";
 
-import { ShroomAssetBundle } from "../../assets/ShroomAssetBundle";
+import { WsproomAssetBundle } from "../../assets/WsproomAssetBundle";
 
 export async function dumpFigure(
   baseName: string,
@@ -20,7 +20,7 @@ export async function dumpFigure(
     )
   );
 
-  const file = new ShroomAssetBundle();
+  const file = new WsproomAssetBundle();
 
   imageFiles.forEach(({ path: filePath, buffer }) => {
     const baseName = path.basename(filePath);

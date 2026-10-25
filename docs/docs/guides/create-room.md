@@ -5,7 +5,7 @@ title: Create a room
 
 import useBaseUrl from '@docusaurus/useBaseUrl';
 
-The Room class is the most essential part of shroom.
+The Room class is the most essential part of wsproom.
 
 The simplest way to create a room is by using the following code.
 This will create a 4x3 room.
@@ -13,13 +13,13 @@ This will create a 4x3 room.
 ```ts
 import * as PIXI from "pixi.js";
 
-import { Room, FloorFurniture, Avatar, Shroom } from "@wiredsnippets/shroom";
+import { Room, FloorFurniture, Avatar, Wsproom } from "@wiredsnippets/wsproom";
 
 const view = document.querySelector("#root") as HTMLCanvasElement;
 const application = new PIXI.Application({ view });
 
-const shroom = Shroom.create({ application, resourcePath: "./resources" });
-const room = Room.create(shroom, {
+const wsproom = Wsproom.create({ application, resourcePath: "./resources" });
+const room = Room.create(wsproom, {
   tilemap: `
    xxxxx
    x0000

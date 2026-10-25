@@ -1,9 +1,9 @@
-import { Room } from "@wiredsnippets/shroom";
+import { Room } from "@wiredsnippets/wsproom";
 import { TestRenderer } from "../../../../TestRenderer";
 
 export function renderModel(tilemap: string): TestRenderer {
-  return ({ shroom, application }) => {
-    const room = Room.create(shroom, {
+  return ({ wsproom, application }) => {
+    const room = Room.create(wsproom, {
       tilemap: tilemap,
     });
 

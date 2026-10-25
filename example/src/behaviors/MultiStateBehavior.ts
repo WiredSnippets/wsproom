@@ -1,4 +1,4 @@
-import { IFurniture, IFurnitureBehavior } from "@wiredsnippets/shroom";
+import { IFurniture, IFurnitureBehavior } from "@wiredsnippets/wsproom";
 
 export class MultiStateBehavior implements IFurnitureBehavior {
   private furniture: IFurniture | undefined;

@@ -1,5 +1,5 @@
 import { LegacyAssetBundle } from "../../assets/LegacyAssetBundle";
-import { ShroomAssetBundle } from "../../assets/ShroomAssetBundle";
+import { WsproomAssetBundle } from "../../assets/WsproomAssetBundle";
 import { IFurnitureData } from "../../interfaces/IFurnitureData";
 import {
   FurnitureFetch,
@@ -44,7 +44,7 @@ export class FurnitureLoader implements IFurnitureLoader {
     return new FurnitureLoader({
       furnitureData,
       getAssetBundle: async (type, revision) => {
-        const bundle = await ShroomAssetBundle.fromUrl(
+        const bundle = await WsproomAssetBundle.fromUrl(
           `${resourcePath}/hof_furni/${normalizePath(revision, type)}.wsproom`
         );
         return new JsonFurnitureAssetBundle(bundle);

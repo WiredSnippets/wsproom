@@ -1,15 +1,15 @@
 import * as PIXI from "pixi.js";
-import { Avatar, Room, FloorFurniture, RoomCamera } from "@wiredsnippets/shroom";
+import { Avatar, Room, FloorFurniture, RoomCamera } from "@wiredsnippets/wsproom";
 import { action } from "@storybook/addon-actions";
-import { createShroom } from "./common/createShroom";
+import { createWsproom } from "./common/createWsproom";
 
 export default {
   title: "Issues",
 };
 
 export function Issue28() {
-  return createShroom(({ application, shroom }) => {
-    const room = Room.create(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const room = Room.create(wsproom, {
       tilemap: `
             xxxxxxxxxxxx
             xxxx00000000
@@ -47,8 +47,8 @@ export function Issue28() {
 }
 
 export function Issue31() {
-  return createShroom(({ application, shroom }) => {
-    const room = Room.create(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const room = Room.create(wsproom, {
       tilemap: `
             xxxxxxxxxxxx
             xxxx00000000
@@ -136,8 +136,8 @@ export function Issue31() {
 }
 
 export function Issue38() {
-  return createShroom(({ application, shroom }) => {
-    const room = Room.create(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const room = Room.create(wsproom, {
       tilemap: `
             xxxxxxxxxxxx
             xxxxx000xxxx
@@ -168,8 +168,8 @@ export function Issue38() {
 }
 
 export function IssueWithAvatarEventsNotHandled() {
-  return createShroom(({ application, shroom }) => {
-    const room = Room.create(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const room = Room.create(wsproom, {
       tilemap: `
             xxxxxxxxxxxx
             xxxxx000xxxx
@@ -239,8 +239,8 @@ export function IssueWithAvatarEventsNotHandled() {
 }
 
 export function IssueWithItemNotRenderingProperly() {
-  return createShroom(({ application, shroom }) => {
-    const room = Room.create(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const room = Room.create(wsproom, {
       tilemap: `
             xxxxx
             x0000
@@ -267,8 +267,8 @@ export function IssueWithItemNotRenderingProperly() {
 }
 
 export function Issue56() {
-  return createShroom(({ application, shroom, container: storyContainer }) => {
-    const room = Room.create(shroom, {
+  return createWsproom(({ application, wsproom, container: storyContainer }) => {
+    const room = Room.create(wsproom, {
       tilemap: `
             xxxxxxxxxxxx
             xxxxx000xxxx
@@ -307,8 +307,8 @@ export function Issue56() {
 }
 
 export function IssueZOrder() {
-  return createShroom(({ application, shroom }) => {
-    const room = Room.create(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const room = Room.create(wsproom, {
       tilemap: `
         xxxxxx
         x00000

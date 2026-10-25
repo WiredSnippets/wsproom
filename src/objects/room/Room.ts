@@ -12,7 +12,7 @@ import { WallPosition } from "../../types/WallPosition";
 import { TileType } from "../../types/TileType";
 import { ParsedTileType } from "../../util/parseTileMap";
 import { parseTileMapString } from "../../util/parseTileMapString";
-import { Shroom } from "../Shroom";
+import { Wsproom } from "../Wsproom";
 import { ITileMap } from "../../interfaces/ITileMap";
 import { RoomObjectContainer } from "./RoomObjectContainer";
 import { RoomModelVisualization } from "./RoomModelVisualization";
@@ -166,11 +166,11 @@ export class Room
 
   /**
    * Creates a new room.
-   * @param shroom A shroom instance
+   * @param wsproom A wsproom instance
    * @param options Room creation options
    */
-  static create(shroom: Shroom, { tilemap }: CreateOptions) {
-    return new Room({ ...shroom.dependencies, tilemap });
+  static create(wsproom: Wsproom, { tilemap }: CreateOptions) {
+    return new Room({ ...wsproom.dependencies, tilemap });
   }
 
   /**

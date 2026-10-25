@@ -1,5 +1,5 @@
-import { Room } from "@wiredsnippets/shroom";
-import { createShroom } from "./common/createShroom";
+import { Room } from "@wiredsnippets/wsproom";
+import { createWsproom } from "./common/createWsproom";
 
 export default {
   title: "Room / Model",
@@ -467,8 +467,8 @@ export function RoomModelR() {
 }
 
 function renderRoomModel(tilemap: string) {
-  return createShroom(({ application, shroom }) => {
-    const room = Room.create(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const room = Room.create(wsproom, {
       tilemap,
     });
 

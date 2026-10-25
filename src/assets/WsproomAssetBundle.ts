@@ -1,7 +1,7 @@
 import ByteBuffer from "bytebuffer";
 import { IAssetBundle } from "./IAssetBundle";
 
-export class ShroomAssetBundle implements IAssetBundle {
+export class WsproomAssetBundle implements IAssetBundle {
   public static readonly VERSION = 1;
 
   private _files: Map<string, ArrayBuffer | Buffer> = new Map();
@@ -25,7 +25,7 @@ export class ShroomAssetBundle implements IAssetBundle {
 
     const buffer = await response.arrayBuffer();
 
-    return ShroomAssetBundle.fromBuffer(buffer);
+    return WsproomAssetBundle.fromBuffer(buffer);
   }
 
   static fromBuffer(buffer: ArrayBuffer | Buffer) {
@@ -52,7 +52,7 @@ export class ShroomAssetBundle implements IAssetBundle {
       files.push(file);
     }
 
-    return new ShroomAssetBundle(files);
+    return new WsproomAssetBundle(files);
   }
 
   addFile(fileName: string, buffer: ArrayBuffer | Buffer) {
@@ -61,7 +61,7 @@ export class ShroomAssetBundle implements IAssetBundle {
 
   toBuffer(): Buffer {
     const byteBuffer = new ByteBuffer();
-    byteBuffer.writeByte(ShroomAssetBundle.VERSION);
+    byteBuffer.writeByte(WsproomAssetBundle.VERSION);
     byteBuffer.writeUint16(this._files.size);
 
     this._files.forEach((buffer, key) => {
