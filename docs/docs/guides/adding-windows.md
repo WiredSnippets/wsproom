@@ -10,13 +10,13 @@ To create windows, we will use a `WallFurniture`. A wall furniture is just like 
 ```ts
 import * as PIXI from "pixi.js";
 
-import { Room, FloorFurniture, Avatar, Shroom } from "@wiredsnippets/shroom";
+import { Room, FloorFurniture, Avatar, Wsproom } from "@wiredsnippets/wsproom";
 
 const view = document.querySelector("#root") as HTMLCanvasElement;
 const application = new PIXI.Application({ view });
 
-const shroom = Shroom.create({ application, resourcePath: "./resources" });
-const room = Room.create(shroom, {
+const wsproom = Wsproom.create({ application, resourcePath: "./resources" });
+const room = Room.create(wsproom, {
   tilemap: `
     xxxxx
     x0000

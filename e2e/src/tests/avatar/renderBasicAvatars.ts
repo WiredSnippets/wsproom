@@ -1,7 +1,7 @@
-import { AvatarAction, BaseAvatar } from "@wiredsnippets/shroom";
+import { AvatarAction, BaseAvatar } from "@wiredsnippets/wsproom";
 import { TestRenderer } from "../../TestRenderer";
 
-export const renderBasicAvatars: TestRenderer = ({ shroom, application }) => {
+export const renderBasicAvatars: TestRenderer = ({ wsproom, application }) => {
   const looks = [
     "hd-180-1.hr-3322-34.ch-215-92.cc-3075-62.lg-3407-110.sh-908-1419",
     "hd-605-2.hr-3012-47.ch-645-1430.lg-720-63.sh-725-92.wa-2001-62",
@@ -33,7 +33,7 @@ export const renderBasicAvatars: TestRenderer = ({ shroom, application }) => {
       const actions = new Set<AvatarAction>([AvatarAction.Default]);
 
       for (let d = 0; d < 8; d++) {
-        const avatar = BaseAvatar.fromShroom(shroom, {
+        const avatar = BaseAvatar.fromWsproom(wsproom, {
           look: { look, actions, direction: d },
           position: { x: x + d * 64, y: y },
           zIndex: 0,

@@ -6,16 +6,16 @@ import {
   AvatarAction,
   BaseAvatar,
   BaseFurniture,
-} from "@wiredsnippets/shroom";
-import { createShroom } from "./common/createShroom";
+} from "@wiredsnippets/wsproom";
+import { createWsproom } from "./common/createWsproom";
 
 export default {
   title: "Documentation",
 };
 
 export function ImplementingFurnitureLogic() {
-  return createShroom(({ application, shroom }) => {
-    const room = Room.create(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const room = Room.create(wsproom, {
       tilemap: `
         xxxx
         x000
@@ -117,8 +117,8 @@ export function ImplementingFurnitureLogic() {
 }
 
 export function AvatarActions() {
-  return createShroom(({ application, shroom }) => {
-    const room = Room.create(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const room = Room.create(wsproom, {
       tilemap: `
           xxxx
           x000
@@ -152,8 +152,8 @@ export function AvatarActions() {
 }
 
 export function BaseAvatarAndFurniture() {
-  return createShroom(({ application, shroom }) => {
-    const avatar = BaseAvatar.fromShroom(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const avatar = BaseAvatar.fromWsproom(wsproom, {
       look: {
         actions: new Set(),
         direction: 2,
@@ -167,7 +167,7 @@ export function BaseAvatarAndFurniture() {
       },
     });
 
-    const furniture = BaseFurniture.fromShroom(shroom, application.stage, {
+    const furniture = BaseFurniture.fromWsproom(wsproom, application.stage, {
       direction: 2,
       type: { kind: "type", type: "club_sofa" },
       animation: "0",

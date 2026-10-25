@@ -1,5 +1,5 @@
-import { Room, Avatar } from "@wiredsnippets/shroom";
-import { createShroom } from "../common/createShroom";
+import { Room, Avatar } from "@wiredsnippets/wsproom";
+import { createWsproom } from "../common/createWsproom";
 
 const directions = [0, 1, 2, 3, 4, 5, 6, 7];
 
@@ -8,8 +8,8 @@ export function renderAvatarDirections(
   dirs = directions,
   callback: (avatar: Avatar) => void
 ) {
-  return createShroom(({ application, shroom }) => {
-    const room = Room.create(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const room = Room.create(wsproom, {
       tilemap: `
                        xxxxxxxxxxxxxxxx
                        x000000000000000

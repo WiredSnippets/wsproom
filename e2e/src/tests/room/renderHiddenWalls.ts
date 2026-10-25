@@ -1,8 +1,8 @@
-import { Room } from "@wiredsnippets/shroom";
+import { Room } from "@wiredsnippets/wsproom";
 import { TestRenderer } from "../../TestRenderer";
 
-export const renderHiddenWalls: TestRenderer = ({ shroom, application }) => {
-  const room = Room.create(shroom, {
+export const renderHiddenWalls: TestRenderer = ({ wsproom, application }) => {
+  const room = Room.create(wsproom, {
     tilemap: `
         xxxxxxxxxxxx
         xxxxxxxxxxxx

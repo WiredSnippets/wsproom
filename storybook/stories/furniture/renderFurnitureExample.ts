@@ -1,5 +1,5 @@
-import { Room, FloorFurniture } from "@wiredsnippets/shroom";
-import { createShroom } from "../common/createShroom";
+import { Room, FloorFurniture } from "@wiredsnippets/wsproom";
+import { createWsproom } from "../common/createWsproom";
 
 export function renderFurnitureExample(
   type: string,
@@ -16,8 +16,8 @@ export function renderFurnitureExample(
     /* Do nothing */
   }
 ) {
-  return createShroom(({ shroom, application }) => {
-    const room = Room.create(shroom, {
+  return createWsproom(({ wsproom, application }) => {
+    const room = Room.create(wsproom, {
       tilemap: `
                            xxxxxxxxxxxxxxxx
                            x000000000000000

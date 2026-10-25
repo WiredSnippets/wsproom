@@ -1,10 +1,10 @@
 import * as PIXI from "pixi.js";
 
-import { Shroom } from "@wiredsnippets/shroom";
+import { Wsproom } from "@wiredsnippets/wsproom";
 
 export type TestRendererCleanup = () => void;
 
 export type TestRenderer = (options: {
-  shroom: Shroom;
+  wsproom: Wsproom;
   application: PIXI.Application;
 }) => TestRendererCleanup | undefined | void;

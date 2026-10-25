@@ -19,7 +19,7 @@ export type { FurnitureInfo } from "./interfaces/IFurnitureData";
 export type { IFurnitureData } from "./interfaces/IFurnitureData";
 export { FurnitureData } from "./objects/furniture/FurnitureData";
 export { FurnitureHelper } from "./objects/furniture/FurnitureHelper";
-export { Shroom } from "./objects/Shroom";
+export { Wsproom } from "./objects/Wsproom";
 export {
   Landscape,
   getLandscapeItemPosition,

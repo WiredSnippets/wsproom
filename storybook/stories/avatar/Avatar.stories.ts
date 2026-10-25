@@ -1,5 +1,5 @@
-import { Avatar, AvatarAction, Room, BaseAvatar } from "@wiredsnippets/shroom";
-import { createShroom } from "../common/createShroom";
+import { Avatar, AvatarAction, Room, BaseAvatar } from "@wiredsnippets/wsproom";
+import { createWsproom } from "../common/createWsproom";
 import { action } from "@storybook/addon-actions";
 
 export default {
@@ -7,8 +7,8 @@ export default {
 };
 
 export function Default() {
-  return createShroom(({ application, shroom }) => {
-    const room = Room.create(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const room = Room.create(wsproom, {
       tilemap: `
             xxxxxxxxxxxxxxxx
             x000000000000000
@@ -90,8 +90,8 @@ export function Default() {
 }
 
 export function Walking() {
-  return createShroom(({ application, shroom }) => {
-    const room = Room.create(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const room = Room.create(wsproom, {
       tilemap: `
            xxxxxxxx
            x0000000
@@ -126,8 +126,8 @@ export function Walking() {
 }
 
 export function Drinking() {
-  return createShroom(({ application, shroom }) => {
-    const room = Room.create(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const room = Room.create(wsproom, {
       tilemap: `
             xxxxxxxx
             x0000000
@@ -179,8 +179,8 @@ export function Drinking() {
 }
 
 export function AvatarInDoor() {
-  return createShroom(({ application, shroom }) => {
-    const room = Room.create(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const room = Room.create(wsproom, {
       tilemap: `
            xxxxxxxx
            x0000000
@@ -212,10 +212,10 @@ export function AvatarInDoor() {
 }
 
 export function AvatarHairBack() {
-  return createShroom(({ application, shroom }) => {
+  return createWsproom(({ application, wsproom }) => {
     const look = `hd-180-1.hr-831-61.ha-1012-68.ch-215-66.lg-280-110.sh-305-62`;
 
-    const room = Room.create(shroom, {
+    const room = Room.create(wsproom, {
       tilemap: `
            xxxxxxxx
            x0000000
@@ -243,10 +243,10 @@ export function AvatarHairBack() {
 }
 
 export function AvatarPlain() {
-  return createShroom(({ application, shroom }) => {
+  return createWsproom(({ application, wsproom }) => {
     const look = `hd-99999-99999`;
 
-    const room = Room.create(shroom, {
+    const room = Room.create(wsproom, {
       tilemap: `
            xxxxxxxx
            x0000000
@@ -274,8 +274,8 @@ export function AvatarPlain() {
 }
 
 export function EventHandling() {
-  return createShroom(({ application, shroom }) => {
-    const room = Room.create(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const room = Room.create(wsproom, {
       tilemap: `
            xxxxxxxx
            x0000000
@@ -311,8 +311,8 @@ export function EventHandling() {
 }
 
 export function headRotation() {
-  return createShroom(({ application, shroom }) => {
-    const room = Room.create(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const room = Room.create(wsproom, {
       tilemap: `
            xxxxxxxx
            x0000000
@@ -384,8 +384,8 @@ export function headRotation() {
 }
 
 export function BaseAvatarClothes() {
-  return createShroom(({ application, shroom }) => {
-    const baseAvatar = BaseAvatar.fromShroom(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const baseAvatar = BaseAvatar.fromWsproom(wsproom, {
       look: {
         look: "ch-3001-73",
         direction: 2,
@@ -403,7 +403,7 @@ export function BaseAvatarClothes() {
       },
     });
 
-    const baseAvatar2 = BaseAvatar.fromShroom(shroom, {
+    const baseAvatar2 = BaseAvatar.fromWsproom(wsproom, {
       look: {
         look: "hr-3163-39.hd-180-2.lg-3202-1322.ch-215-1331",
         direction: 3,
@@ -427,8 +427,8 @@ export function BaseAvatarClothes() {
 }
 
 export function BaseAvatarBroke() {
-  return createShroom(({ application, shroom }) => {
-    const avatar1 = BaseAvatar.fromShroom(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const avatar1 = BaseAvatar.fromWsproom(wsproom, {
       look: {
         look: "hr-3163-39.hd-180-2.lg-3202-1322-1329.ch-215-1331",
         actions: new Set<AvatarAction>().add(AvatarAction.GestureSmile),
@@ -441,7 +441,7 @@ export function BaseAvatarBroke() {
       zIndex: 0,
       onLoad: () => {},
     });
-    const avatar2 = BaseAvatar.fromShroom(shroom, {
+    const avatar2 = BaseAvatar.fromWsproom(wsproom, {
       look: {
         look: "lg-3202-1322-1329.hr-3163-39.ch-215-93.ha-1009-93.hd-180-2",
         actions: new Set<AvatarAction>().add(AvatarAction.GestureSmile),
@@ -456,7 +456,7 @@ export function BaseAvatarBroke() {
         //
       },
     });
-    const avatar3 = BaseAvatar.fromShroom(shroom, {
+    const avatar3 = BaseAvatar.fromWsproom(wsproom, {
       look: {
         look: "hr-3163-39.hd-180-2.lg-3202-1322-1329.ch-215-1331",
         actions: new Set<AvatarAction>().add(AvatarAction.GestureSmile),
@@ -475,7 +475,7 @@ export function BaseAvatarBroke() {
         };
       },
     });
-    const avatar4 = BaseAvatar.fromShroom(shroom, {
+    const avatar4 = BaseAvatar.fromWsproom(wsproom, {
       look: {
         look: "lg-3202-1322-1329.hr-3163-39.ch-215-93.ha-1009-93.hd-180-2",
         actions: new Set<AvatarAction>().add(AvatarAction.GestureSmile),
@@ -503,8 +503,8 @@ export function BaseAvatarBroke() {
 }
 
 export function AvatarDestroy() {
-  return createShroom(({ application, shroom }) => {
-    const room = Room.create(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const room = Room.create(wsproom, {
       tilemap: `
            xxxxxxxx
            x0000000
@@ -539,8 +539,8 @@ export function AvatarDestroy() {
 }
 
 export function AvatarDance() {
-  return createShroom(({ application, shroom }) => {
-    const room = Room.create(shroom, {
+  return createWsproom(({ application, wsproom }) => {
+    const room = Room.create(wsproom, {
       tilemap: `
            xxxxxxxxxxxxxxxx
            x000000000000000

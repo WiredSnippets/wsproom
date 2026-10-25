@@ -6,8 +6,8 @@ import {
   FloorFurniture,
   FurnitureData,
   WallFurniture,
-  Shroom,
-} from "@wiredsnippets/shroom";
+  Wsproom,
+} from "@wiredsnippets/wsproom";
 import EasyStar from "easystarjs";
 import { MultiStateBehavior } from "./behaviors/MultiStateBehavior";
 import { DiceBehavior } from "./behaviors/DiceBehavior";
@@ -65,13 +65,13 @@ export class DummyRoom {
 
     const furnitureData = FurnitureData.create("./resources");
 
-    const shroom = Shroom.create({
+    const wsproom = Wsproom.create({
       application,
       resourcePath: "./resources",
       furnitureData,
     });
 
-    this.room = Room.create(shroom, {
+    this.room = Room.create(wsproom, {
       tilemap: tilemap,
     });
 

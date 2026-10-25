@@ -5,9 +5,9 @@ import {
   Avatar,
   FloorFurniture,
   RoomCamera,
-  Shroom,
+  Wsproom,
   loadRoomTexture,
-} from "@wiredsnippets/shroom";
+} from "@wiredsnippets/wsproom";
 import { DummyRoom } from "./DummyRoom";
 
 const view = document.querySelector("#root") as HTMLCanvasElement | undefined;
@@ -28,12 +28,12 @@ const application = new PIXI.Application({
 
 PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
 
-/* const shroom = Shroom.create({
+/* const wsproom = Wsproom.create({
   application,
   resourcePath: "./resources",
   configuration: { placeholder: PIXI.Texture.from("./image.png") },
 });
-const room = Room.create(shroom, {
+const room = Room.create(wsproom, {
   tilemap: `
    xxxxx
    x0000

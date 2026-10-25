@@ -6,11 +6,11 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const wsproom = path.resolve(here, "..");
 const web = path.resolve(wsproom, "../wiredsnippets/apps/web");
 const storeDirs = globSync(
-  path.resolve(wsproom, "../wiredsnippets/node_modules/.pnpm/@wiredsnippets+shroom@*/node_modules/@wiredsnippets/shroom")
+  path.resolve(wsproom, "../wiredsnippets/node_modules/.pnpm/@wiredsnippets+wsproom@*/node_modules/@wiredsnippets/wsproom")
 );
 
 if (storeDirs.length === 0) {
-  console.error("No installed @wiredsnippets/shroom found. Run pnpm install first.");
+  console.error("No installed @wiredsnippets/wsproom found. Run pnpm install first.");
   process.exit(1);
 }
 

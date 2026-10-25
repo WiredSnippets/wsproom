@@ -4,14 +4,14 @@ title: Using `BaseAvatar` and `BaseFurniture`
 ---
 
 For some use cases, you want to display avatar or furniture without a room.
-You can do this with `BaseAvatar` and `BaseFurniture`. The only thing you need is a `Shroom` instance.
+You can do this with `BaseAvatar` and `BaseFurniture`. The only thing you need is a `Wsproom` instance.
 
 ```ts
 /**
  * ...
  */
 
-const avatar = BaseAvatar.fromShroom(shroom, {
+const avatar = BaseAvatar.fromWsproom(wsproom, {
   look: {
     actions: new Set(),
     direction: 2,
@@ -25,7 +25,7 @@ const avatar = BaseAvatar.fromShroom(shroom, {
   },
 });
 
-const furniture = BaseFurniture.fromShroom(shroom, application.stage, {
+const furniture = BaseFurniture.fromWsproom(wsproom, application.stage, {
   direction: 2,
   type: { kind: "type", type: "club_sofa" },
   animation: "0",

@@ -17,7 +17,7 @@ import { AvatarGeometryData } from "./data/AvatarGeometryData";
 import { IAvatarEffectData } from "./data/interfaces/IAvatarEffectData";
 import { IAssetBundle } from "../../assets/IAssetBundle";
 import { LegacyAssetBundle } from "../../assets/LegacyAssetBundle";
-import { ShroomAssetBundle } from "../../assets/ShroomAssetBundle";
+import { WsproomAssetBundle } from "../../assets/WsproomAssetBundle";
 import {
   AvatarEffect,
   IAvatarEffectMap,
@@ -120,7 +120,7 @@ export class AvatarLoader implements IAvatarLoader {
         return new AvatarEffectMap(text);
       },
       getEffectBundle: async (effect) => {
-        const data = await ShroomAssetBundle.fromUrl(
+        const data = await WsproomAssetBundle.fromUrl(
           `${resourcePath}/effects/${effect.lib}.wsproom`
         );
         return new AvatarEffectBundle(data);
@@ -133,7 +133,7 @@ export class AvatarLoader implements IAvatarLoader {
       createDependencies: () =>
         initializeDefaultAvatarDependencies(resourcePath),
       getAssetBundle: async (library) => {
-        return ShroomAssetBundle.fromUrl(
+        return WsproomAssetBundle.fromUrl(
           `${resourcePath}/figure/${library}.wsproom`
         );
       },
@@ -144,7 +144,7 @@ export class AvatarLoader implements IAvatarLoader {
         return new AvatarEffectMap(text);
       },
       getEffectBundle: async (effect) => {
-        const data = await ShroomAssetBundle.fromUrl(
+        const data = await WsproomAssetBundle.fromUrl(
           `${resourcePath}/effects/${effect.lib}.wsproom`
         );
         return new AvatarEffectBundle(data);

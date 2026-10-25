@@ -1,18 +1,18 @@
 import * as PIXI from "pixi.js";
-import { Room, FloorFurniture } from "@wiredsnippets/shroom";
+import { Room, FloorFurniture } from "@wiredsnippets/wsproom";
 
-import { createShroom } from "../common/createShroom";
+import { createWsproom } from "../common/createWsproom";
 
 export default {
   title: "Furniture / Issues",
 };
 
 export function DestroyFurnitureWhileMoving() {
-  return createShroom(({ application, shroom }) => {
+  return createWsproom(({ application, wsproom }) => {
     const container = new PIXI.Container();
     application.stage.addChild(container);
 
-    const room = Room.create(shroom, {
+    const room = Room.create(wsproom, {
       tilemap: `
          xxxxxxxxxxx
          x0000000000
