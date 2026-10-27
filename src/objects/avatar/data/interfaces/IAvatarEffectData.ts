@@ -23,6 +23,8 @@ export interface IAvatarEffectData {
   ): AvatarEffectSpriteDirection | undefined;
   getDirection(): AvatarEffectDirection | undefined;
   getAddtions(): AvatarEffectFXAddition[];
+  getRemovedParts(): string[];
+  getPartItems(): Map<string, string>;
 }
 
 export interface AvatarEffectFXAddition {

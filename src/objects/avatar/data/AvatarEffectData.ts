@@ -35,8 +35,25 @@ export class AvatarEffectData implements IAvatarEffectData {
 
   private _frameFxPartsById: Map<string, AvatarEffectFrameFXPart> = new Map();
 
+  private _removedParts: Set<string> = new Set();
+  private _partItems: Map<string, string> = new Map();
+
   constructor(string: string) {
     const document = new DOMParser().parseFromString(string, "text/xml");
+
+    document.querySelectorAll("animation > remove").forEach((element) => {
+      const id = element.getAttribute("id");
+      if (id != null) this._removedParts.add(id);
+    });
+
+    document
+      .querySelectorAll("animation > frame > bodypart > item")
+      .forEach((element) => {
+        const id = element.getAttribute("id");
+        const base = element.getAttribute("base");
+        if (id != null && base != null && !this._partItems.has(id))
+          this._partItems.set(id, base);
+      });
 
     const frameElements = document.querySelectorAll("animation > frame");
 
@@ -115,6 +132,14 @@ export class AvatarEffectData implements IAvatarEffectData {
     frame: number
   ): AvatarEffectFrameBodypart | undefined {
     return this._frameBodyPartsById.get(`${bodyPartId}_${frame}`);
+  }
+
+  getRemovedParts(): string[] {
+    return Array.from(this._removedParts);
+  }
+
+  getPartItems(): Map<string, string> {
+    return this._partItems;
   }
 
   getAddtions(): AvatarEffectFXAddition[] {

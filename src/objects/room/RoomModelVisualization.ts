@@ -118,6 +118,19 @@ export class RoomModelVisualization
     this._primaryLayer.sortableChildren = true;
     this._tileLayer.sortableChildren = true;
     this._primaryLayer.interactiveChildren = false;
+    // zIndex changes made while detached don't mark the layer sortDirty, so check the order each render
+    this._primaryLayer.onRender = () => {
+      const layer = this._primaryLayer;
+      const children = layer.children;
+      for (let i = 1; i < children.length; i++) {
+        if (children[i - 1].zIndex > children[i].zIndex) {
+          layer.sortDirty = true;
+          break;
+        }
+      }
+      if (layer.sortDirty && layer.parentRenderGroup != null)
+        layer.parentRenderGroup.structureDidChange = true;
+    };
     this._tileLayer.interactiveChildren = false;
     this._behindWallLayer.interactiveChildren = false;
     this._landscapeLayer.interactiveChildren = false;
