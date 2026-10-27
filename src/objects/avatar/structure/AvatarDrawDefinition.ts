@@ -63,7 +63,7 @@ export class AvatarDrawDefinition implements IAvatarEffectPart {
 
     const effect = _options.effect;
 
-    const partList = this._getPartsForLook(_options.look);
+    const partList = this._getPartsForLook(_options.look, effect);
 
     const bodyParts = AvatarBodyPartList.create(
       partList,
@@ -197,14 +197,14 @@ export class AvatarDrawDefinition implements IAvatarEffectPart {
     return sortedDrawParts;
   }
 
-  private _getPartsForLook(look: ParsedLook) {
+  private _getPartsForLook(look: ParsedLook, effect?: IAvatarEffectData) {
     const avatarList = new AvatarPartList(look, this._options.item, {
       figureData: this._figureData,
       animationData: this._animationData,
       figureMap: this._figureMap,
       offsetsData: this._offsetsData,
       partSetsData: this._partSetsData,
-    });
+    }, effect);
 
     return avatarList;
   }

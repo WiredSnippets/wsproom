@@ -478,6 +478,11 @@ export class BaseFurniture implements IFurnitureEventHandlers, IEventGroup {
     this._updateSprites((element: FurnitureSprite) => {
       element.baseZIndex = this.zIndex;
     });
+
+    if (this._view != null) {
+      this._view.zIndex = this.zIndex;
+      this._view.updateLayers();
+    }
   }
 
   private _updatePosition() {

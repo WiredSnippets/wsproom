@@ -24,7 +24,8 @@ export class AvatarPartList {
   constructor(
     look: ParsedLook,
     itemId: string | number | undefined,
-    private _deps: AvatarPartListOptions
+    private _deps: AvatarPartListOptions,
+    effect?: IAvatarEffectData
   ) {
     const { figureData } = _deps;
 
@@ -49,6 +50,22 @@ export class AvatarPartList {
 
     if (itemId != null) {
       this._addItem(itemId);
+    }
+
+    if (effect != null) {
+      effect.getRemovedParts().forEach((type) => this._hiddenLayers.add(type));
+      effect.getPartItems().forEach((base, type) => {
+        this._parts = this._parts.filter((part) => part.type !== type);
+        this._partsByType.delete(type as AvatarFigurePartType);
+        this._hiddenLayers.delete(type);
+        this._registerPart(
+          new AvatarPart(
+            { type, id: base, colorable: false, index: 0 },
+            undefined,
+            _deps
+          )
+        );
+      });
     }
 
     basePartSet.forEach((partType) => {
