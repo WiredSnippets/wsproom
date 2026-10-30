@@ -259,6 +259,11 @@ export class AnimatedFurnitureVisualization extends FurnitureVisualization {
       return [{ id: 0, frameCount: 1 }];
     }
 
+    // Transition-only target (wired box 0 <-> 1): rest on it instead of looping the transition.
+    if (data.getAnimation(64, target) == null) {
+      animations.push({ id: target, frameCount: 1 });
+    }
+
     return animations;
   }
 
