@@ -390,3 +390,47 @@ test("reapplies the same animation after the view is replaced", () => {
 
   expect(second.setDisplayAnimation).toHaveBeenLastCalledWith("5");
 });
+
+test("does not replay the transition after the view is replaced", () => {
+  const visu = new AnimatedFurnitureVisualization();
+
+  // A wired box: state 1 has no animation of its own, only the transition 100 into it
+  const makeView = () => {
+    const visualizationData = mock<IFurnitureVisualizationData>({
+      getTransitionForAnimation: jest.fn((size: number, transitionTo: number) =>
+        transitionTo === 1 ? { id: 100 } : undefined
+      ),
+      getAnimation: jest.fn((size: number, animation: number) => {
+        if (animation === 100) return { id: 100, transitionTo: 1 };
+        if (animation === 0) return { id: 0 };
+        return undefined;
+      }),
+      getFrameCount: jest.fn((size: number, animation: number) => (animation === 100 ? 4 : 1)),
+    });
+
+    return mock<IFurnitureVisualizationView>({
+      getLayers: jest.fn().mockReturnValue([{ assetCount: 4, layerIndex: 0, frameRepeat: 1, setCurrentFrameIndex: jest.fn(), setColor: jest.fn() }]),
+      getVisualizationData: jest.fn().mockReturnValue(visualizationData),
+      setDisplayAnimation: jest.fn(),
+      setDisplayDirection: jest.fn(),
+      updateDisplay: jest.fn(),
+    });
+  };
+
+  const first = makeView();
+  visu.setView(first);
+  visu.updateDirection(0);
+  visu.updateAnimation("0");
+  visu.updateFrame(0);
+  visu.updateAnimation("1");
+  visu.updateFrame(1);
+  expect(first.setDisplayAnimation).toHaveBeenLastCalledWith("100"); // the flash plays once
+
+  const second = makeView(); // e.g. its highlight changed
+  visu.setView(second);
+  visu.updateDirection(0);
+  visu.updateAnimation("1");
+  visu.updateFrame(10);
+  expect(second.setDisplayAnimation).not.toHaveBeenCalledWith("100");
+  expect(second.setDisplayAnimation).toHaveBeenLastCalledWith("1");
+});

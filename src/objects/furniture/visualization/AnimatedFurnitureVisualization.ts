@@ -64,6 +64,8 @@ export class AnimatedFurnitureVisualization extends FurnitureVisualization {
     this._currentTargetAnimationId = undefined;
     this._currentDirection = undefined;
     this._currentAnimationId = undefined;
+    // A rebuilt view (highlight, alpha...) shows the current state as is: replaying its transition looks like a new flash.
+    this._changeAnimationCount = 0;
   }
 
   setCurrentAnimation(newAnimation: number) {
