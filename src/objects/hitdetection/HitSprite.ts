@@ -60,7 +60,6 @@ export class HitSprite extends PIXI.Sprite implements IEventTarget {
     this._tag = tag;
     this.mirrored = this._mirrored;
     this._eventManager = eventManager;
-    this.onRender = this._emitRectangle;
 
     eventManager.register(this);
   }
@@ -244,8 +243,32 @@ export class HitSprite extends PIXI.Sprite implements IEventTarget {
   }
 
   private _lastRect: Rectangle | undefined;
+  private _lastInputs = new Float64Array(10).fill(NaN);
 
-  private _emitRectangle = () => {
+  private _inputsUnchanged(): boolean {
+    const root = this._eventManager.getCoordinateRoot?.();
+    const group = this.parentRenderGroup;
+    if (root == null || group == null || root.parentRenderGroup !== group) return false;
+
+    const rel = this.relativeGroupTransform;
+    const rootRel = root.relativeGroupTransform;
+    const last = this._lastInputs;
+    const v0 = rel.tx, v1 = rel.ty, v2 = rootRel.tx, v3 = rootRel.ty, v4 = rootRel.a;
+    const v5 = rootRel.d, v6 = group.worldTransform.a, v7 = this.texture.width, v8 = this.texture.height;
+    const v9 = this._mirrored ? 1 : 0;
+    const unchanged = this._lastRect != null
+      && last[0] === v0 && last[1] === v1 && last[2] === v2 && last[3] === v3 && last[4] === v4
+      && last[5] === v5 && last[6] === v6 && last[7] === v7 && last[8] === v8 && last[9] === v9;
+    if (!unchanged) {
+      last[0] = v0; last[1] = v1; last[2] = v2; last[3] = v3; last[4] = v4;
+      last[5] = v5; last[6] = v6; last[7] = v7; last[8] = v8; last[9] = v9;
+    }
+    return unchanged;
+  }
+
+  updateRectangle() {
+    if (this.parentRenderGroup == null || this._ignoreMouse || this._inputsUnchanged()) return;
+
     let width = this.texture.width;
     let height = this.texture.height;
     let x = this.worldTransform.tx - (this._mirrored ? width : 0);
@@ -270,7 +293,7 @@ export class HitSprite extends PIXI.Sprite implements IEventTarget {
 
     this._lastRect = { x, y, width, height };
     this._rectangleSubject.next(this._lastRect);
-  };
+  }
 }
 
 export type HitSpriteEventMap = {

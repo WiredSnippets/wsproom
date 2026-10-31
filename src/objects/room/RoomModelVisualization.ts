@@ -118,14 +118,18 @@ export class RoomModelVisualization
     this._primaryLayer.sortableChildren = true;
     this._tileLayer.sortableChildren = true;
     this._primaryLayer.interactiveChildren = false;
-    // zIndex changes made while detached don't mark the layer sortDirty, so check the order each render
+    // zIndex changes made while detached don't mark the layer sortDirty, so check the order when children come or go
+    let checkedChildren = -1;
     this._primaryLayer.onRender = () => {
       const layer = this._primaryLayer;
       const children = layer.children;
-      for (let i = 1; i < children.length; i++) {
-        if (children[i - 1].zIndex > children[i].zIndex) {
-          layer.sortDirty = true;
-          break;
+      if (children.length !== checkedChildren) {
+        checkedChildren = children.length;
+        for (let i = 1; i < children.length; i++) {
+          if (children[i - 1].zIndex > children[i].zIndex) {
+            layer.sortDirty = true;
+            break;
+          }
         }
       }
       if (layer.sortDirty && layer.parentRenderGroup != null)
@@ -139,6 +143,7 @@ export class RoomModelVisualization
     this.addChild(this._positionalContainer);
 
     this._eventManager.coordinateRoot = this;
+    this.onRender = () => this._eventManager.updateRectangles();
     this._eventManagerContainer = new EventManagerContainer(this._application, this._eventManager);
 
     this._updateHeightmap();

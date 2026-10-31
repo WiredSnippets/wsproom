@@ -201,6 +201,14 @@ export class EventManager {
     return this.coordinateRoot?.worldTransform;
   }
 
+  getCoordinateRoot(): Container | undefined {
+    return this.coordinateRoot;
+  }
+
+  updateRectangles() {
+    this._targets.forEach((target) => target.updateRectangle?.());
+  }
+
   private _performHitTest(x: number, y: number) {
     let indexX = x;
     let indexY = y;
