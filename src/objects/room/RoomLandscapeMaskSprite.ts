@@ -47,6 +47,13 @@ export class RoomLandscapeMaskSprite extends PIXI.Sprite {
     this._renderer = renderer;
   }
 
+  setRoomBounds(roomBounds: { minX: number; minY: number; maxX: number; maxY: number }) {
+    this._roomBounds = roomBounds;
+    this._roomWidth = roomBounds.maxX - roomBounds.minX;
+    this._roomHeight = roomBounds.maxY - roomBounds.minY;
+    this._updateTexture();
+  }
+
   addSprite(element: PIXI.Sprite) {
     this._sprites.add(element);
     this._updateTexture();

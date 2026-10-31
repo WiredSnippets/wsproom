@@ -307,6 +307,10 @@ export class WallFurniture extends RoomObject {
     this._updatePosition();
   }
 
+  tileMapChanged(): void {
+    this._updatePosition();
+  }
+
   private _updatePosition() {
     const position = this._getOffsets(this.direction);
     if (position == null) return;

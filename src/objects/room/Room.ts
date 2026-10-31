@@ -325,52 +325,10 @@ export class Room
   }
 
   public changeTileMap (tileMap : TileType[][]) : void {
-    const currentObjects = [...this._roomObjectContainer.roomObjects];
-    
-    const newVisualization = new RoomModelVisualization(
-        this._eventManager,
-        this.application,
-        new ParsedTileMap(tileMap)
-    );
-
-    [
-        "hideWalls",
-        "hideFloor",
-        "hideTileCursor",
-        "wallDepth",
-        "tileHeight",
-        "wallHeight",
-        "wallTexture",
-        "floorTexture",
-        "wallLeftColor",
-        "wallRightColor",
-        "wallTopColor",
-        "tileLeftColor",
-        "tileRightColor",
-        "tileTopColor"
-    ].forEach(property => {
-        // @ts-ignore
-        newVisualization[property] = this._visualization[property];
-    });
-
-    this._eventManager.reset();
-    this.removeChildAt(0);
-    this._visualization.destroy();
-
-    this._visualization = newVisualization;
-    this.addChild(this._visualization);
-    this._resubscribeVisualization();
-
-    if (this._roomObjectContainer.context) {
-      this._roomObjectContainer.context.visualization = this._visualization;
-      this._roomObjectContainer.context.landscapeContainer = this._visualization;
-    }
-
-    currentObjects.forEach(object => {
-      this._roomObjectContainer.removeRoomObject(object);
-      this.addRoomObject(object);
-    });
+    this._visualization.setParsedTileMap(new ParsedTileMap(tileMap));
+    this._roomObjectContainer.roomObjects.forEach((object) => object.tileMapChanged?.());
   }
+
 
   getParsedTileTypes(): ParsedTileType[][] {
     return this._visualization.parsedTileMap.parsedTileTypes;

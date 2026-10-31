@@ -88,7 +88,7 @@ export class RoomModelVisualization
   constructor(
     private _eventManager: EventManager,
     private _application: PIXI.Application,
-    public readonly parsedTileMap: ParsedTileMap
+    private _parsedTileMap: ParsedTileMap
   ) {
     super();
 
@@ -149,6 +149,21 @@ export class RoomModelVisualization
     this._updateHeightmap();
 
     this._application.ticker.add(this._handleTick);
+  }
+
+  public get parsedTileMap() {
+    return this._parsedTileMap;
+  }
+
+  public setParsedTileMap(parsedTileMap: ParsedTileMap) {
+    this._parsedTileMap = parsedTileMap;
+    this._tileMapBounds = getTileMapBounds(parsedTileMap.parsedTileTypes, {
+      x: parsedTileMap.wallOffsets.x,
+      y: parsedTileMap.wallOffsets.y,
+    });
+    this._rebuildRoom = false;
+    this._updateHeightmap();
+    this._masks.forEach((mask) => mask.setRoomBounds(this.roomBounds));
   }
 
   addPart(part: IRoomPart): PartNode {

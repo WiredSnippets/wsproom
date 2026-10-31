@@ -399,6 +399,10 @@ export class FloorFurniture
     };
   }
 
+  tileMapChanged(): void {
+    this._updatePosition();
+  }
+
   private _updatePosition() {
     if (!this.mounted) return;
 

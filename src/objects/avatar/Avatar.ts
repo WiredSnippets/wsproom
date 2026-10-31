@@ -10,7 +10,7 @@ import { IScreenPositioned } from "../interfaces/IScreenPositioned";
 import { HitEventHandler } from "../hitdetection/HitSprite";
 
 export class Avatar extends RoomObject implements IMoveable, IScreenPositioned {
-  private _avatarSprites: BaseAvatar;
+  private _avatarSprites!: BaseAvatar;
 
   private _moveAnimation:
     | ObjectAnimation<
@@ -65,6 +65,12 @@ export class Avatar extends RoomObject implements IMoveable, IScreenPositioned {
     this._roomZ = roomZ;
     this._headDirection = headDirection;
 
+    this._loadingAvatarSprites = this._createSprites();
+  }
+
+  private _createSprites(): BaseAvatar {
+    this._loaded = false;
+
     this._placeholderSprites = new BaseAvatar({
       look: this._getPlaceholderLookOptions(),
       zIndex: this._calculateZIndex(),
@@ -78,7 +84,7 @@ export class Avatar extends RoomObject implements IMoveable, IScreenPositioned {
 
     this._avatarSprites = this._placeholderSprites;
 
-    this._loadingAvatarSprites = new BaseAvatar({
+    return new BaseAvatar({
       look: this._getLookOptions(),
       position: { x: 0, y: 0 },
       zIndex: this._calculateZIndex(),
@@ -478,13 +484,18 @@ export class Avatar extends RoomObject implements IMoveable, IScreenPositioned {
   }
 
   destroyed(): void {
-    this._avatarSprites?.destroy();
+    this._placeholderSprites?.destroy();
+    this._loadingAvatarSprites.destroy();
 
     if (this._cancelAnimation != null) {
       this._cancelAnimation();
+      this._cancelAnimation = undefined;
     }
 
     this._moveAnimation?.destroy();
+    this._moveAnimation = undefined;
+
+    this._loadingAvatarSprites = this._createSprites();
   }
 
   private _updateEventHandlers() {
@@ -656,6 +667,10 @@ export class Avatar extends RoomObject implements IMoveable, IScreenPositioned {
     }
 
     return getZOrder(roomX, roomY, roomZ) + zOffset;
+  }
+
+  tileMapChanged(): void {
+    this._updatePosition();
   }
 
   private _updatePosition() {
